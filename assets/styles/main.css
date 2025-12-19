@@ -242,3 +242,12 @@ footer a:hover{ opacity: 1; }
     grid-template-columns: 1fr;
   }
 }
+/* ===== Small polish ===== */
+strong{ font-weight: 800; }
+
+section h2{ margin-bottom: 10px; }
+
+#hero{ overflow: hidden; }
+#hero img{ transform: translateY(2px); }
+
+article{ margin-top: 12px; }
