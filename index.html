@@ -7,6 +7,7 @@
   <meta name="description" content="A calm, human-handled digital library for families, communities, and organizations — built for long-term preservation." />
   <link rel="stylesheet" href="assets/styles/main.css" />
 </head>
+
 <body>
 
   <!-- Header (minimal, branded) -->
@@ -25,69 +26,117 @@
 
   <main>
 
-    <!-- 1) Hero -->
+    <!-- 1) Hero (Image LEFT / Text RIGHT) -->
     <section id="hero">
-      <h1>A Living Digital Library, Carefully Built for Families, Communities, and Organizations</h1>
-      <p>
-        We assemble private, long-lasting digital libraries that preserve people, relationships, stories, and documents —
-        handled with care, one project at a time.
-      </p>
-      <p>
-        <a href="start.html">Start Your Library</a>
-      </p>
+      <div class="split">
+        <div class="media">
+          <img src="assets/section-images/heritage-book.png" alt="Heritage library preview" />
+        </div>
+
+        <div class="content">
+          <h1>A Living Digital Library, Carefully Built for Families, Communities, and Organizations</h1>
+          <p>
+            We assemble private, long-lasting digital libraries that preserve people, relationships, stories, and documents —
+            handled with care, one project at a time.
+          </p>
+          <p>
+            <a class="btn" href="start.html">Start Your Library</a>
+          </p>
+        </div>
+      </div>
     </section>
 
-    <!-- 2) What you can build -->
+    <!-- 2) Packages (Image LEFT, then RIGHT, then LEFT) -->
     <section id="types">
-      <h2>What You Can Create with TinyTeam</h2>
+      <h2>Choose Your Library</h2>
 
-      <article>
-        <h3>Family Library</h3>
-        <p>Preserve generations of family members, relationships, stories, and photographs in a structured digital archive.</p>
-      </article>
+      <!-- FAM (Image LEFT) -->
+      <div class="split">
+        <div class="media">
+          <img src="assets/section-images/family-hierarchy.png" alt="Family library preview" />
+        </div>
+        <div class="content">
+          <h3>Family Library (FAM)</h3>
+          <p>Preserve generations of family members, relationships, stories, and photographs in a structured digital archive.</p>
+          <p><strong>$39 one-time</strong></p>
+          <p><a class="btn" href="start.html">Start FAM Library</a></p>
+        </div>
+      </div>
 
-      <article>
-        <h3>Community Library</h3>
-        <p>Document clans, groups, or shared histories with people, timelines, and collective records.</p>
-      </article>
+      <hr />
 
-      <article>
-        <h3>Organization / Hierarchy Library</h3>
-        <p>Record leaders, members, roles, and organizational history in a clear, long-term reference.</p>
-      </article>
+      <!-- COMM (Image RIGHT) -->
+      <div class="split reverse">
+        <div class="media">
+          <img src="assets/section-images/community-groups.png" alt="Community library preview" />
+        </div>
+        <div class="content">
+          <h3>Community Library (COMM)</h3>
+          <p>Document clans, groups, or shared histories with people, timelines, and collective records.</p>
+          <p><strong>$79 one-time</strong></p>
+          <p><a class="btn" href="start.html">Start COMM Library</a></p>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- ORG / HIR Expansion (Image LEFT) -->
+      <div class="split">
+        <div class="media">
+          <img src="assets/section-images/library-records.png" alt="Organization and hierarchy records preview" />
+        </div>
+        <div class="content">
+          <h3>ORG / HIR Expansion Add-on</h3>
+          <p>
+            Add organizational or hierarchy documentation to your archive (leaders, roles, structure, historical records).
+          </p>
+          <p><strong>Starting at $29 (quoted by email)</strong></p>
+          <p><a class="btn" href="start.html">Request ORG/HIR Add-on</a></p>
+        </div>
+      </div>
     </section>
 
-    <!-- 3) Design styles -->
+    <!-- 3) Design styles (Image RIGHT / Text LEFT) -->
     <section id="styles">
-      <h2>Choose a Design Style for Your Library</h2>
-      <p>
-        Design styles define the visual presentation of your library.
-        Each project is individually assembled using one selected style and delivered as a finished archive — not as a reusable template.
-      </p>
+      <div class="split reverse">
+        <div class="media">
+          <img src="assets/section-images/legacy-pages.png" alt="Design style previews" />
+        </div>
 
-      <article>
-        <h3>Heritage Classic</h3>
-        <p>Traditional layouts inspired by archival books.</p>
-        <p><a href="start.html">Use This Style</a></p>
-      </article>
+        <div class="content">
+          <h2>Choose a Design Style</h2>
+          <p>
+            Design styles define the visual presentation of your library.
+            Each project is individually assembled using one selected style and delivered as a finished archive —
+            not as a reusable template.
+          </p>
 
-      <article>
-        <h3>Modern Lineage</h3>
-        <p>Clean, contemporary presentation for growing families.</p>
-        <p><a href="start.html">Use This Style</a></p>
-      </article>
+          <div class="style-list">
+            <article>
+              <h3>Heritage Classic</h3>
+              <p>Traditional layouts inspired by archival books.</p>
+              <p><a class="btn" href="start.html">Use This Style</a></p>
+            </article>
 
-      <article>
-        <h3>Minimal Archive</h3>
-        <p>Quiet, structured design focused on clarity.</p>
-        <p><a href="start.html">Use This Style</a></p>
-      </article>
+            <article>
+              <h3>Modern Lineage</h3>
+              <p>Clean, contemporary presentation for growing families.</p>
+              <p><a class="btn" href="start.html">Use This Style</a></p>
+            </article>
+
+            <article>
+              <h3>Minimal Archive</h3>
+              <p>Quiet, structured design focused on clarity.</p>
+              <p><a class="btn" href="start.html">Use This Style</a></p>
+            </article>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- 4) How it works -->
+    <!-- 4) How it works (plain, calm) -->
     <section id="how">
       <h2>How the Process Works</h2>
-
       <ol>
         <li>
           <strong>Choose Your Library & Style</strong><br />
@@ -104,26 +153,40 @@
       </ol>
     </section>
 
-    <!-- 5) Size & expansion -->
+    <!-- 5) Size & expansion (Image LEFT / Text RIGHT) -->
     <section id="growth">
-      <h2>Designed to Grow with You</h2>
-      <p>
-        Each library is designed to comfortably support up to 1,000 individuals.
-        Larger families, extended branches, or additional generations can continue their archive by adding a connected library.
-      </p>
+      <div class="split">
+        <div class="media">
+          <img src="assets/section-images/family-tree.png" alt="Family tree growth preview" />
+        </div>
+        <div class="content">
+          <h2>Designed to Grow with You</h2>
+          <p>
+            Each library is designed to comfortably support up to <strong>1,000 individuals</strong>.
+            Larger families, extended branches, or additional generations can continue their archive by adding a connected library.
+          </p>
+        </div>
+      </div>
     </section>
 
-    <!-- 6) Photos & documents -->
+    <!-- 6) Photos & documents add-on (Image RIGHT / Text LEFT) -->
     <section id="media">
-      <h2>Add Photos, Documents & Stories</h2>
-      <p>
-        We can carefully integrate photographs, letters, certificates, and written stories into your library —
-        placing them alongside the people and timelines they belong to.
-      </p>
-      <p>Additional collections can be added as your archive grows.</p>
+      <div class="split reverse">
+        <div class="media">
+          <img src="assets/section-images/legacy-pages.png" alt="Photos and stories integration preview" />
+        </div>
+        <div class="content">
+          <h2>Photo & Stories Add-on</h2>
+          <p>
+            We carefully integrate photos, documents, and stories into your library — placed beside the people and timelines they belong to.
+          </p>
+          <p><strong>$29 per package</strong> (up to 1,500 photos/documents)</p>
+          <p><a class="btn" href="start.html">Add Photos & Stories</a></p>
+        </div>
+      </div>
     </section>
 
-    <!-- 7) Ownership & access -->
+    <!-- 7) Ownership & access (plain, trust section) -->
     <section id="ownership">
       <h2>Built for Long-Term Preservation</h2>
       <p>
@@ -133,21 +196,62 @@
       <p>Optional hosted access may be provided while the service remains active.</p>
     </section>
 
-    <!-- 8) Reseller (quiet) -->
+    <!-- 8) About Us (Image LEFT / Text RIGHT) -->
+    <section id="about">
+      <div class="split">
+        <div class="media">
+          <div class="about-placeholder">
+            <strong>TinyTeam Digital Library</strong>
+            <p class="muted">Human-handled · Archival · Purpose-built</p>
+          </div>
+        </div>
+
+        <div class="content">
+          <h2>About TinyTeam</h2>
+          <p>
+            TinyTeam Digital Library is a calm, human-handled system for preserving families, communities,
+            and organizations through carefully assembled digital archives.
+          </p>
+          <p>
+            We focus on clarity, longevity, and respect for the stories entrusted to us.
+            Every library is reviewed, assembled, and delivered with intention — not automated, not mass-produced.
+          </p>
+          <p>
+            TinyTeam is building a growing library of digital systems, beginning with genealogy,
+            community records, and organizational hierarchies.
+          </p>
+
+          <!-- Placeholder links (activate later) -->
+          <div class="about-links">
+            <p><strong>Links (to be added)</strong></p>
+            <ul>
+              <li><a href="#">About the Team</a></li>
+              <li><a href="#">Updates & Announcements</a></li>
+              <li><a href="#">Facebook</a></li>
+              <li><a href="#">Instagram</a></li>
+              <li><a href="#">Email</a></li>
+            </ul>
+            <p class="muted" style="font-size:0.9em;">(We will connect these later.)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9) Reseller (quiet) -->
     <section id="reseller">
       <h2>Introducing TinyTeam to Others</h2>
       <p>
         TinyTeam works with selected partners who help families and communities discover digital preservation.
         All libraries are still personally assembled and delivered by TinyTeam.
       </p>
-      <p><a href="reseller/index.html">Learn About the Reseller Program</a></p>
+      <p><a class="btn" href="reseller/index.html">Learn About the Reseller Program</a></p>
     </section>
 
-    <!-- 9) Final CTA -->
+    <!-- 10) Final CTA -->
     <section id="cta">
       <h2>Ready to Begin?</h2>
       <p>When you’re ready, we’ll guide you through the next steps.</p>
-      <p><a href="start.html">Start Your Library</a></p>
+      <p><a class="btn" href="start.html">Start Your Library</a></p>
     </section>
 
   </main>
@@ -164,4 +268,3 @@
 
 </body>
 </html>
-
