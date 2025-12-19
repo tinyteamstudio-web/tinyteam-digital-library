@@ -7,123 +7,150 @@
   <meta name="description" content="Thank you for your submission. Here are the next steps, tutorials, and payment proof instructions for your TinyTeam Digital Library." />
   <link rel="stylesheet" href="assets/styles/main.css" />
 </head>
+
 <body>
 
-  <header>
-    <div>
-      <a href="index.html" aria-label="TinyTeam Home">
-        <strong>TinyTeam Digital Library</strong>
-      </a>
-      <nav aria-label="Primary">
-        <a href="help/index.html">Help</a>
-      </nav>
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="help/index.html">Help</a>
+      <a href="start.html">Start</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Confirmation -->
+  <section id="ty-hero">
+    <h1>Thank you — we received your request</h1>
+    <p>
+      Your library request has been submitted successfully.
+      TinyTeam is a human-handled process, and every submission is carefully reviewed.
+    </p>
+    <p class="muted">
+      If you do not receive an email reply within a reasonable time, please check your spam/junk folder, then reach out.
+    </p>
+  </section>
+
+  <!-- Next steps -->
+  <section id="ty-next">
+    <h2>What happens next</h2>
+    <ol>
+      <li><strong>Review:</strong> We confirm your request details and check completeness.</li>
+      <li><strong>Follow-up:</strong> We’ll email you if anything is missing or needs clarification.</li>
+      <li><strong>Payment step:</strong> If applicable, we confirm the amount and send payment instructions.</li>
+      <li><strong>Assembly:</strong> Your library is carefully assembled and prepared for delivery.</li>
+      <li><strong>Delivery:</strong> You receive your completed, client-owned archive.</li>
+    </ol>
+  </section>
+
+  <!-- Tutorials placeholder -->
+  <section id="ty-tutorials">
+    <h2>Video tutorials & guide</h2>
+    <p class="muted">We will add your videos and guide links here later.</p>
+
+    <div style="border:1px solid rgba(31,38,35,0.12); padding:16px; border-radius:12px; background:#fff;">
+      <ul>
+        <li>How to prepare names & relationships</li>
+        <li>How to submit photos & documents</li>
+        <li>How to review your delivered archive</li>
+      </ul>
     </div>
-  </header>
+  </section>
 
-  <main>
+  <!-- Payment QR (ONE section, 4 rows) -->
+  <section id="ty-payment">
+    <h2>Payment QR (when applicable)</h2>
+    <p>
+      Please pay only after TinyTeam confirms your amount and scope by email.
+      After payment, submit your proof below.
+    </p>
 
-    <!-- Confirmation -->
-    <section id="ty-hero">
-      <h1>Thank you — we received your request</h1>
-      <p>
-        Your library request has been submitted successfully.
-        TinyTeam is a human-handled process, and every submission is carefully reviewed.
-      </p>
-      <p>
-        If you do not receive an email reply within a reasonable time, please check your spam/junk folder, then reach out via the contact details below.
-      </p>
-    </section>
+    <div class="qr-grid">
 
-    <!-- Next steps -->
-    <section id="ty-next">
-      <h2>What happens next</h2>
-      <ol>
-        <li><strong>Review:</strong> We confirm the details of your request and check completeness.</li>
-        <li><strong>Follow-up:</strong> We’ll email you if anything is missing or needs clarification.</li>
-        <li><strong>Payment step:</strong> If applicable, we will confirm the amount and send payment instructions.</li>
-        <li><strong>Assembly:</strong> Your library is carefully assembled and prepared for delivery.</li>
-        <li><strong>Delivery:</strong> You receive your completed, client-owned archive.</li>
-      </ol>
-    </section>
-
-    <!-- Tutorials (placeholder) -->
-    <section id="ty-tutorials">
-      <h2>Video tutorials & guide</h2>
-      <p>
-        This section will contain short tutorials to help you prepare materials and understand how your archive will be assembled.
-      </p>
-
-      <!-- Replace later with embedded videos or links -->
-      <div style="border:1px solid #ddd; padding:16px; border-radius:12px;">
-        <p><strong>Tutorials not added yet.</strong></p>
-        <ul>
-          <li>How to prepare names & relationships</li>
-          <li>How to submit photos & documents</li>
-          <li>How to review your delivered archive</li>
-        </ul>
+      <div class="qr-row">
+        <img src="assets/qr/gcash-qr.jpeg" alt="GCash QR code" />
+        <div>
+          <h3>GCash</h3>
+          <p class="muted">Scan to pay via GCash. Keep a screenshot/receipt as proof.</p>
+          <p><a class="btn" href="#proof">Submit Proof</a></p>
+        </div>
       </div>
-    </section>
 
-    <!-- Payment proof (ONLY lives here) -->
-    <section id="ty-payment">
-      <h2>Payment proof (when applicable)</h2>
-      <p>
-        If you have been instructed to pay, please submit your proof of payment using the method below.
-        Do not send payment unless your amount and scope have been confirmed by TinyTeam.
-      </p>
-
-      <h3>Option A: Reply to our email</h3>
-      <p>
-        Reply to the email you received from TinyTeam and attach your payment proof (screenshot or receipt).
-      </p>
-
-      <h3>Option B: Upload proof (optional)</h3>
-      <p>
-        If we provide a proof-upload link, you may upload your receipt there.
-      </p>
-
-      <!-- If you want QR images displayed here later, we will add them in Step 6 -->
-      <div style="border:1px solid #ddd; padding:16px; border-radius:12px;">
-        <p><strong>QR payment section not connected yet.</strong></p>
-        <p>We will place your GCash / Maya / GoTyme / PNB QR images here later.</p>
+      <div class="qr-row">
+        <img src="assets/qr/maya-qr.jpeg" alt="Maya QR code" />
+        <div>
+          <h3>Maya</h3>
+          <p class="muted">Scan to pay via Maya. Keep your confirmation as proof.</p>
+          <p><a class="btn" href="#proof">Submit Proof</a></p>
+        </div>
       </div>
-    </section>
 
-    <!-- Reassurance -->
-    <section id="ty-reassure">
-      <h2>Your archive is yours</h2>
-      <p>
-        Every TinyTeam library is delivered as a complete, client-owned archive.
-        Design styles are applied exclusively to your project and delivered as finished outputs — not as reusable templates.
-      </p>
-    </section>
+      <div class="qr-row">
+        <img src="assets/qr/gotym-qr.jpeg" alt="GoTyme QR code" />
+        <div>
+          <h3>GoTyme</h3>
+          <p class="muted">Scan to pay via GoTyme. Include your name in the receipt if possible.</p>
+          <p><a class="btn" href="#proof">Submit Proof</a></p>
+        </div>
+      </div>
 
-    <!-- Contact -->
-    <section id="ty-contact">
-      <h2>Need help?</h2>
-      <p>
-        Visit the <a href="help/index.html">Help & Guide</a> for preparation instructions and common questions.
-      </p>
-      <p>
-        If you need to contact us, reply to your TinyTeam email thread (recommended).
-      </p>
-      <p style="font-size:0.95em;">
-        (We can place your official TinyTeam support email here when you’re ready.)
-      </p>
-    </section>
+      <div class="qr-row">
+        <img src="assets/qr/pnb-qr.jpeg" alt="PNB QR code" />
+        <div>
+          <h3>PNB</h3>
+          <p class="muted">Scan to pay via PNB. Reply to the TinyTeam email thread with your proof.</p>
+          <p><a class="btn" href="#proof">Submit Proof</a></p>
+        </div>
+      </div>
 
-    <!-- Back to home -->
-    <section id="ty-home">
-      <p><a href="index.html">Return to Home</a></p>
-    </section>
+    </div>
+  </section>
 
-  </main>
+  <!-- Proof instructions -->
+  <section id="proof">
+    <h2>Submit proof of payment</h2>
+    <p>
+      Reply to the TinyTeam email thread and attach your receipt/screenshot.
+      If TinyTeam provides a proof-upload link, you may use that as well.
+    </p>
+    <p class="muted">
+      (We can later add a dedicated proof form here if you want.)
+    </p>
+  </section>
 
-  <footer>
-    <p><strong>TinyTeam Digital Library</strong></p>
-    <p><a href="index.html">Home</a> · <a href="help/index.html">Help & Guide</a> · <a href="reseller/index.html">Reseller Program</a></p>
-  </footer>
+  <!-- Ownership -->
+  <section id="ty-ownership">
+    <h2>Your archive is yours</h2>
+    <p>
+      Every TinyTeam library is delivered as a complete, client-owned archive.
+      Design styles are applied per project and delivered as finished outputs — not reusable templates.
+    </p>
+  </section>
+
+  <!-- Links -->
+  <section id="ty-links">
+    <h2>Quick links</h2>
+    <p><a class="btn" href="start.html">Start Another Library</a></p>
+    <p style="margin-top:10px;">
+      <a href="help/index.html">Help & Guide</a> ·
+      <a href="reseller/index.html">Reseller Program</a> ·
+      <a href="index.html">Home</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p><strong>TinyTeam Digital Library</strong></p>
+  <p>
+    <a href="index.html">Home</a> ·
+    <a href="help/index.html">Help</a> ·
+    <a href="reseller/index.html">Reseller</a>
+  </p>
+</footer>
 
 </body>
 </html>
-
