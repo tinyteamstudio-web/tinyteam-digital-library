@@ -6,6 +6,22 @@
   <title>Reseller Program · TinyTeam Digital Library</title>
   <meta name="description" content="A curated 20% reseller program for partners introducing TinyTeam Digital Library to families, communities, and organizations." />
   <link rel="stylesheet" href="../assets/styles/main.css" />
+
+  <!-- Page-only helper styles for the form embed -->
+  <style>
+    .form-embed{
+      border: 1px solid rgba(31, 38, 35, 0.12);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .form-embed iframe{
+      width: 100%;
+      height: 735px;
+      border: 0;
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
@@ -44,7 +60,7 @@
   <section id="reseller-how">
     <h2>How it works</h2>
     <ol>
-      <li><strong>Apply</strong> to become a TinyTeam reseller.</li>
+      <li><strong>Apply</strong> using the form below.</li>
       <li><strong>Get approved</strong> and receive your unique reseller code.</li>
       <li><strong>Share TinyTeam</strong> through your own content, community, or funnel.</li>
       <li><strong>Client submits</strong> their request and enters your code.</li>
@@ -67,9 +83,7 @@
 
   <section id="reseller-rules">
     <h2>Partner rules (important)</h2>
-    <p>
-      To protect families and preserve quality, resellers must follow these rules:
-    </p>
+    <p>To protect families and preserve quality, resellers must follow these rules:</p>
     <ul>
       <li>No selling or sharing TinyTeam templates or internal files.</li>
       <li>No changing prices, offering discounts, or promising timelines.</li>
@@ -79,27 +93,23 @@
     </ul>
   </section>
 
-  <section id="reseller-assets">
-    <h2>Resources provided after approval</h2>
-    <ul>
-      <li>Approved TinyTeam description (safe wording)</li>
-      <li>Messaging templates and suggested captions</li>
-      <li>Reseller code + usage instructions</li>
-      <li>Optional funnel guidance for referral-only flow</li>
-    </ul>
-  </section>
-
   <section id="reseller-apply">
     <h2>Apply to become a reseller</h2>
 
-    <!-- Replace this box with your Google Form embed code later -->
-    <div style="border:1px solid rgba(31,38,35,0.12); padding:16px; border-radius:12px; background:#fff;">
-      <p><strong>Reseller application form not connected yet.</strong></p>
-      <p class="muted">Paste your Google Form embed code here when ready.</p>
+    <div class="form-embed">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLScsIyh-0Z7NFRDpM5hs3hobVVTZiozMv0xSwE9eL-7c6M3EnA/viewform?embedded=true"
+        width="640"
+        height="735"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="TinyTeam Reseller Application Form"
+      >Loading…</iframe>
     </div>
 
     <p class="muted" style="margin-top:12px;">
-      After approval, you’ll receive your reseller code and the official TinyTeam reseller guidelines.
+      After approval, you’ll receive your reseller code and the official TinyTeam reseller guidelines by email.
     </p>
   </section>
 
