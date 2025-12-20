@@ -6,6 +6,22 @@
   <title>Start Your Library · TinyTeam Digital Library</title>
   <meta name="description" content="Start your TinyTeam Digital Library request. Choose your library type and design style, then submit your materials for careful review." />
   <link rel="stylesheet" href="assets/styles/main.css" />
+
+  <!-- Page-only styles for Google Form embed -->
+  <style>
+    .form-embed{
+      border: 1px solid rgba(31, 38, 35, 0.12);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .form-embed iframe{
+      width: 100%;
+      height: 1385px;
+      border: 0;
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
@@ -22,56 +38,68 @@
 
 <main>
 
+  <!-- Intro -->
   <section id="start-hero">
     <h1>Start Your Library</h1>
     <p>
-      This is a human-handled, done-for-you archive service.
-      You choose your library type and design style — we assemble and deliver your completed archive.
+      This is a human-handled, done-for-you archival service.
+      Choose your library type and design style — TinyTeam assembles and delivers your completed archive.
     </p>
     <p class="muted">
       If you were referred by a partner, please enter your reseller code in the form.
     </p>
   </section>
 
+  <!-- Process -->
   <section id="start-steps">
     <h2>What happens after you submit</h2>
     <ol>
-      <li><strong>We review your request</strong> to confirm scope and completeness.</li>
-      <li><strong>We email next steps</strong> (and confirm payment instructions if applicable).</li>
-      <li><strong>We assemble and deliver</strong> your completed library.</li>
+      <li><strong>Review</strong> — we carefully check your request.</li>
+      <li><strong>Follow-up</strong> — we email if anything needs clarification.</li>
+      <li><strong>Payment confirmation</strong> — if applicable.</li>
+      <li><strong>Assembly & delivery</strong> — your library is prepared and delivered.</li>
     </ol>
   </section>
 
+  <!-- Google Form -->
   <section id="start-form">
     <h2>Submit your library request</h2>
 
-    <!-- Replace this box with your Google Form embed code -->
-    <div style="border:1px solid rgba(31,38,35,0.12); padding:16px; border-radius:12px; background:#fff;">
-      <p><strong>Form not connected yet.</strong></p>
-      <p class="muted">
-        Paste your Google Form embed code here when ready.
-        (We will also configure the form confirmation redirect to the Thank You page.)
-      </p>
+    <div class="form-embed">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSfl5K84Js5VK7PMHK1Nyk6uUTda-K0PdGpbs6z60_HdIsqomA/viewform?embedded=true"
+        width="640"
+        height="1385"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="TinyTeam Start Your Library Form"
+      >
+        Loading…
+      </iframe>
     </div>
 
     <p class="muted" style="margin-top:12px;">
-      Tip: Keep your submission simple. You can submit what you have first — TinyTeam will follow up if anything needs clarification.
+      Tip: You don’t need everything ready. Submit what you have — TinyTeam will guide you if anything is missing.
     </p>
   </section>
 
+  <!-- Assurance -->
   <section id="start-note">
     <h2>Handled with care</h2>
     <p>
-      TinyTeam libraries are personally reviewed and assembled.
-      Design styles are applied per project and delivered as finished outputs — not as reusable templates.
+      Every TinyTeam library is reviewed, assembled, and delivered with intention.
+      Design styles are applied per project and delivered as finished outputs — not reusable templates.
     </p>
   </section>
 
+  <!-- Links -->
   <section id="start-links">
     <h2>Need help?</h2>
     <p><a class="btn" href="help/index.html">Open Help & Guide</a></p>
     <p style="margin-top:10px;">
-      <a href="index.html">Home</a> · <a href="thank-you.html">Thank You Page</a>
+      <a href="index.html">Home</a> ·
+      <a href="thank-you.html">Thank You Page</a>
     </p>
   </section>
 
