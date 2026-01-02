@@ -3,28 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Start Your Library · TinyTeam Digital Library</title>
-  <meta
-    name="description"
-    content="Submit a TinyTeam library request for human review. Choose your library type, optional add-ons, and style. Attach payment proof and QR reference — confirmation is sent by email."
-  />
+  <title>Start Your Library — TinyTeam</title>
+  <meta name="description" content="Submit your library request. All submissions are reviewed manually before any payment is requested." />
   <link rel="stylesheet" href="assets/styles/main.css" />
-
-  <!-- Page-only styles for Google Form embed -->
-  <style>
-    .form-embed{
-      border: 1px solid rgba(31, 38, 35, 0.12);
-      border-radius: 14px;
-      overflow: hidden;
-      background: #fff;
-    }
-    .form-embed iframe{
-      width: 100%;
-      height: 1385px;
-      border: 0;
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
@@ -33,120 +14,73 @@
   <div>
     <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
     <nav>
+      <a href="index.html#types">Packages</a>
+      <a href="index.html#faq">FAQ</a>
       <a href="help/index.html">Help</a>
-      <a href="reseller/index.html">Reseller</a>
     </nav>
   </div>
 </header>
 
 <main>
+  <section style="padding:70px 20px;">
+    <div style="max-width:820px;margin:0 auto;">
+      <h1>Start Your Library</h1>
+      <p class="muted" style="line-height:1.7;">
+        Please complete this request form. We review submissions manually to keep your library private,
+        organized, and accurate. Payment instructions are provided only after review.
+      </p>
 
-  <!-- Intro -->
-  <section id="start-hero">
-    <h1>Start Your Library</h1>
-    <p>
-      TinyTeam builds calm, privacy-first digital libraries for families and communities —
-      carefully assembled by humans, one project at a time.
-    </p>
-    <p class="muted">
-      Your library is designed to become an <strong>heirloom</strong>, with optional
-      <strong>print-ready formatting</strong> if you prefer a physical hard copy.
-    </p>
-  </section>
+      <div style="
+        margin-top:18px;
+        background:#fff;
+        border:1px solid rgba(0,0,0,0.08);
+        border-radius:18px;
+        box-shadow:0 14px 32px rgba(0,0,0,0.06);
+        overflow:hidden;">
+        
+        <!-- IMPORTANT: Use the EMBED link (the one that contains /viewform?embedded=true) -->
+        <iframe
+          src="PASTE_YOUR_GOOGLE_FORM_EMBED_URL_HERE"
+          width="100%"
+          height="980"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          style="border:0;display:block;">
+        </iframe>
 
-  <!-- Guardrails -->
-  <section id="start-guardrails">
-    <h2>Before you submit</h2>
-    <ul>
-      <li><strong>Do not upload detailed family or community data on this page.</strong></li>
-      <li>This form is for <strong>library request, package selection, and payment proof</strong> only.</li>
-      <li><strong>All projects begin after manual review and validation.</strong></li>
-    </ul>
-    <p class="muted" style="margin-top:10px;">
-      After validation, you will receive clear instructions by email on how to safely provide your materials.
-    </p>
-  </section>
+      </div>
 
-  <!-- Packages Reminder -->
-  <section id="start-packages-note">
-    <h2>Available libraries</h2>
-    <ul>
-      <li><strong>Family Library (FAM)</strong> — up to 1,000 entries</li>
-      <li><strong>Community / Clan Library (COMM)</strong> — up to 2,000 entries</li>
-      <li><strong>Photos / Docs / Memorabilia Add-On</strong> — optional, up to 1,000 attachments</li>
-    </ul>
-    <p class="muted">
-      You may also indicate if you want your library prepared in a
-      <strong>print-ready layout</strong> (A4, A3, or book-style).
-    </p>
-  </section>
-
-  <!-- Process -->
-  <section id="start-steps">
-    <h2>What happens after you submit</h2>
-    <ol>
-      <li><strong>Manual review</strong> — we check your request details and QR reference.</li>
-      <li><strong>Payment validation</strong> — proof is verified.</li>
-      <li><strong>Project creation</strong> — your Project ID is issued.</li>
-      <li><strong>Email guidance</strong> — you receive next steps, timelines, and instructions.</li>
-    </ol>
-  </section>
-
-  <!-- Google Form -->
-  <section id="start-form">
-    <h2>Submit your request</h2>
-
-    <div class="form-embed">
-      <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSfl5K84Js5VK7PMHK1Nyk6uUTda-K0PdGpbs6z60_HdIsqomA/viewform?embedded=true"
-        width="640"
-        height="1385"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
-        title="TinyTeam Start Your Library Form"
-      >
-        Loading…
-      </iframe>
+      <p class="muted" style="margin-top:16px;">
+        Having trouble viewing the form? 
+        <a href="PASTE_YOUR_GOOGLE_FORM_PUBLIC_URL_HERE" target="_blank" rel="noopener">Open it in a new tab</a>.
+      </p>
     </div>
-
-    <p class="muted" style="margin-top:12px;">
-      Tip: You may submit even if you are still gathering details —
-      guidance will be provided after validation.
-    </p>
   </section>
-
-  <!-- Assurance -->
-  <section id="start-note">
-    <h2>Handled with care</h2>
-    <p>
-      Each TinyTeam library is assembled with intention and delivered as a finished archive.
-      Your data is handled privately, reviewed manually, and prepared for long-term preservation.
-    </p>
-    <p class="muted">
-      Optional print-ready formatting allows your library to exist as a physical keepsake if you choose.
-    </p>
-  </section>
-
-  <!-- Links -->
-  <section id="start-links">
-    <h2>Need help?</h2>
-    <p><a class="btn" href="help/index.html">Open Help &amp; Guide</a></p>
-    <p style="margin-top:10px;">
-      <a href="index.html">Home</a> ·
-      <a href="thank-you.html">Thank You Page</a>
-    </p>
-  </section>
-
 </main>
 
-<footer>
-  <p><strong>TinyTeam Digital Library</strong></p>
-  <p>
-    <a href="index.html">Home</a> ·
-    <a href="help/index.html">Help</a> ·
-    <a href="reseller/index.html">Reseller</a>
-  </p>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+      <span class="footer-x">×</span>
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio" />
+    </div>
+
+    <div class="footer-contacts">
+      <a href="mailto:chinveloso.consmaterials@gmail.com">SVP: chinveloso.consmaterials@gmail.com</a>
+      <span class="dot">•</span>
+      <a href="mailto:smallsteps@tinyteamstudio.online">TinyTeam: smallsteps@tinyteamstudio.online</a>
+    </div>
+
+    <div class="footer-links">
+      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">SVP Personal Facebook</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Funnels Facebook Page</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Facebook Page</a>
+    </div>
+  </div>
 </footer>
 
 </body>
