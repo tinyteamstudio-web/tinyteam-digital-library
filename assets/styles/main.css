@@ -427,3 +427,80 @@ article{ margin-top: 12px; }
   line-height: 1.6;
   font-size: 14px;
 }
+/* ================= ABOUT (PHOTO LEFT + TEXT RIGHT) ================= */
+#about {
+  padding: 80px 20px;
+}
+
+#about .about-split {
+  max-width: 1200px;
+  margin: 28px auto 0;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Photo */
+#about .about-photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+}
+
+/* Content */
+#about .about-content h3 {
+  margin: 0 0 10px;
+  font-size: 1.9rem;
+  letter-spacing: -0.3px;
+}
+
+#about .about-content p {
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+
+/* Brand blocks */
+#about .about-brand {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  column-gap: 14px;
+  row-gap: 6px;
+  align-items: start;
+}
+
+#about .about-brand img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+#about .about-brand h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+#about .about-brand p {
+  grid-column: 2 / -1;
+  margin: 0;
+  color: rgba(0,0,0,0.75);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  #about .about-split {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  #about .about-photo {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
