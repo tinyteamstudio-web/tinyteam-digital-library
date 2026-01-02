@@ -251,3 +251,49 @@ section h2{ margin-bottom: 10px; }
 #hero img{ transform: translateY(2px); }
 
 article{ margin-top: 12px; }
+
+/* ========== Packages Cards (Make them feel light) ========== */
+
+/* 3-card grid on desktop, stacked on mobile */
+.cards3{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr; /* mobile default */
+  margin-top: 14px;
+}
+
+@media (min-width: 900px){
+  .cards3{
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+/* Make package images behave like thumbnails (not posters) */
+.card__media{ overflow: hidden; }
+
+.card__img{
+  width: 100%;
+  height: 220px;      /* KEY: controls the "heavy" feel */
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+}
+
+/* Tighter card spacing */
+.card__body{
+  padding-top: 12px;
+}
+
+/* Small visual balance for price row */
+.card__top{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* Optional: softer list spacing */
+.card__list{
+  margin: 10px 0 0;
+}
