@@ -504,3 +504,94 @@ article{ margin-top: 12px; }
     margin: 0 auto;
   }
 }
+/* ================= ABOUT (POLISHED CARD STYLE) ================= */
+#about {
+  padding: 70px 20px;
+}
+
+#about .muted {
+  max-width: 980px;
+}
+
+/* Turn the split layout into a premium "card" */
+#about .about-split {
+  max-width: 1200px;
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 42px;
+
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 22px;
+  padding: 38px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.06);
+}
+
+/* Photo: make it feel like a portrait card */
+#about .about-photo img {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+  box-shadow: 0 16px 34px rgba(0,0,0,0.10);
+}
+
+/* Content typography + spacing */
+#about .about-content h3 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  letter-spacing: -0.3px;
+}
+
+#about .about-content p {
+  margin: 0 0 14px;
+  line-height: 1.7;
+  color: rgba(0,0,0,0.78);
+}
+
+/* Brand rows: cleaner, more “agency-level” */
+#about .about-brand {
+  margin-top: 18px;
+  padding: 16px 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  background: rgba(0,0,0,0.02);
+
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+#about .about-brand img {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+#about .about-brand h4 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+#about .about-brand p {
+  margin: 0;
+  color: rgba(0,0,0,0.72);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  #about .about-split {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  #about .about-photo img {
+    height: auto;
+  }
+}
