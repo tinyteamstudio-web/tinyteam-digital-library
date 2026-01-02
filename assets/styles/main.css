@@ -347,3 +347,83 @@ article{ margin-top: 12px; }
 .card__list{
   margin: 10px 0 0;
 }
+/* ===== Added Sections: Pain Points / About / FAQ ===== */
+
+.grid3{
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+  margin-top: 14px;
+}
+
+@media (min-width: 900px){
+  .grid3{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mini-card{
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.04);
+}
+
+.mini-card h3{
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.mini-card p{
+  margin: 0;
+  color: rgba(0,0,0,0.72);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.about-split{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (min-width: 900px){
+  .about-split{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.list-clean{
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: rgba(0,0,0,0.72);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.faq{
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.faq-item{
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.faq-item summary{
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.faq-body{
+  margin-top: 10px;
+  color: rgba(0,0,0,0.72);
+  line-height: 1.6;
+  font-size: 14px;
+}
