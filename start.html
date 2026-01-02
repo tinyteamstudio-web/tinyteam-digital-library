@@ -60,8 +60,6 @@
       border: 1px solid rgba(0,0,0,0.10);
       background: rgba(255,210,210,0.35);
     }
-    .small-link { font-size: .95rem; color: rgba(0,0,0,0.7); }
-    .small-link a { color: inherit; }
   </style>
 </head>
 
@@ -172,22 +170,16 @@
   </div>
 </footer>
 
-<!-- Load config FIRST -->
 <script src="assets/config.js"></script>
 
 <script>
-  const publicFormUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/viewform";
-
   const formResponseUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/formResponse";
 
   const form = document.getElementById("ttForm");
   const successBox = document.getElementById("successBox");
   const errorBox = document.getElementById("errorBox");
-  const fallbackLink = document.getElementById("fallbackLink");
 
-  fallbackLink.href = publicFormUrl;
   form.action = formResponseUrl;
 
   // Auto-select package from URL: start.html?package=FAM / COMM / ADDON
@@ -214,10 +206,11 @@
       return;
     }
 
-    // Show success after a short delay (Google response is hidden in iframe)
     setTimeout(() => {
       successBox.style.display = "block";
       form.reset();
+
+      // keep package selection if it came from URL
       if (urlPkg) {
         const radio2 = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
         if (radio2) radio2.checked = true;
