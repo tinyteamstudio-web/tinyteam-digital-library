@@ -444,11 +444,14 @@ article{ margin-top: 12px; }
 /* Photo */
 #about .about-photo img {
   width: 100%;
-  height: auto;
-  border-radius: 16px;
+  height: auto;            /* IMPORTANT */
+  max-height: 520px;
+  object-fit: contain;     /* prevents blur */
+  border-radius: 18px;
   display: block;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+  background: #fff;
 }
+
 
 /* Content */
 #about .about-content h3 {
