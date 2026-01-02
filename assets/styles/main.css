@@ -202,65 +202,68 @@ footer a{ font-weight: 600; }
   box-shadow: none; /* keep QR clean */
 }
 
-/* ========== Footer ========== */
-/* ========== Footer (Centered, Soft Turquoise) ========== */
+/* ========== Compact Footer (Light + Centered) ========== */
 
 .site-footer{
-  background: linear-gradient(
-    135deg,
-    #5fa8a0,
-    #6fbdb4
-  );
+  background: #cfeeea;            /* light turquoise */
   color: #0f2f2b;
-  padding: 48px 16px;
-  margin-top: 60px;
+  padding: 18px 16px;             /* SMALLER */
+  margin-top: 30px;               /* less space */
+  border-radius: 18px;
 }
 
 .footer-inner{
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
   text-align: center;
 }
 
-.footer-powered{
-  font-size: 16px;
+.footer-brand{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.footer-logo{
+  height: 28px;                   /* small logos */
+  width: auto;
+  display: block;
+}
+
+.footer-x{
+  opacity: 0.7;
   font-weight: 600;
-  margin-bottom: 16px;
 }
 
-.footer-contacts{
-  margin: 18px 0;
+.footer-contacts,
+.footer-links{
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0;
 }
 
-.footer-contacts p{
-  margin: 8px 0;
-  font-size: 15px;
-}
-
-.footer-contacts a{
+.footer-contacts a,
+.footer-links a{
   color: #0f2f2b;
   text-decoration: none;
   font-weight: 500;
 }
 
-.footer-contacts a:hover{
-  text-decoration: underline;
-}
-
-.footer-links{
-  margin-top: 18px;
-  font-size: 14px;
-}
-
-.footer-links a{
-  color: #0f2f2b;
-  text-decoration: none;
-  margin: 0 8px;
-}
-
+.footer-contacts a:hover,
 .footer-links a:hover{
   text-decoration: underline;
 }
+
+.dot{
+  opacity: 0.55;
+}
+
 
 
 /* ========== Mobile polish ========== */
