@@ -506,7 +506,6 @@ article{ margin-top: 12px; }
     max-width: 360px;
     margin: 0 auto;
   }
-}
 /* ================= ABOUT (POLISHED CARD STYLE) ================= */
 #about {
   padding: 70px 20px;
@@ -732,5 +731,125 @@ article{ margin-top: 12px; }
 @media (max-width: 980px) {
   #types .cards3 {
     grid-template-columns: 1fr;
+  }
+}
+/* ================= PRICING – EMPHASIZED ================= */
+
+.pricing-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+/* Base card */
+.pricing-card {
+  position: relative;
+  border-radius: 22px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+/* Background variations */
+.pricing-card.fam {
+  background: linear-gradient(180deg, #f4fbf7, #ffffff);
+}
+
+.pricing-card.comm {
+  background: linear-gradient(180deg, #eef6ff, #ffffff);
+}
+
+.pricing-card.addon {
+  background: linear-gradient(180deg, #fff6ec, #ffffff);
+}
+
+/* Featured card */
+.pricing-card.featured {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.12);
+}
+
+/* Badge */
+.badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #2f6fed;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Icon */
+.pricing-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+/* Title */
+.pricing-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.pricing-card h3 span {
+  font-weight: 500;
+  color: rgba(0,0,0,0.55);
+}
+
+/* PRICE — BIG EMPHASIS */
+.price {
+  margin: 12px 0 6px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1a1a1a;
+}
+
+.currency {
+  font-size: 1.4rem;
+  vertical-align: top;
+}
+
+.price-note {
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+  margin-top: -4px;
+}
+
+/* Description */
+.pricing-desc {
+  margin: 12px 0;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.75);
+}
+
+/* List */
+.pricing-list {
+  margin: 12px 0 18px;
+  padding-left: 18px;
+  line-height: 1.7;
+}
+
+/* Button */
+.btn-block {
+  width: 100%;
+  margin-top: auto;
+  text-align: center;
+}
+
+/* Mobile */
+@media (max-width: 980px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card.featured {
+    transform: none;
   }
 }
