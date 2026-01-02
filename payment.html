@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment — TinyTeam</title>
+  <meta name="description" content="Payment instructions for approved TinyTeam Digital Library requests." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
+
+  <style>
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 70px 20px; }
+    .panel {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 18px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.06);
+      padding: 20px;
+      margin-top: 16px;
+    }
+    .grid2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+    .pay-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .badge {
+      background: rgba(24, 119, 242, 0.08);
+      color: rgba(24, 119, 242, 0.95);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .qr-card {
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fafafa;
+    }
+    .qr-card h4 { margin: 0 0 10px; }
+    .qr-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .qr-card a { font-weight: 700; }
+
+    .muted { color: rgba(0,0,0,0.65); }
+    .small { font-size: 0.95rem; }
+    .hr { height:1px; background: rgba(0,0,0,0.08); margin: 16px 0; }
+
+    @media (max-width: 980px) {
+      .grid2 { grid-template-columns: 1fr; }
+      .grid3 { grid-template-columns: 1fr; }
+      .grid4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .grid4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="index.html#types">Packages</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="pay-title">
+      <h1 style="margin:0;">Payment</h1>
+      <span class="badge" id="pkgBadge">Approved Request</span>
+    </div>
+
+    <p class="muted small" style="line-height:1.7;margin-top:10px;">
+      <strong>Important:</strong> Please pay only after you receive an approval/confirmation message from us.
+      This keeps your project verified and prevents mistaken payments.
+    </p>
+
+    <div class="panel grid2">
+      <div>
+        <h3 style="margin:0 0 8px;">Your Selected Package</h3>
+        <p class="muted" style="margin:0 0 12px;line-height:1.7;" id="pkgText">
+          Loading your package...
+        </p>
+
+        <div class="hr"></div>
+
+        <h3 style="margin:0 0 8px;">Submit Payment Proof</h3>
+        <p class="muted" style="margin:0 0 12px;line-height:1.7;">
+          After payment, submit your proof so we can verify and move your project to <strong>Paid</strong>.
+        </p>
+        <p style="margin:0;">
+          <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Submit Payment Proof</a>
+        </p>
+
+        <p class="muted small" style="margin-top:12px;line-height:1.7;">
+          Need help? Email:
+          <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+        </p>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 8px;">PayPal (Recommended)</h3>
+        <p class="muted small" style="margin:0 0 12px;">
+          Scan the PayPal QR below or use the PayPal link.
+        </p>
+
+        <!-- PAYPAL QR (AUTO-SHOW 1 ONLY) -->
+        <div id="paypalArea">
+
+          <div class="qr-card" data-package="FAM">
+            <h4>Family Library (FAM) — $48</h4>
+            <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
+            <p style="margin:10px 0 0;">
+              <a href="https://www.paypal.com/ncp/payment/T9KRP3UURZ63L" target="_blank" rel="noopener">Open PayPal Link</a>
+            </p>
+          </div>
+
+          <div class="qr-card" data-package="COMM">
+            <h4>Community Library (COMM) — $89</h4>
+            <img src="assets/qr/TinyTeam – Com-qrcode.png" alt="PayPal COMM QR">
+            <p style="margin:10px 0 0;">
+              <a href="https://www.paypal.com/ncp/payment/K45JT94FYQD6C" target="_blank" rel="noopener">Open PayPal Link</a>
+            </p>
+          </div>
+
+          <div class="qr-card" data-package="ADDON">
+            <h4>Photo / Docs Add-On — $49</h4>
+            <img src="assets/qr/TinyTeam – Pho-qrcode.png" alt="PayPal Add-On QR">
+            <p style="margin:10px 0 0;">
+              <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 8px;">Alternative Payment Options</h3>
+      <p class="muted small" style="margin:0 0 14px;line-height:1.7;">
+        If PayPal is not available for you, you may use the options below.
+        Keep your receipt/screenshot and submit it via the Payment Proof button above.
+      </p>
+
+      <div class="grid4">
+        <div class="qr-card">
+          <h4>GCash</h4>
+          <img src="assets/qr/gcash-qr.jpeg" alt="GCash QR">
+        </div>
+        <div class="qr-card">
+          <h4>Maya</h4>
+          <img src="assets/qr/maya-qr.jpeg" alt="Maya QR">
+        </div>
+        <div class="qr-card">
+          <h4>GoTyme</h4>
+          <img src="assets/qr/gotym-qr.jpeg" alt="GoTyme QR">
+        </div>
+        <div class="qr-card">
+          <h4>PNB</h4>
+          <img src="assets/qr/pnb-qr.jpeg" alt="PNB QR">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a class="btn" href="index.html">Back to Home</a>
+      <a class="btn" href="thank-you.html">Back to Thank You</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-contacts">
+      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
+      <span class="dot">•</span>
+      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Personal Facebook</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Funnels Facebook Page</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Facebook Page</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/config.js"></script>
+<script>
+  // 1) Payment proof button from config
+  const cfg = window.TINYTEAM_CONFIG || {};
+  const proofBtn = document.getElementById("proofBtn");
+  proofBtn.href = cfg.PAYMENT_PROOF_FORM_URL || "#";
+
+  // 2) Read package from URL
+  const params = new URLSearchParams(window.location.search);
+  const pkg = (params.get("package") || "FAM").toUpperCase();
+
+  // 3) Show only the matching PayPal block
+  document.querySelectorAll("#paypalArea .qr-card").forEach(card => {
+    card.style.display = (card.dataset.package === pkg) ? "block" : "none";
+  });
+
+  // 4) Update top text + badge
+  const pkgText = document.getElementById("pkgText");
+  const pkgBadge = document.getElementById("pkgBadge");
+
+  const meta = {
+    FAM:   { label: "Family Library (FAM)", price: "$48 one-time" },
+    COMM:  { label: "Community Library (COMM)", price: "$89 one-time" },
+    ADDON: { label: "Photo / Docs Add-On", price: "$49 one-time" }
+  };
+
+  const chosen = meta[pkg] || meta.FAM;
+  pkgBadge.textContent = chosen.label;
+  pkgText.innerHTML = `
+    <strong>${chosen.label}</strong><br>
+    Amount: <strong>${chosen.price}</strong><br>
+    <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
+  `;
+</script>
+
+</body>
+</html>
