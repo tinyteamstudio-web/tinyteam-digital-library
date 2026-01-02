@@ -91,4 +91,70 @@
       </div>
 
       <div class="about-brand">
-        <img src="
+        <img src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio Logo" />
+        <h4>TinyTeam Studio</h4>
+        <p>
+          I build long-term digital systems for genealogy, organizations, communities,
+          courses, and templates — designed to organize knowledge and preserve stories.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <h2>Frequently Asked Questions</h2>
+  <p class="muted">Clear answers — so you feel safe and confident before starting.</p>
+
+  <div class="faq">
+    <details class="faq-item">
+      <summary>Is this public? Will my family information appear on Google?</summary>
+      <div class="faq-body">
+        No. TinyTeam is designed as a privacy-first, human-handled library.
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Do you auto-charge payments?</summary>
+      <div class="faq-body">
+        No. Everything is manually verified by design.
+      </div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+      <span class="footer-x">×</span>
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio" />
+    </div>
+
+    <div class="footer-contacts">
+      <a href="mailto:chinveloso.consmaterials@gmail.com">SVP: chinveloso.consmaterials@gmail.com</a>
+      <span class="dot">•</span>
+      <a href="mailto:smallsteps@tinyteamstudio.online">TinyTeam: smallsteps@tinyteamstudio.online</a>
+    </div>
+
+  </div>
+</footer>
+
+<script src="assets/config.js"></script>
+<script>
+  const cfg = window.TINYTEAM_CONFIG || {};
+  document.querySelectorAll('[data-action="start"]').forEach(btn => {
+    btn.addEventListener("click", () => {
+      window.open(cfg.SUBMISSION_FORM_URL, "_blank");
+    });
+  });
+</script>
+
+</body>
+</html>
