@@ -173,17 +173,26 @@
     </div>
   </div>
 
-  <script>
-    // ✅ TODO: We will paste your Google Form "public" link here in the next step.
-   const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSdiSuB4h8_s7H2-V7Q5jZkgsfVhlfQ9RH8RhE1Hwy-C7PMj6g/viewform";
+ <script>
+  const FORM_BASE =
+    "https://docs.google.com/forms/d/e/1FAIpQLSdiSuB4h8_s7H2-V7Q5jZkgsfVhlfQ9RH8RhE1Hwy-C7PMj6g/viewform";
 
-    document.getElementById("ttForm").addEventListener("submit", function(e){
-      e.preventDefault();
+  document.getElementById("ttForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      // We’ll pass the values in the URL (prefill) later if you want.
-      // For now (v1), just open the secure upload form.
-      window.location.href = GOOGLE_FORM_LINK;
+    const params = new URLSearchParams({
+      "entry.1045823789": document.getElementById("name").value,
+      "entry.1724651136": document.getElementById("email").value,
+      "entry.728628950": document.getElementById("contact").value,
+      "entry.2020581982": document.getElementById("request").value,
+      "entry.303339037": document.getElementById("package").value,
+      "entry.705749111": document.getElementById("project").value,
+      "entry.1195539472": document.getElementById("notes").value
     });
-  </script>
+
+    window.location.href = `${FORM_BASE}?${params.toString()}`;
+  });
+</script>
+
 </body>
 </html>
