@@ -228,6 +228,23 @@
     const radio = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
     if (radio) radio.checked = true;
   }
+<script>
+  function injectDesignNotes() {
+    const title = document.getElementById("libraryTitle")?.value.trim();
+    const color = document.getElementById("primaryColor")?.value.trim();
+    const themeEl = document.querySelector('input[name="tt_theme"]:checked');
+    const theme = themeEl ? themeEl.value : "";
+
+    const notesField = document.getElementById("notes");
+
+    let designNotes = "\n\n--- Design Preferences ---\n";
+    if (title) designNotes += `Library Title: ${title}\n`;
+    if (theme) designNotes += `Theme: ${theme}\n`;
+    if (color) designNotes += `Primary Color: ${color}\n`;
+
+    notesField.value = (notesField.value || "") + designNotes;
+  }
+</script>
 
   function isValid() {
     const name = document.getElementById("ownerName").value.trim();
@@ -245,6 +262,7 @@
       errorBox.style.display = "block";
       return;
     }
+injectDesignNotes();
 
     setTimeout(() => {
       successBox.style.display = "block";
