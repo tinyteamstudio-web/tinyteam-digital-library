@@ -210,10 +210,90 @@
 </footer>
 
 <script src="assets/config.js"></script>
-
 <script>
   const formResponseUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/formResponse";
+
+  const form = document.getElementById("ttForm");
+  const successBox = document.getElementById("successBox");
+  const errorBox = document.getElementById("errorBox");
+  const payBtn = document.getElementById("payBtn");
+
+  form.action = formResponseUrl;
+
+  // Auto-select package from URL: start.html?package=FAM / COMM / ADDON
+  const urlPkg = new URLSearchParams(location.search).get("package");
+  if (urlPkg) {
+    const radio = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  function injectDesignNotes() {
+    const title = document.getElementById("libraryTitle")?.value.trim();
+    const color = document.getElementById("primaryColor")?.value.trim();
+    const themeEl = document.querySelector('input[name="tt_theme"]:checked');
+    const theme = themeEl ? themeEl.value : "";
+
+    const notesField = document.getElementById("notes");
+    const existing = (notesField.value || "").trim();
+
+    const lines = [];
+    lines.push("--- Design Preferences ---");
+    if (title) lines.push("Library Title: " + title);
+    if (theme) lines.push("Theme: " + theme);
+    if (color) lines.push("Primary Color: " + color);
+
+    const block = lines.join("\n");
+    notesField.value = existing ? (existing + "\n\n" + block) : block;
+  }
+
+  function isValid() {
+    const name = document.getElementById("ownerName").value.trim();
+    const email = document.getElementById("ownerEmail").value.trim();
+    const pkg = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
+
+    // New fields (local validation)
+    const title = document.getElementById("libraryTitle").value.trim();
+    const color = document.getElementById("primaryColor").value.trim();
+    const theme = form.querySelector('input[name="tt_theme"]:checked');
+
+    return !!(name && email && pkg && title && color && theme);
+  }
+
+  form.addEventListener("submit", (e) => {
+    successBox.style.display = "none";
+    errorBox.style.display = "none";
+
+    if (!isValid()) {
+      e.preventDefault();
+      errorBox.style.display = "block";
+      return;
+    }
+
+    // IMPORTANT: inject before actual submit happens
+    injectDesignNotes();
+
+    // Show success UI (form still submits in hidden iframe)
+    setTimeout(() => {
+      successBox.style.display = "block";
+
+      // Payment button
+      const selected = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
+      const pkgSelected = selected ? selected.value : (urlPkg || "FAM");
+      payBtn.href = `payment.html?package=${encodeURIComponent(pkgSelected)}`;
+      payBtn.style.display = "inline-block";
+
+      form.reset();
+
+      // Keep package selection if it came from URL
+      if (urlPkg) {
+        const radio2 = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+        if (radio2) radio2.checked = true;
+        payBtn.href = `payment.html?package=${encodeURIComponent(urlPkg)}`;
+      }
+    }, 700);
+  });
+</script>
 
   const form = document.getElementById("ttForm");
   const successBox = document.getElementById("successBox");
