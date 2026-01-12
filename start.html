@@ -1,56 +1,122 @@
-<script>
-  // ✅ BuildFrame (Private) Web App endpoint
-  const WEB_APP_URL =
-    "https://script.google.com/macros/s/AKfycbxz45I7nQaPy_tL8542rTlEQA-RwAPCFTkINctXm6zpoUv48M8iYTHpkA_tb_XYmthrxg/exec";
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Start — TinyTeam</title>
+  <style>
+    body{font-family:Arial;background:#f6f7fb;margin:0;padding:24px}
+    .card{max-width:760px;margin:0 auto;background:#fff;border:1px solid rgba(0,0,0,.1);
+      border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(0,0,0,.06)}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,textarea{width:100%;padding:12px;margin-top:6px;border:1px solid rgba(0,0,0,.15);border-radius:10px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .rad{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .pill{border:1px solid rgba(0,0,0,.15);border-radius:999px;padding:10px 12px;display:flex;gap:8px;align-items:center}
+    button{margin-top:16px;padding:12px 14px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+    .msg{display:none;margin-top:12px;padding:12px;border-radius:12px}
+    #successBox{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+    #errorBox{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d}
+    #payBtn{display:none;margin-left:10px;padding:12px 14px;border-radius:12px;background:#111827;color:#fff;text-decoration:none;font-weight:700}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
 
-  const form = document.getElementById("ttForm");
-  const successBox = document.getElementById("successBox");
-  const errorBox = document.getElementById("errorBox");
-  const payBtn = document.getElementById("payBtn");
+  <div class="card">
+    <h2 style="margin:0 0 6px;">Start Your Library</h2>
 
-  // Auto-select package from URL: start.html?package=FAM / COMM / ADDON
-  const urlPkg = new URLSearchParams(location.search).get("package");
-  if (urlPkg && form) {
-    const radio = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
-    if (radio) radio.checked = true;
-  }
+    <form id="ttForm">
+      <div class="row">
+        <div>
+          <label for="ownerName">Owner Name</label>
+          <input id="ownerName" required />
+        </div>
+        <div>
+          <label for="ownerEmail">Owner Email</label>
+          <input id="ownerEmail" type="email" required />
+        </div>
+      </div>
 
-  function injectDesignNotes() {
-    const title = document.getElementById("libraryTitle").value.trim();
-    const color = document.getElementById("primaryColor").value.trim();
-    const themeEl = document.querySelector('input[name="tt_theme"]:checked');
-    const theme = themeEl ? themeEl.value : "";
+      <label>Package</label>
+      <div class="rad">
+        <label class="pill"><input type="radio" name="entry.1443621857" value="FAM"> FAM</label>
+        <label class="pill"><input type="radio" name="entry.1443621857" value="COMM"> COMM</label>
+        <label class="pill"><input type="radio" name="entry.1443621857" value="ADDON"> ADDON</label>
+      </div>
 
-    const notesField = document.getElementById("notes");
-    const existing = (notesField.value || "").trim();
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label for="libraryTitle">Library Title</label>
+          <input id="libraryTitle" required />
+        </div>
+        <div>
+          <label for="primaryColor">Primary Color</label>
+          <input id="primaryColor" required placeholder="#1f2937" />
+        </div>
+      </div>
 
-    const block =
-      "--- Design Preferences ---\n" +
-      "Library Title: " + title + "\n" +
-      "Theme: " + theme + "\n" +
-      "Primary Color: " + color;
+      <label>Theme</label>
+      <div class="rad">
+        <label class="pill"><input type="radio" name="tt_theme" value="Classic"> Classic</label>
+        <label class="pill"><input type="radio" name="tt_theme" value="Modern"> Modern</label>
+        <label class="pill"><input type="radio" name="tt_theme" value="Minimal"> Minimal</label>
+      </div>
 
-    notesField.value = existing ? (existing + "\n\n" + block) : block;
-  }
+      <label for="notes">Notes</label>
+      <textarea id="notes"></textarea>
 
-  function isValid() {
-    const name = document.getElementById("ownerName").value.trim();
-    const email = document.getElementById("ownerEmail").value.trim();
-    const pkg = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
+      <button type="submit">Submit</button>
+      <a id="payBtn" href="payment.html">Proceed to Payment</a>
 
-    const title = document.getElementById("libraryTitle").value.trim();
-    const color = document.getElementById("primaryColor").value.trim();
-    const theme = form.querySelector('input[name="tt_theme"]:checked');
+      <div id="successBox" class="msg">Submitted ✅</div>
+      <div id="errorBox" class="msg">Please complete all required fields.</div>
+    </form>
+  </div>
 
-    return !!(name && email && pkg && title && color && theme);
-  }
+  <!-- ✅ your working web app wiring -->
+  <script>
+    const WEB_APP_URL =
+      "https://script.google.com/macros/s/AKfycbxz45I7nQaPy_tL8542rTlEQA-RwAPCFTkINctXm6zpoUv48M8iYTHpkA_tb_XYmthrxg/exec";
 
-  if (!form) {
-    console.error("ttForm not found. Make sure your HTML has <form id='ttForm'>...");
-  } else {
+    const form = document.getElementById("ttForm");
+    const successBox = document.getElementById("successBox");
+    const errorBox = document.getElementById("errorBox");
+    const payBtn = document.getElementById("payBtn");
+
+    const urlPkg = new URLSearchParams(location.search).get("package");
+    if (urlPkg) {
+      const radio = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    function injectDesignNotes() {
+      const title = document.getElementById("libraryTitle").value.trim();
+      const color = document.getElementById("primaryColor").value.trim();
+      const themeEl = document.querySelector('input[name="tt_theme"]:checked');
+      const theme = themeEl ? themeEl.value : "";
+      const notesField = document.getElementById("notes");
+      const existing = (notesField.value || "").trim();
+      const block =
+        "--- Design Preferences ---\n" +
+        "Library Title: " + title + "\n" +
+        "Theme: " + theme + "\n" +
+        "Primary Color: " + color;
+      notesField.value = existing ? (existing + "\n\n" + block) : block;
+    }
+
+    function isValid() {
+      const name = document.getElementById("ownerName").value.trim();
+      const email = document.getElementById("ownerEmail").value.trim();
+      const pkg = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
+      const title = document.getElementById("libraryTitle").value.trim();
+      const color = document.getElementById("primaryColor").value.trim();
+      const theme = form.querySelector('input[name="tt_theme"]:checked');
+      return !!(name && email && pkg && title && color && theme);
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       successBox.style.display = "none";
       errorBox.style.display = "none";
 
@@ -59,17 +125,13 @@
         return;
       }
 
-      // Add design prefs into Notes BEFORE submit happens
       injectDesignNotes();
 
-      // Collect values
       const selected = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
       const pkgSelected = selected ? selected.value : (urlPkg || "FAM");
-
       const themeEl = document.querySelector('input[name="tt_theme"]:checked');
       const themeVal = themeEl ? themeEl.value : "";
 
-      // Send to BuildFrame WebApp
       const fd = new FormData();
       fd.append("ownerName", document.getElementById("ownerName").value.trim());
       fd.append("ownerEmail", document.getElementById("ownerEmail").value.trim());
@@ -84,33 +146,25 @@
         const res = await fetch(WEB_APP_URL, { method: "POST", body: fd });
         const raw = await res.text();
         console.log("WEBAPP RAW:", raw);
-
         const json = JSON.parse(raw);
-        if (!json.ok) throw new Error(json.error || "WebApp returned ok:false");
-
+        if (!json.ok) throw new Error(json.error || "ok:false");
       } catch (err) {
-        console.error(err);
         errorBox.style.display = "block";
         errorBox.textContent = "Submit failed: " + err.message;
         return;
       }
 
-      // ✅ Success UI only AFTER data is saved
-      setTimeout(() => {
-        successBox.style.display = "block";
+      successBox.style.display = "block";
+      payBtn.href = `payment.html?package=${encodeURIComponent(pkgSelected)}`;
+      payBtn.style.display = "inline-block";
 
-        payBtn.href = `payment.html?package=${encodeURIComponent(pkgSelected)}`;
-        payBtn.style.display = "inline-block";
-
-        form.reset();
-
-        // keep package selection if it came from URL
-        if (urlPkg) {
-          const radio2 = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
-          if (radio2) radio2.checked = true;
-          payBtn.href = `payment.html?package=${encodeURIComponent(urlPkg)}`;
-        }
-      }, 300);
+      form.reset();
+      if (urlPkg) {
+        const radio2 = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+        if (radio2) radio2.checked = true;
+        payBtn.href = `payment.html?package=${encodeURIComponent(urlPkg)}`;
+      }
     });
-  }
-</script>
+  </script>
+</body>
+</html>
