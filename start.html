@@ -4,115 +4,265 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Start — TinyTeam</title>
+  <meta name="description" content="Start your TinyTeam library. No design decisions needed — the system applies a professional theme automatically." />
+
   <style>
-    body{font-family:Arial;background:#f6f7fb;margin:0;padding:24px}
-    .card{max-width:760px;margin:0 auto;background:#fff;border:1px solid rgba(0,0,0,.1);
-      border-radius:16px;padding:20px;box-shadow:0 10px 24px rgba(0,0,0,.06)}
-    label{display:block;margin-top:12px;font-weight:600}
-    input,textarea{width:100%;padding:12px;margin-top:6px;border:1px solid rgba(0,0,0,.15);border-radius:10px}
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:rgba(0,0,0,.10);
+      --brand:#2563eb;
+      --brand2:#111827;
+      --okbg:#ecfdf5;
+      --okbd:#34d399;
+      --oktx:#065f46;
+      --erbg:#fef2f2;
+      --erbd:#fca5a5;
+      --ertx:#7f1d1d;
+      --radius:16px;
+      --radius2:12px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica;
+      background:var(--bg);
+      margin:0;
+      padding:24px;
+      color:var(--text);
+    }
+    .card{
+      max-width:820px;
+      margin:0 auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+    .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    h2{margin:0 0 6px;font-size:22px}
+    .sub{margin:0;color:var(--muted);line-height:1.35}
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      background:#fff;
+      white-space:nowrap;
+    }
+
+    label{display:block;margin-top:14px;font-weight:650;font-size:13px}
+    input,textarea{
+      width:100%;
+      padding:12px;
+      margin-top:7px;
+      border:1px solid rgba(0,0,0,.15);
+      border-radius:var(--radius2);
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    textarea{min-height:90px;resize:vertical}
+
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .rad{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-    .pill{border:1px solid rgba(0,0,0,.15);border-radius:999px;padding:10px 12px;display:flex;gap:8px;align-items:center}
-    button{margin-top:16px;padding:12px 14px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
-    .msg{display:none;margin-top:12px;padding:12px;border-radius:12px}
-    #successBox{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
-    #errorBox{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d}
-    #payBtn{display:none;margin-left:10px;padding:12px 14px;border-radius:12px;background:#111827;color:#fff;text-decoration:none;font-weight:700}
-    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    @media(max-width:760px){.row{grid-template-columns:1fr}}
+
+    .rad{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .pill{
+      border:1px solid rgba(0,0,0,.15);
+      border-radius:999px;
+      padding:10px 12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      user-select:none;
+      background:#fff;
+    }
+    .pill input{width:auto;margin:0}
+
+    .fine{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.35;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:16px;
+    }
+    button{
+      padding:12px 14px;
+      border:0;
+      border-radius:var(--radius2);
+      background:var(--brand);
+      color:#fff;
+      font-weight:750;
+      cursor:pointer;
+      font-size:14px;
+    }
+    button:disabled{opacity:.6;cursor:not-allowed}
+
+    #payBtn{
+      display:none;
+      padding:12px 14px;
+      border-radius:var(--radius2);
+      background:var(--brand2);
+      color:#fff;
+      text-decoration:none;
+      font-weight:750;
+      font-size:14px;
+    }
+
+    .msg{display:none;margin-top:12px;padding:12px;border-radius:var(--radius2);font-size:14px}
+    #successBox{background:var(--okbg);border:1px solid var(--okbd);color:var(--oktx)}
+    #errorBox{background:var(--erbg);border:1px solid var(--erbd);color:var(--ertx)}
+
+    .divider{height:1px;background:rgba(0,0,0,.06);margin:16px 0}
+    .mini{font-size:12.5px;color:var(--muted)}
+    .mini strong{color:var(--text)}
   </style>
 </head>
-<body>
 
+<body>
   <div class="card">
-    <h2 style="margin:0 0 6px;">Start Your Library</h2>
+    <div class="top">
+      <div>
+        <h2>Start Your Library</h2>
+        <p class="sub">
+          No design decisions needed — TinyTeam automatically applies a professional theme and layout that adapts as your library grows.
+        </p>
+      </div>
+      <div class="badge">Auto Design Enabled ✅</div>
+    </div>
+
+    <div class="divider"></div>
 
     <form id="ttForm">
       <div class="row">
         <div>
           <label for="ownerName">Owner Name</label>
-          <input id="ownerName" required />
+          <input id="ownerName" autocomplete="name" required />
         </div>
         <div>
           <label for="ownerEmail">Owner Email</label>
-          <input id="ownerEmail" type="email" required />
+          <input id="ownerEmail" type="email" autocomplete="email" required />
         </div>
       </div>
 
       <label>Package</label>
-      <div class="rad">
-        <label class="pill"><input type="radio" name="entry.1443621857" value="FAM"> FAM</label>
-        <label class="pill"><input type="radio" name="entry.1443621857" value="COMM"> COMM</label>
-        <label class="pill"><input type="radio" name="entry.1443621857" value="ADDON"> ADDON</label>
+      <div class="rad" role="group" aria-label="Package selection">
+        <label class="pill">
+          <input type="radio" name="package" value="FAM" required>
+          <span><strong>FAM</strong> — up to 1,000 entries</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="package" value="COMM">
+          <span><strong>COMM</strong> — up to 2,000 entries</span>
+        </label>
+      </div>
+
+      <p class="fine">
+        Add-on (optional): Photos / Docs / Memorabilia supports up to <strong>1,500 attachments</strong>.
+      </p>
+
+      <div class="rad" style="margin-top:8px;">
+        <label class="pill">
+          <input type="checkbox" id="addonMedia" />
+          <span><strong>+ Add Media Pack</strong> — up to 1,500 attachments</span>
+        </label>
       </div>
 
       <div class="row" style="margin-top:10px;">
         <div>
           <label for="libraryTitle">Library Title</label>
-          <input id="libraryTitle" required />
+          <input id="libraryTitle" required placeholder="e.g., Veloso Family Legacy" />
+          <p class="fine" style="margin-top:8px;">
+            This is the only required “identity” input. Theme + layout are applied automatically.
+          </p>
         </div>
         <div>
-          <label for="primaryColor">Primary Color</label>
-          <input id="primaryColor" required placeholder="#1f2937" />
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" placeholder="Anything you want us to know (optional)."></textarea>
         </div>
       </div>
 
-      <label>Theme</label>
-      <div class="rad">
-        <label class="pill"><input type="radio" name="tt_theme" value="Classic"> Classic</label>
-        <label class="pill"><input type="radio" name="tt_theme" value="Modern"> Modern</label>
-        <label class="pill"><input type="radio" name="tt_theme" value="Minimal"> Minimal</label>
+      <div class="actions">
+        <button id="submitBtn" type="submit">Submit</button>
+        <a id="payBtn" href="payment.html">Proceed to Payment</a>
       </div>
 
-      <label for="notes">Notes</label>
-      <textarea id="notes"></textarea>
-
-      <button type="submit">Submit</button>
-      <a id="payBtn" href="payment.html">Proceed to Payment</a>
-
-      <div id="successBox" class="msg">Submitted ✅</div>
+      <div id="successBox" class="msg">Submitted ✅ Your request is recorded. Proceed to payment to continue.</div>
       <div id="errorBox" class="msg">Please complete all required fields.</div>
+
+      <p class="mini" style="margin-top:14px;">
+        <strong>Privacy note:</strong> Your submission is handled internally by TinyTeam for processing and delivery.
+      </p>
     </form>
   </div>
 
-  <!-- ✅ your working web app wiring -->
   <script>
+    // ✅ Your existing Web App URL (unchanged)
     const WEB_APP_URL =
       "https://script.google.com/macros/s/AKfycbxz45I7nQaPy_tL8542rTlEQA-RwAPCFTkINctXm6zpoUv48M8iYTHpkA_tb_XYmthrxg/exec";
 
     const form = document.getElementById("ttForm");
+    const submitBtn = document.getElementById("submitBtn");
     const successBox = document.getElementById("successBox");
     const errorBox = document.getElementById("errorBox");
     const payBtn = document.getElementById("payBtn");
 
+    // Optional: preselect package via URL like start.html?package=FAM
     const urlPkg = new URLSearchParams(location.search).get("package");
     if (urlPkg) {
-      const radio = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+      const radio = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
       if (radio) radio.checked = true;
-    }
-
-    function injectDesignNotes() {
-      const title = document.getElementById("libraryTitle").value.trim();
-      const color = document.getElementById("primaryColor").value.trim();
-      const themeEl = document.querySelector('input[name="tt_theme"]:checked');
-      const theme = themeEl ? themeEl.value : "";
-      const notesField = document.getElementById("notes");
-      const existing = (notesField.value || "").trim();
-      const block =
-        "--- Design Preferences ---\n" +
-        "Library Title: " + title + "\n" +
-        "Theme: " + theme + "\n" +
-        "Primary Color: " + color;
-      notesField.value = existing ? (existing + "\n\n" + block) : block;
     }
 
     function isValid() {
       const name = document.getElementById("ownerName").value.trim();
       const email = document.getElementById("ownerEmail").value.trim();
-      const pkg = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
+      const pkg = form.querySelector('input[type="radio"][name="package"]:checked');
       const title = document.getElementById("libraryTitle").value.trim();
-      const color = document.getElementById("primaryColor").value.trim();
-      const theme = form.querySelector('input[name="tt_theme"]:checked');
-      return !!(name && email && pkg && title && color && theme);
+      return !!(name && email && pkg && title);
+    }
+
+    function buildPayload() {
+      const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
+      const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
+      const addon = document.getElementById("addonMedia").checked ? "YES" : "NO";
+
+      return {
+        ownerName: document.getElementById("ownerName").value.trim(),
+        ownerEmail: document.getElementById("ownerEmail").value.trim(),
+        package: pkg,
+        addonMedia: addon,
+        libraryTitle: document.getElementById("libraryTitle").value.trim(),
+        notes: document.getElementById("notes").value.trim(),
+        source: "tinyteamstudio.online/start.html",
+        autoDesign: "ENABLED"
+      };
+    }
+
+    function toFormData(obj) {
+      const fd = new FormData();
+      Object.keys(obj).forEach(k => fd.append(k, obj[k]));
+      return fd;
     }
 
     form.addEventListener("submit", async (e) => {
@@ -125,45 +275,41 @@
         return;
       }
 
-      injectDesignNotes();
+      submitBtn.disabled = true;
 
-      const selected = form.querySelector('input[type="radio"][name="entry.1443621857"]:checked');
-      const pkgSelected = selected ? selected.value : (urlPkg || "FAM");
-      const themeEl = document.querySelector('input[name="tt_theme"]:checked');
-      const themeVal = themeEl ? themeEl.value : "";
-
-      const fd = new FormData();
-      fd.append("ownerName", document.getElementById("ownerName").value.trim());
-      fd.append("ownerEmail", document.getElementById("ownerEmail").value.trim());
-      fd.append("libraryTitle", document.getElementById("libraryTitle").value.trim());
-      fd.append("theme", themeVal);
-      fd.append("primaryColor", document.getElementById("primaryColor").value.trim());
-      fd.append("package", pkgSelected);
-      fd.append("notes", document.getElementById("notes").value.trim());
-      fd.append("source", "tinyteamstudio.online/start.html");
+      const payload = buildPayload();
+      const fd = toFormData(payload);
 
       try {
         const res = await fetch(WEB_APP_URL, { method: "POST", body: fd });
         const raw = await res.text();
         console.log("WEBAPP RAW:", raw);
+
         const json = JSON.parse(raw);
         if (!json.ok) throw new Error(json.error || "ok:false");
       } catch (err) {
         errorBox.style.display = "block";
         errorBox.textContent = "Submit failed: " + err.message;
+        submitBtn.disabled = false;
         return;
       }
 
       successBox.style.display = "block";
-      payBtn.href = `payment.html?package=${encodeURIComponent(pkgSelected)}`;
+
+      const pkg = payload.package;
+      const addon = payload.addonMedia === "YES" ? "1" : "0";
+      payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addon)}`;
       payBtn.style.display = "inline-block";
 
       form.reset();
+
+      // keep preselected package if present in URL
       if (urlPkg) {
-        const radio2 = form.querySelector(`input[type="radio"][value="${urlPkg}"]`);
+        const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
         if (radio2) radio2.checked = true;
-        payBtn.href = `payment.html?package=${encodeURIComponent(urlPkg)}`;
       }
+
+      submitBtn.disabled = false;
     });
   </script>
 </body>
