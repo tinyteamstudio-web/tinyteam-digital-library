@@ -216,11 +216,23 @@
     </form>
   </div>
 
-  <!-- ✅ ONLY THIS SCRIPT SECTION WAS CLEANED/UPDATED -->
   <script>
-    // ✅ Web App URL (v_clean deployment)
-    const WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbxyo4jaR3r77IiXGh0f9yIuBXbC-zeWdFTXeknBjURxchlzZMkjz4ytmBitAtPN2uMO/exec";
+    /************************************************************
+     * TinyTeam Start Page → Google Form (v_clean)
+     * Uses your prefill link entry IDs
+     ************************************************************/
+
+    // 1) Google Form "formResponse" endpoint (this is what actually writes to the sheet)
+    const FORM_ACTION_URL =
+      "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/formResponse";
+
+    // 2) Entry IDs from your prefill link
+    const ENTRY_OWNER_NAME   = "entry.281403147";
+    const ENTRY_OWNER_EMAIL  = "entry.1713120999";
+    const ENTRY_PACKAGE      = "entry.1443621857";
+    const ENTRY_LIBRARY_TITLE= "entry.1720358155";
+    const ENTRY_ADDON_MEDIA  = "entry.1107896643"; // Yes/No
+    const ENTRY_NOTES        = "entry.771748026";
 
     const form = document.getElementById("ttForm");
     const submitBtn = document.getElementById("submitBtn");
@@ -228,53 +240,41 @@
     const errorBox = document.getElementById("errorBox");
     const payBtn = document.getElementById("payBtn");
 
-    // Optional: preselect package via URL like start.html?package=FAM
+    // Optional preselect via URL: start.html?package=FAM
     const urlPkg = new URLSearchParams(location.search).get("package");
     if (urlPkg) {
-      const radio = form.querySelector(
-        `input[type="radio"][name="package"][value="${urlPkg}"]`
-      );
+      const radio = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
       if (radio) radio.checked = true;
     }
 
     function isValid() {
       const name = document.getElementById("ownerName").value.trim();
       const email = document.getElementById("ownerEmail").value.trim();
-      const pkg = form.querySelector('input[name="package"]:checked');
+      const pkg = form.querySelector('input[type="radio"][name="package"]:checked');
       const title = document.getElementById("libraryTitle").value.trim();
       return !!(name && email && pkg && title);
     }
 
-    function buildPayload() {
-      const pkgEl = form.querySelector('input[name="package"]:checked');
+    function buildGoogleFormData() {
+      const ownerName = document.getElementById("ownerName").value.trim();
+      const ownerEmail = document.getElementById("ownerEmail").value.trim();
+      const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
       const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
-      const addon = document.getElementById("addonMedia").checked ? "YES" : "NO";
+      const libraryTitle = document.getElementById("libraryTitle").value.trim();
+      const notes = document.getElementById("notes").value.trim();
 
-      return {
-        ownerName: document.getElementById("ownerName").value.trim(),
-        ownerEmail: document.getElementById("ownerEmail").value.trim(),
-        package: pkg,
-        addonMedia: addon,
-        libraryTitle: document.getElementById("libraryTitle").value.trim(),
-        notes: document.getElementById("notes").value.trim(),
-        source: "tinyteamstudio.online/start.html",
-        autoDesign: "ENABLED"
-      };
-    }
+      // Your Google Form expects "Yes" / "No" (capitalization matters)
+      const addon = document.getElementById("addonMedia").checked ? "Yes" : "No";
 
-    function toFormData(obj) {
       const fd = new FormData();
-      Object.keys(obj).forEach(k => fd.append(k, obj[k]));
-      return fd;
-    }
+      fd.append(ENTRY_OWNER_NAME, ownerName);
+      fd.append(ENTRY_OWNER_EMAIL, ownerEmail);
+      fd.append(ENTRY_PACKAGE, pkg);
+      fd.append(ENTRY_LIBRARY_TITLE, libraryTitle);
+      fd.append(ENTRY_ADDON_MEDIA, addon);
+      fd.append(ENTRY_NOTES, notes);
 
-    async function safeJson(res) {
-      const text = await res.text();
-      try {
-        return { ok: true, json: JSON.parse(text), raw: text };
-      } catch {
-        return { ok: false, json: null, raw: text };
-      }
+      return { fd, pkg, addon };
     }
 
     form.addEventListener("submit", async (e) => {
@@ -289,30 +289,15 @@
 
       submitBtn.disabled = true;
 
-      const payload = buildPayload();
-      const fd = toFormData(payload);
+      const { fd, pkg, addon } = buildGoogleFormData();
 
       try {
-        console.log("Submitting payload:", payload);
-
-        const res = await fetch(WEB_APP_URL, {
+        // no-cors is required; Google Forms will accept it and write to the sheet
+        await fetch(FORM_ACTION_URL, {
           method: "POST",
-          body: fd,
-          cache: "no-store"
+          mode: "no-cors",
+          body: fd
         });
-
-        const parsed = await safeJson(res);
-        console.log("WEBAPP RAW:", parsed.raw);
-
-        if (!parsed.ok) {
-          throw new Error("WebApp did not return JSON. Raw: " + parsed.raw);
-        }
-
-        const json = parsed.json;
-        if (!json || !json.ok) {
-          throw new Error((json && json.error) ? json.error : "ok:false");
-        }
-
       } catch (err) {
         errorBox.style.display = "block";
         errorBox.textContent = "Submit failed: " + err.message;
@@ -320,26 +305,24 @@
         return;
       }
 
+      // We can't read a response in no-cors, so we treat as success
       successBox.style.display = "block";
 
-      const pkg = payload.package;
-      const addon = payload.addonMedia === "YES" ? "1" : "0";
-      payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addon)}`;
+      // Payment button params
+      const addonParam = addon === "Yes" ? "1" : "0";
+      payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addonParam)}`;
       payBtn.style.display = "inline-block";
 
       form.reset();
 
-      // keep preselected package if present in URL
+      // keep preselected package if it exists
       if (urlPkg) {
-        const radio2 = form.querySelector(
-          `input[type="radio"][name="package"][value="${urlPkg}"]`
-        );
+        const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
         if (radio2) radio2.checked = true;
       }
 
       submitBtn.disabled = false;
     });
   </script>
-
 </body>
 </html>
