@@ -216,103 +216,102 @@
     </form>
   </div>
 
-  <script>
-    // ✅ Your existing Web App URL (unchanged)
-      "const WEB_APP_URL =
-  "const WEB_APP_URL =
+ <script>
+  // ✅ Web App URL (v_clean deployment)
   const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbxyo4jaR3r77IiXGh0f9yIuBXbC-zeWdFTXeknBjURxchlzZMkjz4ytmBitAtPN2uMO/exec";
+    "https://script.google.com/macros/s/AKfycbxyo4jaR3r77IiXGh0f9yIuBXbC-zeWdFTXeknBjURxchlzZMkjz4ytmBitAtPN2uMO/exec";
 
-    const form = document.getElementById("ttForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const successBox = document.getElementById("successBox");
-    const errorBox = document.getElementById("errorBox");
-    const payBtn = document.getElementById("payBtn");
+  const form = document.getElementById("ttForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const successBox = document.getElementById("successBox");
+  const errorBox = document.getElementById("errorBox");
+  const payBtn = document.getElementById("payBtn");
 
-    // Optional: preselect package via URL like start.html?package=FAM
-    const urlPkg = new URLSearchParams(location.search).get("package");
-    if (urlPkg) {
-      const radio = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
-      if (radio) radio.checked = true;
+  // Optional: preselect package via URL like start.html?package=FAM
+  const urlPkg = new URLSearchParams(location.search).get("package");
+  if (urlPkg) {
+    const radio = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  function isValid() {
+    const name = document.getElementById("ownerName").value.trim();
+    const email = document.getElementById("ownerEmail").value.trim();
+    const pkg = form.querySelector('input[type="radio"][name="package"]:checked');
+    const title = document.getElementById("libraryTitle").value.trim();
+    return !!(name && email && pkg && title);
+  }
+
+  function buildPayload() {
+    const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
+    const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
+    const addon = document.getElementById("addonMedia").checked ? "YES" : "NO";
+
+    return {
+      ownerName: document.getElementById("ownerName").value.trim(),
+      ownerEmail: document.getElementById("ownerEmail").value.trim(),
+      package: pkg,
+      addonMedia: addon,
+      libraryTitle: document.getElementById("libraryTitle").value.trim(),
+      notes: document.getElementById("notes").value.trim(),
+      source: "tinyteamstudio.online/start.html",
+      autoDesign: "ENABLED"
+    };
+  }
+
+  function toFormData(obj) {
+    const fd = new FormData();
+    Object.keys(obj).forEach(k => fd.append(k, obj[k]));
+    return fd;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    successBox.style.display = "none";
+    errorBox.style.display = "none";
+
+    if (!isValid()) {
+      errorBox.style.display = "block";
+      return;
     }
 
-    function isValid() {
-      const name = document.getElementById("ownerName").value.trim();
-      const email = document.getElementById("ownerEmail").value.trim();
-      const pkg = form.querySelector('input[type="radio"][name="package"]:checked');
-      const title = document.getElementById("libraryTitle").value.trim();
-      return !!(name && email && pkg && title);
-    }
+    submitBtn.disabled = true;
 
-    function buildPayload() {
-      const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
-      const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
-      const addon = document.getElementById("addonMedia").checked ? "YES" : "NO";
+    const payload = buildPayload();
+    const fd = toFormData(payload);
 
-      return {
-        ownerName: document.getElementById("ownerName").value.trim(),
-        ownerEmail: document.getElementById("ownerEmail").value.trim(),
-        package: pkg,
-        addonMedia: addon,
-        libraryTitle: document.getElementById("libraryTitle").value.trim(),
-        notes: document.getElementById("notes").value.trim(),
-        source: "tinyteamstudio.online/start.html",
-        autoDesign: "ENABLED"
-      };
-    }
+    try {
+      const res = await fetch(WEB_APP_URL, { method: "POST", body: fd });
+      const raw = await res.text();
+      console.log("WEBAPP RAW:", raw);
 
-    function toFormData(obj) {
-      const fd = new FormData();
-      Object.keys(obj).forEach(k => fd.append(k, obj[k]));
-      return fd;
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      successBox.style.display = "none";
-      errorBox.style.display = "none";
-
-      if (!isValid()) {
-        errorBox.style.display = "block";
-        return;
-      }
-
-      submitBtn.disabled = true;
-
-      const payload = buildPayload();
-      const fd = toFormData(payload);
-
-      try {
-        const res = await fetch(WEB_APP_URL, { method: "POST", body: fd });
-        const raw = await res.text();
-        console.log("WEBAPP RAW:", raw);
-
-        const json = JSON.parse(raw);
-        if (!json.ok) throw new Error(json.error || "ok:false");
-      } catch (err) {
-        errorBox.style.display = "block";
-        errorBox.textContent = "Submit failed: " + err.message;
-        submitBtn.disabled = false;
-        return;
-      }
-
-      successBox.style.display = "block";
-
-      const pkg = payload.package;
-      const addon = payload.addonMedia === "YES" ? "1" : "0";
-      payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addon)}`;
-      payBtn.style.display = "inline-block";
-
-      form.reset();
-
-      // keep preselected package if present in URL
-      if (urlPkg) {
-        const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
-        if (radio2) radio2.checked = true;
-      }
-
+      const json = JSON.parse(raw);
+      if (!json.ok) throw new Error(json.error || "ok:false");
+    } catch (err) {
+      errorBox.style.display = "block";
+      errorBox.textContent = "Submit failed: " + err.message;
       submitBtn.disabled = false;
-    });
-  </script>
+      return;
+    }
+
+    successBox.style.display = "block";
+
+    const pkg = payload.package;
+    const addon = payload.addonMedia === "YES" ? "1" : "0";
+    payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addon)}`;
+    payBtn.style.display = "inline-block";
+
+    form.reset();
+
+    // keep preselected package if present in URL
+    if (urlPkg) {
+      const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
+      if (radio2) radio2.checked = true;
+    }
+
+    submitBtn.disabled = false;
+  });
+</script>
+
 </body>
 </html>
