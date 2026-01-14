@@ -216,23 +216,10 @@
     </form>
   </div>
 
- <script>
-  /************************************************************
-   * TinyTeam Start Page → Silent POST to Google Form (NO redirect)
-   * Writes to Owner_Start_Responses (v_clean) via Google Form backend.
-   ************************************************************/
-
-  // ✅ Google Form endpoint for submissions:
-  const FORM_RESPONSE_URL =
-    "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/formResponse";
-
-  // ✅ Entry IDs from your prefill link
-  const ENTRY_OWNER_NAME    = "entry.281403147";
-  const ENTRY_OWNER_EMAIL   = "entry.1713120999";
-  const ENTRY_PACKAGE       = "entry.1443621857";
-  const ENTRY_LIBRARY_TITLE = "entry.1720358155";
-  const ENTRY_ADDON_MEDIA   = "entry.1107896643"; // Yes / No (capitalization matters)
-  const ENTRY_NOTES         = "entry.771748026";
+<script>
+  // ✅ Web App URL (v_clean deployment)
+  const WEB_APP_URL =
+    "https://script.google.com/macros/s/AKfycbxyo4jaR3r77IiXGh0f9yIuBXbC-zeWdFTXeknBjURxchlzZMkjz4ytmBitAtPN2uMO/exec";
 
   const form = document.getElementById("ttForm");
   const submitBtn = document.getElementById("submitBtn");
@@ -240,10 +227,19 @@
   const errorBox = document.getElementById("errorBox");
   const payBtn = document.getElementById("payBtn");
 
+  // ✅ hidden iframe target (CORS bypass)
+  const sink = document.createElement("iframe");
+  sink.name = "tt_sink";
+  sink.id = "tt_sink";
+  sink.style.display = "none";
+  document.body.appendChild(sink);
+
   // Optional: preselect package via URL like start.html?package=FAM
   const urlPkg = new URLSearchParams(location.search).get("package");
   if (urlPkg) {
-    const radio = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
+    const radio = form.querySelector(
+      `input[type="radio"][name="package"][value="${urlPkg}"]`
+    );
     if (radio) radio.checked = true;
   }
 
@@ -255,26 +251,48 @@
     return !!(name && email && pkg && title);
   }
 
-  function buildFormData() {
-    const ownerName = document.getElementById("ownerName").value.trim();
-    const ownerEmail = document.getElementById("ownerEmail").value.trim();
-
+  function buildPayload() {
     const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
     const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
+    const addon = document.getElementById("addonMedia").checked ? "YES" : "NO";
 
-    const libraryTitle = document.getElementById("libraryTitle").value.trim();
-    const addon = document.getElementById("addonMedia").checked ? "Yes" : "No";
-    const notes = document.getElementById("notes").value.trim();
+    return {
+      ownerName: document.getElementById("ownerName").value.trim(),
+      ownerEmail: document.getElementById("ownerEmail").value.trim(),
+      package: pkg,
+      addonMedia: addon,
+      libraryTitle: document.getElementById("libraryTitle").value.trim(),
+      notes: document.getElementById("notes").value.trim(),
+      source: "tinyteamstudio.online/start.html",
+      autoDesign: "ENABLED"
+    };
+  }
 
-    const fd = new FormData();
-    fd.append(ENTRY_OWNER_NAME, ownerName);
-    fd.append(ENTRY_OWNER_EMAIL, ownerEmail);
-    fd.append(ENTRY_PACKAGE, pkg);
-    fd.append(ENTRY_LIBRARY_TITLE, libraryTitle);
-    fd.append(ENTRY_ADDON_MEDIA, addon);
-    fd.append(ENTRY_NOTES, notes);
+  // ✅ CORS-safe submit (hidden form → iframe)
+  function postToWebApp(payload) {
+    return new Promise((resolve) => {
+      const f = document.createElement("form");
+      f.method = "POST";
+      f.action = WEB_APP_URL;
+      f.target = "tt_sink";
 
-    return { fd, pkg, addon };
+      Object.keys(payload).forEach((k) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = payload[k];
+        f.appendChild(input);
+      });
+
+      document.body.appendChild(f);
+      f.submit();
+
+      // We can't read response (by design), so we resolve after a short delay.
+      setTimeout(() => {
+        f.remove();
+        resolve(true);
+      }, 900);
+    });
   }
 
   form.addEventListener("submit", async (e) => {
@@ -284,21 +302,15 @@
 
     if (!isValid()) {
       errorBox.style.display = "block";
-      errorBox.textContent = "Please complete all required fields.";
       return;
     }
 
     submitBtn.disabled = true;
 
-    const { fd, pkg, addon } = buildFormData();
+    const payload = buildPayload();
 
     try {
-      // ✅ Silent submit (no redirect). Google Forms accepts this.
-      await fetch(FORM_RESPONSE_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: fd
-      });
+      await postToWebApp(payload);
     } catch (err) {
       errorBox.style.display = "block";
       errorBox.textContent = "Submit failed. Please try again.";
@@ -306,24 +318,27 @@
       return;
     }
 
-    // ✅ Treat as success (no-cors doesn't let us read the response)
     successBox.style.display = "block";
 
-    const addonParam = addon === "Yes" ? "1" : "0";
-    payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addonParam)}`;
+    const pkg = payload.package;
+    const addon = payload.addonMedia === "YES" ? "1" : "0";
+    payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addon)}`;
     payBtn.style.display = "inline-block";
 
-    // Optional: don't reset immediately if you want user to see their inputs
     form.reset();
 
+    // keep preselected package if present in URL
     if (urlPkg) {
-      const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
+      const radio2 = form.querySelector(
+        `input[type="radio"][name="package"][value="${urlPkg}"]`
+      );
       if (radio2) radio2.checked = true;
     }
 
     submitBtn.disabled = false;
   });
 </script>
+
 
 
 </body>
