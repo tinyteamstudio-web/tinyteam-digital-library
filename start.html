@@ -216,23 +216,22 @@
     </form>
   </div>
 
-  <script>
-  /**
-   * TinyTeam Start (Custom UI) → Google Form backend (v_clean)
-   * This keeps your site professional while still writing to Owner_Start_Responses.
-   */
+ <script>
+  // ✅ Google Form (Prefill) Base
+  const FORM_BASE =
+    "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/viewform?usp=pp_url";
 
-  // ✅ From your prefill link:
-  // https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/viewform?...
-  // The POST endpoint is the same form, but with /formResponse
-  const FORM_RESPONSE_URL =
-    "https://docs.google.com/forms/d/e/1FAIpQLScD-IqBpKkiTdrp1mfD3EUqqAEUfQLpE2O2ht6LhYX2DqpdqA/formResponse";
+  // ✅ Entry IDs (from your prefill link)
+  const ENTRY_OWNER_NAME   = "entry.281403147";
+  const ENTRY_OWNER_EMAIL  = "entry.1713120999";
+  const ENTRY_PACKAGE      = "entry.1443621857";
+  const ENTRY_LIBRARYTITLE = "entry.1720358155";
+  const ENTRY_ADDON        = "entry.1107896643";
+  const ENTRY_NOTES        = "entry.771748026";
 
   const form = document.getElementById("ttForm");
   const submitBtn = document.getElementById("submitBtn");
-  const successBox = document.getElementById("successBox");
   const errorBox = document.getElementById("errorBox");
-  const payBtn = document.getElementById("payBtn");
 
   // Optional: preselect package via URL like start.html?package=FAM
   const urlPkg = new URLSearchParams(location.search).get("package");
@@ -249,70 +248,44 @@
     return !!(name && email && pkg && title);
   }
 
-  function buildGoogleFormData() {
+  function buildRedirectUrl() {
+    const ownerName = document.getElementById("ownerName").value.trim();
+    const ownerEmail = document.getElementById("ownerEmail").value.trim();
     const pkgEl = form.querySelector('input[type="radio"][name="package"]:checked');
     const pkg = pkgEl ? pkgEl.value : (urlPkg || "FAM");
     const addon = document.getElementById("addonMedia").checked ? "Yes" : "No";
+    const libraryTitle = document.getElementById("libraryTitle").value.trim();
+    const notes = document.getElementById("notes").value.trim();
 
-    // Map to Google Form "entry.XXXXX" keys:
-    const fd = new FormData();
-    fd.append("entry.281403147", document.getElementById("ownerName").value.trim());        // Owner Full Name
-    fd.append("entry.1713120999", document.getElementById("ownerEmail").value.trim());      // Owner Email
-    fd.append("entry.1443621857", pkg);                                                     // Package Type
-    fd.append("entry.1720358155", document.getElementById("libraryTitle").value.trim());    // Library Title
-    fd.append("entry.1107896643", addon);                                                   // AddonMedia (Yes/No)
-    fd.append("entry.771748026", document.getElementById("notes").value.trim());            // Notes
-    return { fd, pkg, addon };
+    const params = new URLSearchParams();
+    params.set(ENTRY_OWNER_NAME, ownerName);
+    params.set(ENTRY_OWNER_EMAIL, ownerEmail);
+    params.set(ENTRY_PACKAGE, pkg);
+    params.set(ENTRY_LIBRARYTITLE, libraryTitle);
+    params.set(ENTRY_ADDON, addon);
+    params.set(ENTRY_NOTES, notes);
+
+    return `${FORM_BASE}&${params.toString()}`;
   }
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    successBox.style.display = "none";
     errorBox.style.display = "none";
 
     if (!isValid()) {
       errorBox.style.display = "block";
+      errorBox.textContent = "Please complete all required fields.";
       return;
     }
 
     submitBtn.disabled = true;
 
-    const { fd, pkg, addon } = buildGoogleFormData();
-
-    try {
-      // Important:
-      // Google Forms does not return normal CORS-friendly responses.
-      // mode:"no-cors" will still submit successfully (we just can’t read JSON back).
-      await fetch(FORM_RESPONSE_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: fd
-      });
-    } catch (err) {
-      errorBox.style.display = "block";
-      errorBox.textContent = "Submit failed. Please try again.";
-      submitBtn.disabled = false;
-      return;
-    }
-
-    // Show success + reveal payment button
-    successBox.style.display = "block";
-
-    const addonFlag = (addon.toLowerCase() === "yes") ? "1" : "0";
-    payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&addon=${encodeURIComponent(addonFlag)}`;
-    payBtn.style.display = "inline-block";
-
-    form.reset();
-
-    // keep preselected package if present in URL
-    if (urlPkg) {
-      const radio2 = form.querySelector(`input[type="radio"][name="package"][value="${urlPkg}"]`);
-      if (radio2) radio2.checked = true;
-    }
-
-    submitBtn.disabled = false;
+    // ✅ Redirect to hidden Google Form (prefilled)
+    const url = buildRedirectUrl();
+    window.location.href = url;
   });
 </script>
+
 
 </body>
 </html>
