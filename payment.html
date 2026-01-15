@@ -18,7 +18,6 @@
       margin-top: 16px;
     }
     .grid2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; }
-    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
     .pay-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -45,15 +44,48 @@
       border-radius: 12px;
       border: 1px solid rgba(0,0,0,0.06);
     }
-    .qr-card a { font-weight: 700; }
+    .qr-card a { font-weight: 800; }
 
     .muted { color: rgba(0,0,0,0.65); }
     .small { font-size: 0.95rem; }
     .hr { height:1px; background: rgba(0,0,0,0.08); margin: 16px 0; }
 
+    .noteBox{
+      border:1px solid rgba(0,0,0,0.10);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      margin-top: 10px;
+    }
+    .noteBox strong{ color:#111; }
+
+    .oidRow{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .oidRow input{
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.15);
+      min-width: 260px;
+      max-width: 420px;
+      width: 100%;
+      font-size: 14px;
+    }
+    .oidRow button{
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 0;
+      background:#111827;
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      font-size: 14px;
+    }
+    .oidHint{ margin:8px 0 0; font-size: 0.92rem; color: rgba(0,0,0,0.65); line-height:1.6; }
+
     @media (max-width: 980px) {
       .grid2 { grid-template-columns: 1fr; }
-      .grid3 { grid-template-columns: 1fr; }
       .grid4 { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 520px) {
@@ -94,19 +126,45 @@
           Loading your package...
         </p>
 
+        <div class="noteBox">
+          <strong>Order ID is required</strong><br>
+          <span class="muted small">
+            You will receive your <strong>Order_ID</strong> in our approval/payment confirmation email.
+            Use the same Order_ID when submitting your payment proof.
+          </span>
+
+          <div class="oidRow">
+            <input id="orderIdInput" type="text" placeholder="Paste your Order_ID here (e.g., TT-ORD-2026-000001)" />
+            <button id="copyBtn" type="button">Copy</button>
+          </div>
+
+          <p class="oidHint">
+            If you don’t have your Order_ID yet, go back and submit your request first:
+            <a href="start.html" style="font-weight:800;">Start Your Library</a>
+          </p>
+        </div>
+
         <div class="hr"></div>
 
         <h3 style="margin:0 0 8px;">Submit Payment Proof</h3>
         <p class="muted" style="margin:0 0 12px;line-height:1.7;">
           After payment, submit your proof so we can verify and move your project to <strong>Paid</strong>.
         </p>
-        <p style="margin:0;">
+
+        <p style="margin:0; display:flex; gap:10px; flex-wrap:wrap;">
           <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Submit Payment Proof</a>
+          <a class="btn" id="proofBtnPrefill" href="#" target="_blank" rel="noopener" style="background:#111827;">
+            Submit Proof (Prefilled Order_ID)
+          </a>
         </p>
 
         <p class="muted small" style="margin-top:12px;line-height:1.7;">
           Need help? Email:
           <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+        </p>
+
+        <p class="muted small" style="margin-top:8px;line-height:1.7;">
+          <strong>Member submission link:</strong> You will receive it by email after your payment is verified.
         </p>
       </div>
 
@@ -176,7 +234,7 @@
 
     <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
       <a class="btn" href="index.html">Back to Home</a>
-      <a class="btn" href="thank-you.html">Back to Thank You</a>
+      <a class="btn" href="start.html">Start a New Request</a>
     </div>
   </div>
 </main>
@@ -198,23 +256,29 @@
   </div>
 </footer>
 
-<script src="assets/config.js"></script>
 <script>
-  // 1) Payment proof button from config
-  const cfg = window.TINYTEAM_CONFIG || {};
-  const proofBtn = document.getElementById("proofBtn");
-  proofBtn.href = cfg.PAYMENT_PROOF_FORM_URL || "#";
+  // ✅ Payment Proof Form base URL (v_locked-linked)
+  const PAYMENT_PROOF_FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSdOa8FkqUfu8mXWuUgJtOHlUd7wu-DSnfMvpxbk0r8JkJD7GQ/viewform";
 
-  // 2) Read package from URL
+  /**
+   * OPTIONAL (Prefill):
+   * If your Payment Proof form has an Order_ID field, we can prefill it.
+   * To do that, replace the "ORDER_ID_ENTRY_ID" below with the real entry id.
+   * Example: entry.1234567890
+   */
+  const ORDER_ID_ENTRY_ID = ""; // <-- paste like: "entry.888161912" if that is your Order_ID field
+
+  // 1) Read package from URL
   const params = new URLSearchParams(window.location.search);
   const pkg = (params.get("package") || "FAM").toUpperCase();
 
-  // 3) Show only the matching PayPal block
+  // 2) Show only the matching PayPal block
   document.querySelectorAll("#paypalArea .qr-card").forEach(card => {
     card.style.display = (card.dataset.package === pkg) ? "block" : "none";
   });
 
-  // 4) Update top text + badge
+  // 3) Update top text + badge
   const pkgText = document.getElementById("pkgText");
   const pkgBadge = document.getElementById("pkgBadge");
 
@@ -231,6 +295,42 @@
     Amount: <strong>${chosen.price}</strong><br>
     <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
   `;
+
+  // 4) Proof buttons
+  const proofBtn = document.getElementById("proofBtn");
+  const proofBtnPrefill = document.getElementById("proofBtnPrefill");
+  proofBtn.href = PAYMENT_PROOF_FORM_URL;
+
+  // Prefill button (only works if ORDER_ID_ENTRY_ID is set)
+  function buildPrefillUrl(orderId) {
+    if (!ORDER_ID_ENTRY_ID || !orderId) return PAYMENT_PROOF_FORM_URL;
+    const u = new URL(PAYMENT_PROOF_FORM_URL);
+    u.searchParams.set(ORDER_ID_ENTRY_ID, orderId);
+    u.searchParams.set("usp", "pp_url");
+    return u.toString();
+  }
+
+  // 5) Copy helper
+  const orderIdInput = document.getElementById("orderIdInput");
+  const copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", async () => {
+    const val = (orderIdInput.value || "").trim();
+    if (!val) return;
+    try { await navigator.clipboard.writeText(val); copyBtn.textContent = "Copied ✓"; }
+    catch(e){ copyBtn.textContent = "Copy"; }
+    setTimeout(() => copyBtn.textContent = "Copy", 1200);
+  });
+
+  // 6) If Order_ID is passed in URL, auto-fill + prefill proof link
+  const oid = (params.get("order_id") || "").trim();
+  if (oid) orderIdInput.value = oid;
+
+  proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
+
+  // Update prefill link when user types
+  orderIdInput.addEventListener("input", () => {
+    proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
+  });
 </script>
 
 </body>
