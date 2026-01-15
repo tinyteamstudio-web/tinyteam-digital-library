@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -124,12 +124,27 @@
       </a>
 
       <!-- ✅ Next step -->
-      <a class="btn" href="payment.html">Proceed to Payment</a>
+      <a class="btn" id="payBtn" href="payment.html">Proceed to Payment</a>
     </div>
 
     <p class="mini">
       <strong>Privacy note:</strong> Your submission is handled internally by TinyTeam for processing and delivery.
     </p>
   </div>
+
+  <script>
+    // keep the selected package in the payment page when start.html is opened like:
+    // start.html?package=FAM  or  start.html?package=COMM
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const pkg = (params.get("package") || "").toUpperCase();
+      if (!pkg) return;
+
+      const payBtn = document.getElementById("payBtn");
+      if (!payBtn) return;
+
+      payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}`;
+    })();
+  </script>
 </body>
 </html>
