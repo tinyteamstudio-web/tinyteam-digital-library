@@ -154,12 +154,41 @@
           After payment, submit your proof so we can verify and move your project to <strong>Paid</strong>.
         </p>
 
-        <p style="margin:0; display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Submit Payment Proof</a>
-          <a class="btn" id="proofBtnPrefill" href="#" target="_blank" rel="noopener" style="background:#111827;">
-            Submit Proof (Prefilled Order_ID)
-          </a>
-        </p>
+        <div class="noteBox" id="uploadBox" style="margin-top:12px;">
+  <strong>Upload Payment Proof (No Google Form)</strong><br>
+  <span class="muted small">
+    Upload your receipt/screenshot here. We’ll save it securely and match it to your Order_ID.
+  </span>
+
+  <div class="oidRow" style="margin-top:12px;">
+    <input id="payerEmailInput" type="email" placeholder="Your Email (required)" autocomplete="email" />
+  </div>
+
+  <div class="oidRow">
+    <input id="proofFile" type="file" accept="image/*,application/pdf" />
+  </div>
+
+  <p style="margin:10px 0 0; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="btn" id="uploadBtn" type="button" style="background:#111827;">Upload Proof Now</button>
+    <span class="muted small" id="uploadStatus" style="display:none;"></span>
+  </p>
+
+  <p class="oidHint" style="margin-top:10px;">
+    If upload doesn’t work (slow internet), use the Secure Upload buttons (Google Form) above.
+  </p>
+</div>
+
+       <p style="margin:0; display:flex; gap:10px; flex-wrap:wrap;">
+  <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Secure Upload (Google Form)</a>
+  <a class="btn" id="proofBtnPrefill" href="#" target="_blank" rel="noopener" style="background:#111827;">
+    Secure Upload (Prefilled Order ID)
+  </a>
+</p>
+
+<p class="muted small" style="margin-top:10px;line-height:1.7;">
+  You’ll be redirected to our secure Google upload form to submit payment proof (required for file upload).
+</p>
+
 
         <p class="muted small" style="margin-top:12px;line-height:1.7;">
           Need help? Email:
