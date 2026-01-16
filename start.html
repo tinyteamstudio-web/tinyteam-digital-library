@@ -167,14 +167,30 @@
           </div>
 
           <div class="row">
-            <label for="theme">Theme</label>
-            <input id="theme" name="theme" type="text" placeholder="Auto (default)" />
-          </div>
+  <label for="theme">Theme Style</label>
+  <select id="theme" name="theme">
+    <option value="">Auto (recommended)</option>
+    <option value="Classic">Classic</option>
+    <option value="Modern">Modern</option>
+    <option value="Minimal">Minimal</option>
+    <option value="Warm">Warm</option>
+    <option value="Elegant">Elegant</option>
+  </select>
+</div>
 
-          <div class="row">
-            <label for="primaryColor">Primary Color</label>
-            <input id="primaryColor" name="primaryColor" type="text" placeholder="Auto (default)" />
-          </div>
+<div class="row">
+  <label for="primaryColor">Color Mood</label>
+  <select id="primaryColor" name="primaryColor">
+    <option value="">Auto (recommended)</option>
+    <option value="#2563eb">Blue</option>
+    <option value="#16a34a">Green</option>
+    <option value="#111827">Neutral (Black/Gray)</option>
+    <option value="#a855f7">Purple</option>
+    <option value="#f59e0b">Warm (Gold)</option>
+    <option value="#0ea5e9">Sky</option>
+  </select>
+</div>
+
 
           <div class="row full">
             <label for="notes">Notes (optional)</label>
