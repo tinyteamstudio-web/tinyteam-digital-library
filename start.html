@@ -237,6 +237,22 @@
       if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
     })(); /* ✅ FIX: this closing was missing */
 
+    // keep "Proceed to Payment" synced with current package selection
+(function () {
+  const payBtn = document.getElementById("payBtn");
+  const pkgSel = document.getElementById("package");
+  if (!payBtn || !pkgSel) return;
+
+  function syncPayLink() {
+    const v = (pkgSel.value || "FAM").toUpperCase();
+    payBtn.href = `payment.html?package=${encodeURIComponent(v)}`;
+  }
+
+  pkgSel.addEventListener("change", syncPayLink);
+  syncPayLink();
+})();
+
+
     const form = document.getElementById("startForm");
     const submitBtn = document.getElementById("submitBtn");
     const statusBox = document.getElementById("statusBox");
