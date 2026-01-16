@@ -105,7 +105,9 @@
 
       const payBtn = document.getElementById("payBtn");
       if (payBtn && pkg) {
-        payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}&order_id=${encodeURIComponent(pid)}`;
+        payBtn.href = pid
+          ? `payment.html?package=${encodeURIComponent(pkg)}&order_id=${encodeURIComponent(pid)}`
+          : `payment.html?package=${encodeURIComponent(pkg)}`;
       }
     })();
   </script>
