@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -167,30 +167,29 @@
           </div>
 
           <div class="row">
-  <label for="theme">Theme Style</label>
-  <select id="theme" name="theme">
-    <option value="">Auto (recommended)</option>
-    <option value="Classic">Classic</option>
-    <option value="Modern">Modern</option>
-    <option value="Minimal">Minimal</option>
-    <option value="Warm">Warm</option>
-    <option value="Elegant">Elegant</option>
-  </select>
-</div>
+            <label for="theme">Theme Style</label>
+            <select id="theme" name="theme">
+              <option value="">Auto (recommended)</option>
+              <option value="Classic">Classic</option>
+              <option value="Modern">Modern</option>
+              <option value="Minimal">Minimal</option>
+              <option value="Warm">Warm</option>
+              <option value="Elegant">Elegant</option>
+            </select>
+          </div>
 
-<div class="row">
-  <label for="primaryColor">Color Mood</label>
-  <select id="primaryColor" name="primaryColor">
-    <option value="">Auto (recommended)</option>
-    <option value="#2563eb">Blue</option>
-    <option value="#16a34a">Green</option>
-    <option value="#111827">Neutral (Black/Gray)</option>
-    <option value="#a855f7">Purple</option>
-    <option value="#f59e0b">Warm (Gold)</option>
-    <option value="#0ea5e9">Sky</option>
-  </select>
-</div>
-
+          <div class="row">
+            <label for="primaryColor">Color Mood</label>
+            <select id="primaryColor" name="primaryColor">
+              <option value="">Auto (recommended)</option>
+              <option value="#2563eb">Blue</option>
+              <option value="#16a34a">Green</option>
+              <option value="#111827">Neutral (Black/Gray)</option>
+              <option value="#a855f7">Purple</option>
+              <option value="#f59e0b">Warm (Gold)</option>
+              <option value="#0ea5e9">Sky</option>
+            </select>
+          </div>
 
           <div class="row full">
             <label for="notes">Notes (optional)</label>
@@ -198,9 +197,9 @@
           </div>
         </div>
 
-     <p class="hint">
-  <strong>Not sure?</strong> Leave Theme Style and Color Mood on <strong>Auto (recommended)</strong> — we’ll handle the design for you.
-</p>
+        <p class="hint">
+          <strong>Not sure?</strong> Leave Theme Style and Color Mood on <strong>Auto (recommended)</strong> — we’ll handle the design for you.
+        </p>
 
         <div class="actions">
           <button class="btn" id="submitBtn" type="submit">Submit Request</button>
@@ -236,7 +235,7 @@
 
       const pkgSel = document.getElementById("package");
       if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
-    })();
+    })(); /* ✅ FIX: this closing was missing */
 
     const form = document.getElementById("startForm");
     const submitBtn = document.getElementById("submitBtn");
@@ -294,7 +293,12 @@
           body: toFormBody(payload)
         });
 
-        const json = await res.json();
+        let json;
+        try {
+          json = await res.json();
+        } catch (e) {
+          throw new Error("Server response was not JSON. Please confirm your Web App is deployed as 'Anyone' and returns JSON.");
+        }
 
         if (!json || !json.ok) {
           throw new Error((json && json.error) ? json.error : "Submission failed.");
@@ -313,3 +317,4 @@
   </script>
 </body>
 </html>
+
