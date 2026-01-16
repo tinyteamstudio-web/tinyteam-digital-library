@@ -288,10 +288,84 @@
   </div>
 </footer>
 
+ // ===== Hidden upload (Option B) =====
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadStatus = document.getElementById("uploadStatus");
+const payerEmailInput = document.getElementById("payerEmailInput");
+const proofFile = document.getElementById("proofFile");
+
+function showUploadStatus(msg) {
+  uploadStatus.style.display = "inline";
+  uploadStatus.textContent = msg;
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result || "";
+      // result looks like: data:image/png;base64,AAAA...
+      const base64 = String(result).split(",")[1] || "";
+      resolve(base64);
+    };
+    reader.onerror = () => reject(reader.error || new Error("File read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+uploadBtn.addEventListener("click", async () => {
+  const orderId = (orderIdInput.value || "").trim();
+  const payerEmail = (payerEmailInput.value || "").trim();
+  const file = proofFile.files && proofFile.files[0];
+
+  if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
+  if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
+  if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
+
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = "Uploading...";
+  showUploadStatus("Uploading... please wait.");
+
+  try {
+    const base64 = await fileToBase64(file);
+
+    const body = new URLSearchParams();
+    body.set("action", "PAYMENT_PROOF_UPLOAD");
+    body.set("orderId", orderId);
+    body.set("payerEmail", payerEmail);
+    body.set("package", pkg);
+    body.set("fileName", file.name);
+    body.set("mimeType", file.type || "application/octet-stream");
+    body.set("fileBase64", base64);
+
+    const res = await fetch(WEBAPP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: body.toString()
+    });
+
+    const json = await res.json();
+
+    if (!json || !json.ok) {
+      throw new Error((json && json.error) ? json.error : "Upload failed.");
+    }
+
+    showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
+    uploadBtn.textContent = "Uploaded ✓";
+
+  } catch (err) {
+    showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = "Upload Proof Now";
+  }
+});
+
 <script>
   // ✅ Payment Proof Form base URL (v_locked-linked)
   const PAYMENT_PROOF_FORM_URL =
     "https://docs.google.com/forms/d/e/1FAIpQLSdOa8FkqUfu8mXWuUgJtOHlUd7wu-DSnfMvpxbk0r8JkJD7GQ/viewform";
+// ✅ Upload endpoint (use the SAME Web App URL you already use in start.html)
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxz45I7nQaPy_tL8542rTlEQA-RwAPCFTkINctXm6zpoUv48M8iYTHpkA_tb_XYmthrxg/exec";
 
   /**
    * OPTIONAL (Prefill):
