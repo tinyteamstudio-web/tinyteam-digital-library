@@ -84,6 +84,54 @@
     }
     .oidHint{ margin:8px 0 0; font-size: 0.92rem; color: rgba(0,0,0,0.65); line-height:1.6; }
 
+    /* ===== Option C: Modal (Embedded Google Form) ===== */
+    .modalBackdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 9999;
+    }
+    .modalCard{
+      width:min(980px, 100%);
+      background:#fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      background:#f8fafc;
+    }
+    .modalTop strong{ font-size: 0.98rem; }
+    .modalClose{
+      border:0;
+      background:#111827;
+      color:#fff;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-weight:800;
+      font-size: 13px;
+    }
+    .modalBody{
+      height: min(76vh, 720px);
+      background:#fff;
+    }
+    .modalBody iframe{
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
     @media (max-width: 980px) {
       .grid2 { grid-template-columns: 1fr; }
       .grid4 { grid-template-columns: repeat(2, 1fr); }
@@ -154,41 +202,46 @@
           After payment, submit your proof so we can verify and move your project to <strong>Paid</strong>.
         </p>
 
+        <!-- ===== Option B (Hidden Upload - No Google Form) ===== -->
         <div class="noteBox" id="uploadBox" style="margin-top:12px;">
-  <strong>Upload Payment Proof (No Google Form)</strong><br>
-  <span class="muted small">
-    Upload your receipt/screenshot here. We’ll save it securely and match it to your Order_ID.
-  </span>
+          <strong>Upload Payment Proof (No Google Form)</strong><br>
+          <span class="muted small">
+            Upload your receipt/screenshot here. We’ll save it securely and match it to your Order_ID.
+          </span>
 
-  <div class="oidRow" style="margin-top:12px;">
-    <input id="payerEmailInput" type="email" placeholder="Your Email (required)" autocomplete="email" />
-  </div>
+          <div class="oidRow" style="margin-top:12px;">
+            <input id="payerEmailInput" type="email" placeholder="Your Email (required)" autocomplete="email" />
+          </div>
 
-  <div class="oidRow">
-    <input id="proofFile" type="file" accept="image/*,application/pdf" />
-  </div>
+          <div class="oidRow">
+            <input id="proofFile" type="file" accept="image/*,application/pdf" />
+          </div>
 
-  <p style="margin:10px 0 0; display:flex; gap:10px; flex-wrap:wrap;">
-    <button class="btn" id="uploadBtn" type="button" style="background:#111827;">Upload Proof Now</button>
-    <span class="muted small" id="uploadStatus" style="display:none;"></span>
-  </p>
+          <p style="margin:10px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button class="btn" id="uploadBtn" type="button" style="background:#111827;">Upload Proof Now</button>
+            <span class="muted small" id="uploadStatus" style="display:none;"></span>
+          </p>
 
-  <p class="oidHint" style="margin-top:10px;">
-    If upload doesn’t work (slow internet), use the Secure Upload buttons (Google Form) above.
-  </p>
-</div>
+          <p class="oidHint" style="margin-top:10px;">
+            If upload doesn’t work (slow internet), use the secure upload options below.
+          </p>
+        </div>
 
-       <p style="margin:0; display:flex; gap:10px; flex-wrap:wrap;">
-  <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Secure Upload (Google Form)</a>
-  <a class="btn" id="proofBtnPrefill" href="#" target="_blank" rel="noopener" style="background:#111827;">
-    Secure Upload (Prefilled Order ID)
-  </a>
-</p>
+        <!-- ===== Option A + Option C (Google Form) ===== -->
+        <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" id="proofBtn" href="#" target="_blank" rel="noopener">Secure Upload (Google Form)</a>
+          <a class="btn" id="proofBtnPrefill" href="#" target="_blank" rel="noopener" style="background:#111827;">
+            Secure Upload (Prefilled Order ID)
+          </a>
+          <button class="btn" id="openModalBtn" type="button" style="background:#0f172a;">
+            Open Secure Upload Here
+          </button>
+        </p>
 
-<p class="muted small" style="margin-top:10px;line-height:1.7;">
-  You’ll be redirected to our secure Google upload form to submit payment proof (required for file upload).
-</p>
-
+        <p class="muted small" style="margin-top:10px;line-height:1.7;">
+          The secure upload uses Google’s file upload system. You can open it in a popup here (recommended),
+          or in a new tab.
+        </p>
 
         <p class="muted small" style="margin-top:12px;line-height:1.7;">
           Need help? Email:
@@ -206,9 +259,7 @@
           Scan the PayPal QR below or use the PayPal link.
         </p>
 
-        <!-- PAYPAL QR (AUTO-SHOW 1 ONLY) -->
         <div id="paypalArea">
-
           <div class="qr-card" data-package="FAM">
             <h4>Family Library (FAM) — $48</h4>
             <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
@@ -232,7 +283,6 @@
               <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
             </p>
           </div>
-
         </div>
       </div>
     </div>
@@ -241,7 +291,7 @@
       <h3 style="margin:0 0 8px;">Alternative Payment Options</h3>
       <p class="muted small" style="margin:0 0 14px;line-height:1.7;">
         If PayPal is not available for you, you may use the options below.
-        Keep your receipt/screenshot and submit it via the Payment Proof button above.
+        Keep your receipt/screenshot and submit it via the options above.
       </p>
 
       <div class="grid4">
@@ -288,103 +338,41 @@
   </div>
 </footer>
 
- // ===== Hidden upload (Option B) =====
-const uploadBtn = document.getElementById("uploadBtn");
-const uploadStatus = document.getElementById("uploadStatus");
-const payerEmailInput = document.getElementById("payerEmailInput");
-const proofFile = document.getElementById("proofFile");
-
-function showUploadStatus(msg) {
-  uploadStatus.style.display = "inline";
-  uploadStatus.textContent = msg;
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result || "";
-      // result looks like: data:image/png;base64,AAAA...
-      const base64 = String(result).split(",")[1] || "";
-      resolve(base64);
-    };
-    reader.onerror = () => reject(reader.error || new Error("File read failed"));
-    reader.readAsDataURL(file);
-  });
-}
-
-uploadBtn.addEventListener("click", async () => {
-  const orderId = (orderIdInput.value || "").trim();
-  const payerEmail = (payerEmailInput.value || "").trim();
-  const file = proofFile.files && proofFile.files[0];
-
-  if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
-  if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
-  if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
-
-  uploadBtn.disabled = true;
-  uploadBtn.textContent = "Uploading...";
-  showUploadStatus("Uploading... please wait.");
-
-  try {
-    const base64 = await fileToBase64(file);
-
-    const body = new URLSearchParams();
-    body.set("action", "PAYMENT_PROOF_UPLOAD");
-    body.set("orderId", orderId);
-    body.set("payerEmail", payerEmail);
-    body.set("package", pkg);
-    body.set("fileName", file.name);
-    body.set("mimeType", file.type || "application/octet-stream");
-    body.set("fileBase64", base64);
-
-    const res = await fetch(WEBAPP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-      body: body.toString()
-    });
-
-    const json = await res.json();
-
-    if (!json || !json.ok) {
-      throw new Error((json && json.error) ? json.error : "Upload failed.");
-    }
-
-    showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
-    uploadBtn.textContent = "Uploaded ✓";
-
-  } catch (err) {
-    showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
-    uploadBtn.disabled = false;
-    uploadBtn.textContent = "Upload Proof Now";
-  }
-});
+<!-- ===== Option C Modal (Embedded Google Form) ===== -->
+<div class="modalBackdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true">
+    <div class="modalTop">
+      <strong>Secure Upload (Google Form)</strong>
+      <button class="modalClose" id="modalCloseBtn" type="button">Close</button>
+    </div>
+    <div class="modalBody">
+      <iframe id="formFrame" title="Secure Upload Form"></iframe>
+    </div>
+  </div>
+</div>
 
 <script>
-  // ✅ Payment Proof Form base URL (v_locked-linked)
+  // ✅ Payment Proof Form base URL (Google Form)
   const PAYMENT_PROOF_FORM_URL =
     "https://docs.google.com/forms/d/e/1FAIpQLSdOa8FkqUfu8mXWuUgJtOHlUd7wu-DSnfMvpxbk0r8JkJD7GQ/viewform";
 
-  // ✅ Upload endpoint (same Web App used by start.html)
+  // ✅ Web App URL (your NEW deployment)
   const WEBAPP_URL =
-   const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzrMDP8Z6jzy-3WJKSe7TLEMhRCLl9WIKvmNTLtjgR7MSm2vhKrDOtRRxmkynnu_HETSw/exec";
+    "https://script.google.com/macros/s/AKfycbzrMDP8Z6jzy-3WJKSe7TLEMhRCLl9WIKvmNTLtjgR7MSm2vhKrDOtRRxmkynnu_HETSw/exec";
 
-  /**
-   * OPTIONAL (Prefill):
-   * If your Payment Proof form has an Order_ID field, we can prefill it.
-   */
+  // Prefill entry id for Order_ID in your Google Form
   const ORDER_ID_ENTRY_ID = "entry.1318981867";
 
-  // 1) Read package from URL
+  // Read URL params
   const params = new URLSearchParams(window.location.search);
   const pkg = (params.get("package") || "FAM").toUpperCase();
 
-  // 2) Show only the matching PayPal block
+  // Show only the matching PayPal block
   document.querySelectorAll("#paypalArea .qr-card").forEach(card => {
     card.style.display = (card.dataset.package === pkg) ? "block" : "none";
   });
 
-  // 3) Update top text + badge
+  // Update package text + badge
   const pkgText = document.getElementById("pkgText");
   const pkgBadge = document.getElementById("pkgBadge");
 
@@ -402,11 +390,7 @@ uploadBtn.addEventListener("click", async () => {
     <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
   `;
 
-  // 4) Proof buttons
-  const proofBtn = document.getElementById("proofBtn");
-  const proofBtnPrefill = document.getElementById("proofBtnPrefill");
-  proofBtn.href = PAYMENT_PROOF_FORM_URL;
-
+  // Build prefill URL
   function buildPrefillUrl(orderId) {
     if (!ORDER_ID_ENTRY_ID || !orderId) return PAYMENT_PROOF_FORM_URL;
     const u = new URL(PAYMENT_PROOF_FORM_URL);
@@ -415,8 +399,12 @@ uploadBtn.addEventListener("click", async () => {
     return u.toString();
   }
 
-  // 5) Copy helper
+  // Order ID input
   const orderIdInput = document.getElementById("orderIdInput");
+  const oidFromUrl = (params.get("order_id") || "").trim();
+  if (oidFromUrl) orderIdInput.value = oidFromUrl;
+
+  // Copy helper
   const copyBtn = document.getElementById("copyBtn");
   copyBtn.addEventListener("click", async () => {
     const val = (orderIdInput.value || "").trim();
@@ -426,24 +414,51 @@ uploadBtn.addEventListener("click", async () => {
     setTimeout(() => copyBtn.textContent = "Copy", 1200);
   });
 
-  // 6) If Order_ID is passed in URL, auto-fill + prefill proof link
-  const oid = (params.get("order_id") || "").trim();
-  if (oid) orderIdInput.value = oid;
-
+  // Option A buttons (open new tab)
+  const proofBtn = document.getElementById("proofBtn");
+  const proofBtnPrefill = document.getElementById("proofBtnPrefill");
+  proofBtn.href = PAYMENT_PROOF_FORM_URL;
   proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
 
   orderIdInput.addEventListener("input", () => {
     proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
   });
 
-  // ===== Hidden upload (Option B) =====
+  // Option C: modal open (embedded form)
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalCloseBtn = document.getElementById("modalCloseBtn");
+  const openModalBtn = document.getElementById("openModalBtn");
+  const formFrame = document.getElementById("formFrame");
+
+  function openModalWithUrl(url){
+    formFrame.src = url;
+    modalBackdrop.style.display = "flex";
+    modalBackdrop.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+  function closeModal(){
+    modalBackdrop.style.display = "none";
+    modalBackdrop.setAttribute("aria-hidden", "true");
+    formFrame.src = "about:blank";
+    document.body.style.overflow = "";
+  }
+
+  openModalBtn.addEventListener("click", () => {
+    const oid = (orderIdInput.value || "").trim();
+    openModalWithUrl(buildPrefillUrl(oid));
+  });
+  modalCloseBtn.addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  // ===== Option B: Hidden upload =====
   const uploadBtn = document.getElementById("uploadBtn");
   const uploadStatus = document.getElementById("uploadStatus");
   const payerEmailInput = document.getElementById("payerEmailInput");
   const proofFile = document.getElementById("proofFile");
 
   function showUploadStatus(msg) {
-    if (!uploadStatus) return;
     uploadStatus.style.display = "inline";
     uploadStatus.textContent = msg;
   }
@@ -461,56 +476,50 @@ uploadBtn.addEventListener("click", async () => {
     });
   }
 
-  if (uploadBtn) {
-    uploadBtn.addEventListener("click", async () => {
-      const orderId = (orderIdInput.value || "").trim();
-      const payerEmail = (payerEmailInput && payerEmailInput.value ? payerEmailInput.value : "").trim();
-      const file = proofFile && proofFile.files ? proofFile.files[0] : null;
+  uploadBtn.addEventListener("click", async () => {
+    const orderId = (orderIdInput.value || "").trim();
+    const payerEmail = (payerEmailInput.value || "").trim();
+    const file = (proofFile.files && proofFile.files[0]) ? proofFile.files[0] : null;
 
-      if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
-      if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
-      if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
+    if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
+    if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
+    if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
 
-      uploadBtn.disabled = true;
-      uploadBtn.textContent = "Uploading...";
-      showUploadStatus("Uploading... please wait.");
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = "Uploading...";
+    showUploadStatus("Uploading... please wait.");
 
-      try {
-        const base64 = await fileToBase64(file);
+    try {
+      const base64 = await fileToBase64(file);
 
-        const body = new URLSearchParams();
-        body.set("action", "PAYMENT_PROOF_UPLOAD");
-        body.set("orderId", orderId);
-        body.set("payerEmail", payerEmail);
-        body.set("package", pkg);
-        body.set("fileName", file.name);
-        body.set("mimeType", file.type || "application/octet-stream");
-        body.set("fileBase64", base64);
+      const body = new URLSearchParams();
+      body.set("action", "PAYMENT_PROOF_UPLOAD");
+      body.set("orderId", orderId);
+      body.set("payerEmail", payerEmail);
+      body.set("package", pkg);
+      body.set("fileName", file.name);
+      body.set("mimeType", file.type || "application/octet-stream");
+      body.set("fileBase64", base64);
 
-        const res = await fetch(WEBAPP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-          body: body.toString()
-        });
+      const res = await fetch(WEBAPP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body.toString()
+      });
 
-        const json = await res.json();
+      const json = await res.json();
+      if (!json || !json.ok) throw new Error((json && json.error) ? json.error : "Upload failed.");
 
-        if (!json || !json.ok) {
-          throw new Error((json && json.error) ? json.error : "Upload failed.");
-        }
+      showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
+      uploadBtn.textContent = "Uploaded ✓";
 
-        showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
-        uploadBtn.textContent = "Uploaded ✓";
-
-      } catch (err) {
-        showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
-        uploadBtn.disabled = false;
-        uploadBtn.textContent = "Upload Proof Now";
-      }
-    });
-  }
+    } catch (err) {
+      showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = "Upload Proof Now";
+    }
+  });
 </script>
-
 
 </body>
 </html>
