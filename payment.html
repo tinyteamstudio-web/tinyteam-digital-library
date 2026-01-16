@@ -259,16 +259,14 @@
 <script>
   // ✅ Payment Proof Form base URL (v_locked-linked)
   const PAYMENT_PROOF_FORM_URL =
-   const PAYMENT_PROOF_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdOa8FkqUfu8mXWuUgJtOHlUd7wu-DSnfMvpxbk0r8JkJD7GQ/viewform";
+    "https://docs.google.com/forms/d/e/1FAIpQLSdOa8FkqUfu8mXWuUgJtOHlUd7wu-DSnfMvpxbk0r8JkJD7GQ/viewform";
 
   /**
    * OPTIONAL (Prefill):
    * If your Payment Proof form has an Order_ID field, we can prefill it.
-   * To do that, replace the "ORDER_ID_ENTRY_ID" below with the real entry id.
-   * Example: entry.1234567890
+   * Replace ORDER_ID_ENTRY_ID below with the real entry id (entry.##########).
    */
- const ORDER_ID_ENTRY_ID = "entry.1318981867"; if that is your Order_ID field
+  const ORDER_ID_ENTRY_ID = "entry.1318981867";
 
   // 1) Read package from URL
   const params = new URLSearchParams(window.location.search);
@@ -302,7 +300,6 @@
   const proofBtnPrefill = document.getElementById("proofBtnPrefill");
   proofBtn.href = PAYMENT_PROOF_FORM_URL;
 
-  // Prefill button (only works if ORDER_ID_ENTRY_ID is set)
   function buildPrefillUrl(orderId) {
     if (!ORDER_ID_ENTRY_ID || !orderId) return PAYMENT_PROOF_FORM_URL;
     const u = new URL(PAYMENT_PROOF_FORM_URL);
@@ -328,7 +325,6 @@
 
   proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
 
-  // Update prefill link when user types
   orderIdInput.addEventListener("input", () => {
     proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
   });
