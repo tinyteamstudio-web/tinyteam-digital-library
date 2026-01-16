@@ -360,8 +360,11 @@
   const WEBAPP_URL =
     "https://script.google.com/macros/s/AKfycbzrMDP8Z6jzy-3WJKSe7TLEMhRCLl9WIKvmNTLtjgR7MSm2vhKrDOtRRxmkynnu_HETSw/exec";
 
-  // Prefill entry id for Order_ID in your Google Form
+  // ✅ Prefill entry id for Order_ID in your Google Form
   const ORDER_ID_ENTRY_ID = "entry.1318981867";
+
+  // ✅ Hidden upload safety limit (Base64 upload can fail if file is huge)
+  const MAX_UPLOAD_BYTES = 8 * 1024 * 1024; // 8MB
 
   // Read URL params
   const params = new URLSearchParams(window.location.search);
@@ -383,14 +386,16 @@
   };
 
   const chosen = meta[pkg] || meta.FAM;
-  pkgBadge.textContent = chosen.label;
-  pkgText.innerHTML = `
-    <strong>${chosen.label}</strong><br>
-    Amount: <strong>${chosen.price}</strong><br>
-    <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
-  `;
+  if (pkgBadge) pkgBadge.textContent = chosen.label;
+  if (pkgText) {
+    pkgText.innerHTML = `
+      <strong>${chosen.label}</strong><br>
+      Amount: <strong>${chosen.price}</strong><br>
+      <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
+    `;
+  }
 
-  // Build prefill URL
+  // Build prefill URL (normal open)
   function buildPrefillUrl(orderId) {
     if (!ORDER_ID_ENTRY_ID || !orderId) return PAYMENT_PROOF_FORM_URL;
     const u = new URL(PAYMENT_PROOF_FORM_URL);
@@ -399,30 +404,45 @@
     return u.toString();
   }
 
+  // Build prefill URL (embedded for modal)
+  function buildEmbedPrefillUrl(orderId) {
+    const u = new URL(buildPrefillUrl(orderId));
+    u.searchParams.set("embedded", "true");
+    return u.toString();
+  }
+
   // Order ID input
   const orderIdInput = document.getElementById("orderIdInput");
   const oidFromUrl = (params.get("order_id") || "").trim();
-  if (oidFromUrl) orderIdInput.value = oidFromUrl;
+  if (orderIdInput && oidFromUrl) orderIdInput.value = oidFromUrl;
 
   // Copy helper
   const copyBtn = document.getElementById("copyBtn");
-  copyBtn.addEventListener("click", async () => {
-    const val = (orderIdInput.value || "").trim();
-    if (!val) return;
-    try { await navigator.clipboard.writeText(val); copyBtn.textContent = "Copied ✓"; }
-    catch(e){ copyBtn.textContent = "Copy"; }
-    setTimeout(() => copyBtn.textContent = "Copy", 1200);
-  });
+  if (copyBtn && orderIdInput) {
+    copyBtn.addEventListener("click", async () => {
+      const val = (orderIdInput.value || "").trim();
+      if (!val) return;
+      try { await navigator.clipboard.writeText(val); copyBtn.textContent = "Copied ✓"; }
+      catch(e){ copyBtn.textContent = "Copy"; }
+      setTimeout(() => copyBtn.textContent = "Copy", 1200);
+    });
+  }
 
   // Option A buttons (open new tab)
   const proofBtn = document.getElementById("proofBtn");
   const proofBtnPrefill = document.getElementById("proofBtnPrefill");
-  proofBtn.href = PAYMENT_PROOF_FORM_URL;
-  proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
 
-  orderIdInput.addEventListener("input", () => {
-    proofBtnPrefill.href = buildPrefillUrl((orderIdInput.value || "").trim());
-  });
+  if (proofBtn) proofBtn.href = PAYMENT_PROOF_FORM_URL;
+
+  function refreshPrefillButtons() {
+    const oid = orderIdInput ? (orderIdInput.value || "").trim() : "";
+    if (proofBtnPrefill) proofBtnPrefill.href = buildPrefillUrl(oid);
+  }
+  refreshPrefillButtons();
+
+  if (orderIdInput) {
+    orderIdInput.addEventListener("input", refreshPrefillButtons);
+  }
 
   // Option C: modal open (embedded form)
   const modalBackdrop = document.getElementById("modalBackdrop");
@@ -431,25 +451,35 @@
   const formFrame = document.getElementById("formFrame");
 
   function openModalWithUrl(url){
+    if (!formFrame || !modalBackdrop) return;
     formFrame.src = url;
     modalBackdrop.style.display = "flex";
     modalBackdrop.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
   }
   function closeModal(){
+    if (!modalBackdrop || !formFrame) return;
     modalBackdrop.style.display = "none";
     modalBackdrop.setAttribute("aria-hidden", "true");
     formFrame.src = "about:blank";
     document.body.style.overflow = "";
   }
 
-  openModalBtn.addEventListener("click", () => {
-    const oid = (orderIdInput.value || "").trim();
-    openModalWithUrl(buildPrefillUrl(oid));
-  });
-  modalCloseBtn.addEventListener("click", closeModal);
-  modalBackdrop.addEventListener("click", (e) => {
-    if (e.target === modalBackdrop) closeModal();
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", () => {
+      const oid = orderIdInput ? (orderIdInput.value || "").trim() : "";
+      openModalWithUrl(buildEmbedPrefillUrl(oid));
+    });
+  }
+  if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+  }
+  // ESC closes modal
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
   });
 
   // ===== Option B: Hidden upload =====
@@ -459,6 +489,7 @@
   const proofFile = document.getElementById("proofFile");
 
   function showUploadStatus(msg) {
+    if (!uploadStatus) return;
     uploadStatus.style.display = "inline";
     uploadStatus.textContent = msg;
   }
@@ -476,49 +507,56 @@
     });
   }
 
-  uploadBtn.addEventListener("click", async () => {
-    const orderId = (orderIdInput.value || "").trim();
-    const payerEmail = (payerEmailInput.value || "").trim();
-    const file = (proofFile.files && proofFile.files[0]) ? proofFile.files[0] : null;
+  if (uploadBtn) {
+    uploadBtn.addEventListener("click", async () => {
+      const orderId = orderIdInput ? (orderIdInput.value || "").trim() : "";
+      const payerEmail = payerEmailInput ? (payerEmailInput.value || "").trim() : "";
+      const file = (proofFile && proofFile.files && proofFile.files[0]) ? proofFile.files[0] : null;
 
-    if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
-    if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
-    if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
+      if (!payerEmail) { showUploadStatus("Please enter your email."); return; }
+      if (!orderId) { showUploadStatus("Please enter your Order_ID."); return; }
+      if (!file) { showUploadStatus("Please choose an image/PDF file."); return; }
 
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = "Uploading...";
-    showUploadStatus("Uploading... please wait.");
+      if (file.size > MAX_UPLOAD_BYTES) {
+        showUploadStatus("File too large. Please upload a smaller image (recommended under 8MB), or use the Secure Google Form option.");
+        return;
+      }
 
-    try {
-      const base64 = await fileToBase64(file);
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = "Uploading...";
+      showUploadStatus("Uploading... please wait.");
 
-      const body = new URLSearchParams();
-      body.set("action", "PAYMENT_PROOF_UPLOAD");
-      body.set("orderId", orderId);
-      body.set("payerEmail", payerEmail);
-      body.set("package", pkg);
-      body.set("fileName", file.name);
-      body.set("mimeType", file.type || "application/octet-stream");
-      body.set("fileBase64", base64);
+      try {
+        const base64 = await fileToBase64(file);
 
-      const res = await fetch(WEBAPP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-        body: body.toString()
-      });
+        const body = new URLSearchParams();
+        body.set("action", "PAYMENT_PROOF_UPLOAD");
+        body.set("orderId", orderId);
+        body.set("payerEmail", payerEmail);
+        body.set("package", pkg);
+        body.set("fileName", file.name);
+        body.set("mimeType", file.type || "application/octet-stream");
+        body.set("fileBase64", base64);
 
-      const json = await res.json();
-      if (!json || !json.ok) throw new Error((json && json.error) ? json.error : "Upload failed.");
+        const res = await fetch(WEBAPP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: body.toString()
+        });
 
-      showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
-      uploadBtn.textContent = "Uploaded ✓";
+        const json = await res.json();
+        if (!json || !json.ok) throw new Error((json && json.error) ? json.error : "Upload failed.");
 
-    } catch (err) {
-      showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
-      uploadBtn.disabled = false;
-      uploadBtn.textContent = "Upload Proof Now";
-    }
-  });
+        showUploadStatus("✅ Uploaded! We received your proof. Thank you.");
+        uploadBtn.textContent = "Uploaded ✓";
+
+      } catch (err) {
+        showUploadStatus("Error: " + (err && err.message ? err.message : String(err)));
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload Proof Now";
+      }
+    });
+  }
 </script>
 
 </body>
