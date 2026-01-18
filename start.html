@@ -166,6 +166,20 @@
             </select>
           </div>
 
+          <!-- ✅ ADDED (minimal): 6 Auto Design choices -->
+          <div class="row">
+            <label for="designTemplate">Auto Design (choose 1)</label>
+            <select id="designTemplate" name="designTemplate">
+              <option value="">Auto (recommended)</option>
+              <option value="DESIGN_01">Design 01</option>
+              <option value="DESIGN_02">Design 02</option>
+              <option value="DESIGN_03">Design 03</option>
+              <option value="DESIGN_04">Design 04</option>
+              <option value="DESIGN_05">Design 05</option>
+              <option value="DESIGN_06">Design 06</option>
+            </select>
+          </div>
+
           <div class="row">
             <label for="theme">Theme Style</label>
             <select id="theme" name="theme">
@@ -191,6 +205,12 @@
             </select>
           </div>
 
+          <!-- ✅ ADDED (minimal): Family intro / history page text -->
+          <div class="row full">
+            <label for="familyIntro">Family Introduction / History (optional)</label>
+            <textarea id="familyIntro" name="familyIntro" placeholder="Write a short introduction you want included in the library (history, story, dedication, etc.)"></textarea>
+          </div>
+
           <div class="row full">
             <label for="notes">Notes (optional)</label>
             <textarea id="notes" name="notes" placeholder="Anything you want us to know (names, dates, preferences, etc.)"></textarea>
@@ -198,7 +218,7 @@
         </div>
 
         <p class="hint">
-          <strong>Not sure?</strong> Leave Theme Style and Color Mood on <strong>Auto (recommended)</strong> — we’ll handle the design for you.
+          <strong>Not sure?</strong> Leave Auto Design, Theme Style, and Color Mood on <strong>Auto (recommended)</strong> — we’ll handle the design for you.
         </p>
 
         <div class="actions">
@@ -222,6 +242,7 @@
     // Auto-Design Option 1 defaults (front-end safety)
     const DEFAULT_THEME = "Auto";
     const DEFAULT_PRIMARY_COLOR = "#2563eb";
+    const DEFAULT_DESIGN_TEMPLATE = ""; // Auto (recommended)
 
     // keep the selected package in the payment page when start.html is opened like:
     // start.html?package=FAM  or  start.html?package=COMM
@@ -281,11 +302,14 @@
         return;
       }
 
+      const designTemplate = (document.getElementById("designTemplate").value || "").trim();
+
       let theme = (document.getElementById("theme").value || "").trim();
       let primaryColor = (document.getElementById("primaryColor").value || "").trim();
       if (!theme) theme = DEFAULT_THEME;
       if (!primaryColor) primaryColor = DEFAULT_PRIMARY_COLOR;
 
+      const familyIntro = (document.getElementById("familyIntro").value || "");
       const notes = (document.getElementById("notes").value || "");
 
       submitBtn.disabled = true;
@@ -297,9 +321,11 @@
           ownerName,
           ownerEmail,
           libraryTitle,
+          designTemplate: designTemplate || DEFAULT_DESIGN_TEMPLATE,
           theme,
           primaryColor,
           package: pkg,
+          familyIntro,
           notes
         };
 
@@ -333,4 +359,3 @@
   </script>
 </body>
 </html>
-
