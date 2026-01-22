@@ -17,7 +17,6 @@
       --brand2:#111827;
       --radius:16px;
     }
-
     *{box-sizing:border-box}
     body{
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica;
@@ -82,7 +81,6 @@
       font-weight:800;
     }
 
-    /* form */
     .formWrap{
       border:1px solid rgba(0,0,0,.10);
       border-radius:16px;
@@ -131,34 +129,27 @@
       <div>
         <h2>Start Your Library</h2>
         <p class="sub">
-          Submit the form below to start your TinyTeam library. After review, you’ll receive your next-step instructions by email.
+          Submit the form below to start your TinyTeam library. After review, you’ll receive next-step instructions by email.
         </p>
       </div>
-      <div class="badge">Auto Design Enabled ✅</div>
+      <div class="badge">Manual-first • Privacy-first ✅</div>
     </div>
 
     <div class="divider"></div>
 
     <div class="formWrap">
-
-      <!-- ✅ Formspree Inbox (NO GOOGLE) -->
+      <!-- ✅ FORM: Formspree -->
       <form
         id="startForm"
         action="https://formspree.io/f/xqeergag"
         method="POST"
         accept-charset="UTF-8"
+        novalidate
       >
-        <!-- Email subject -->
-        <input type="hidden" name="_subject" value="TinyTeam — New Library Request" />
-
-        <!-- Redirect after submit -->
-        <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html" />
-
-        <!-- Spam honeypot -->
-        <div style="display:none">
-          <label>Leave this empty</label>
-          <input name="_gotcha" tabindex="-1" autocomplete="off" />
-        </div>
+        <!-- Formspree helpers -->
+        <input type="hidden" name="_subject" value="TinyTeam — Start Library Request">
+        <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
         <div class="grid">
           <div class="row">
@@ -225,7 +216,7 @@
 
           <div class="row full">
             <label for="familyIntro">Family Introduction / History (optional)</label>
-            <textarea id="familyIntro" name="familyIntro" placeholder="Write a short introduction you want included in the library (history, story, dedication, etc.)"></textarea>
+            <textarea id="familyIntro" name="familyIntro" placeholder="Short introduction (history, story, dedication, etc.)"></textarea>
           </div>
 
           <div class="row full">
@@ -235,7 +226,7 @@
         </div>
 
         <p class="hint">
-          <strong>Not sure?</strong> Leave Auto Design, Theme Style, and Color Mood on <strong>Auto (recommended)</strong> — we’ll handle the design for you.
+          <strong>Not sure?</strong> Leave Auto Design, Theme Style, and Color Mood on <strong>Auto</strong> — we’ll handle the design.
         </p>
 
         <div class="actions">
@@ -253,15 +244,11 @@
   </div>
 
   <script>
-    // Keep the selected package in the payment page when start.html is opened like:
-    // start.html?package=FAM  or  start.html?package=COMM
+    // Keep the selected package in the payment page (start.html?package=FAM)
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pkg = (params.get("package") || "").toUpperCase();
       if (!pkg) return;
-
-      const payBtn = document.getElementById("payBtn");
-      if (payBtn) payBtn.href = `payment.html?package=${encodeURIComponent(pkg)}`;
 
       const pkgSel = document.getElementById("package");
       if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
@@ -282,18 +269,22 @@
       syncPayLink();
     })();
 
-    // Optional: show a tiny "Submitting..." status (no fetch)
-    (function () {
+    // Tiny submit UX (no heavy logic)
+    (function(){
       const form = document.getElementById("startForm");
-      const submitBtn = document.getElementById("submitBtn");
-      const statusBox = document.getElementById("statusBox");
-      if (!form || !submitBtn || !statusBox) return;
+      const btn = document.getElementById("submitBtn");
+      const box = document.getElementById("statusBox");
+      if (!form || !btn || !box) return;
+
+      function show(msg){
+        box.textContent = msg;
+        box.classList.add("show");
+      }
 
       form.addEventListener("submit", () => {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
-        statusBox.textContent = "Submitting your request...";
-        statusBox.classList.add("show");
+        btn.disabled = true;
+        btn.textContent = "Submitting...";
+        show("Submitting your request...");
       });
     })();
   </script>
