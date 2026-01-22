@@ -112,6 +112,42 @@
     }
     .status.show{display:block}
 
+    /* NEW: upsell pricing box (small, consistent with your UI) */
+    .priceGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .priceCard{
+      border:1px solid rgba(0,0,0,0.10);
+      border-radius:14px;
+      padding:12px 12px;
+      background:#fff;
+    }
+    .priceCard .topline{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:6px;
+    }
+    .priceCard .tier{
+      font-weight:900;
+      color:#111;
+    }
+    .priceCard .amt{
+      font-weight:900;
+      color:#111827;
+      white-space:nowrap;
+    }
+    .priceCard ul{
+      margin:8px 0 0;
+      padding-left:18px;
+      line-height:1.75;
+    }
+
     @media (max-width: 980px) {
       .grid2 { grid-template-columns: 1fr; }
       .grid4 { grid-template-columns: repeat(2, 1fr); }
@@ -197,9 +233,7 @@
           >
             <input type="hidden" name="_subject" value="TinyTeam — Payment Proof" />
             <input type="hidden" name="source" value="payment_proof" />
-            <!-- ✅ IMPORTANT: use _next and include from=payment -->
             <input type="hidden" name="_next" id="proofNext" value="https://tinyteamstudio.online/thank-you.html?from=payment" />
-
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
             <div class="oidRow">
@@ -238,22 +272,61 @@
 
         <h3 style="margin:0 0 8px;">Optional: We Can Customize Everything For You</h3>
         <p class="muted" style="margin:0 0 12px;line-height:1.7;">
-          Want premium, done-for-you support? Request customization below. We’ll confirm scope + pricing by email.
+          Want premium, done-for-you support? Request customization below.
+          <strong>Exact scope is confirmed by email</strong> before any work starts.
         </p>
 
         <div class="noteBox">
           <strong>Customization Services (Upsell)</strong><br>
           <span class="muted small">
-            Choose what you want help with. This is optional and separate from your package.
+            This is optional and separate from your base package.
+            Choose a tier or request a recommendation.
           </span>
 
-          <ul class="muted small" style="margin:10px 0 0; line-height:1.8;">
-            <li><strong>Cover-to-cover design</strong> (theme, cover, layouts, style)</li>
-            <li><strong>Photo clean-up + organizing</strong> (folders, labels, rename, sorting)</li>
-            <li><strong>Captioning / dates / notes</strong> (light writing support)</li>
-            <li><strong>Family story page</strong> (intro, dedication, timeline)</li>
-            <li><strong>Extra deliverables</strong> (print-ready PDF, album export, special sections)</li>
-          </ul>
+          <!-- ✅ NEW: PRICING TIERS (THIS IS WHERE YOUR PRICING GOES) -->
+          <div class="priceGrid" aria-label="Customization pricing tiers">
+            <div class="priceCard">
+              <div class="topline">
+                <span class="tier">Tier A — Light Assist</span>
+                <span class="amt">USD 45</span>
+              </div>
+              <div class="muted small">Small help / quick wins</div>
+              <ul class="muted small">
+                <li>Cover polish</li>
+                <li>Minor layout tweaks</li>
+                <li>Simple story page</li>
+              </ul>
+            </div>
+
+            <div class="priceCard">
+              <div class="topline">
+                <span class="tier">Tier B — Full Custom Design</span>
+                <span class="amt">USD 189</span>
+              </div>
+              <div class="muted small">Done-for-you design direction</div>
+              <ul class="muted small">
+                <li>Theme + cover</li>
+                <li>Page style + layout system</li>
+              </ul>
+            </div>
+
+            <div class="priceCard">
+              <div class="topline">
+                <span class="tier">Tier C — Organize + Build Support</span>
+                <span class="amt">USD 449+</span>
+              </div>
+              <div class="muted small">Heavy lift (final price depends on volume)</div>
+              <ul class="muted small">
+                <li>Organize / rename / sort by year</li>
+                <li>Captions, dates, notes</li>
+                <li>Timeline + story support</li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="oidHint" style="margin-top:10px;">
+            <strong>Tier C:</strong> final price is confirmed by email after we review the volume and condition of files.
+          </p>
 
           <form
             id="upsellForm"
@@ -264,9 +337,7 @@
           >
             <input type="hidden" name="_subject" value="TinyTeam — Customization / Add-on Request" />
             <input type="hidden" name="source" value="upsell" />
-            <!-- ✅ IMPORTANT: use _next and include from=upsell -->
             <input type="hidden" name="_next" id="upsellNext" value="https://tinyteamstudio.online/thank-you.html?from=upsell" />
-
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
             <div class="oidRow">
@@ -281,15 +352,14 @@
               <input name="package" id="upsellPackage" type="text" readonly />
             </div>
 
+            <!-- Updated select to match tiers + your existing options -->
             <div class="oidRow">
-              <select name="service_request">
-                <option value="">Choose a service (optional)</option>
-                <option>Cover-to-cover design</option>
-                <option>Photo clean-up + organizing</option>
-                <option>Captioning / dates / notes</option>
-                <option>Family story page</option>
-                <option>Extra deliverables</option>
-                <option>Not sure — recommend for me</option>
+              <select name="service_request" required>
+                <option value="">Choose a tier / service (required)</option>
+                <option value="Tier A — Light Assist (USD 45)">Tier A — Light Assist (USD 45)</option>
+                <option value="Tier B — Full Custom Design (USD 189)">Tier B — Full Custom Design (USD 189)</option>
+                <option value="Tier C — Organize + Build Support (USD 449+)">Tier C — Organize + Build Support (USD 449+)</option>
+                <option value="Not sure — recommend for me">Not sure — recommend for me</option>
               </select>
             </div>
 
@@ -299,7 +369,7 @@
 
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <button class="btn" id="upsellSubmitBtn" type="submit">Request Customization</button>
-              <span class="muted small">We’ll reply with scope + price.</span>
+              <span class="muted small">We’ll reply with scope + confirmation.</span>
             </p>
           </form>
         </div>
@@ -323,7 +393,7 @@
 
         <div id="paypalArea">
           <div class="qr-card" data-package="FAM">
-            <h4>Family Library (FAM) — $48</h4>
+            <h4>Family Library (FAM) — $49</h4>
             <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
             <p style="margin:10px 0 0;">
               <a href="https://www.paypal.com/ncp/payment/T9KRP3UURZ63L" target="_blank" rel="noopener">Open PayPal Link</a>
@@ -339,7 +409,7 @@
           </div>
 
           <div class="qr-card" data-package="ADDON">
-            <h4>Photo / Docs Add-On — $49</h4>
+            <h4>Photo / Docs Add-On — $48</h4>
             <img src="assets/qr/TinyTeam – Pho-qrcode.png" alt="PayPal Add-On QR">
             <p style="margin:10px 0 0;">
               <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
@@ -393,11 +463,11 @@
   const params = new URLSearchParams(window.location.search);
   const pkg = (params.get("package") || "FAM").toUpperCase();
 
-  // Package meta
+  // Package meta (UPDATED to your locked pricing)
   const meta = {
-    FAM:   { label: "Family Library (FAM)", price: "$48 one-time" },
+    FAM:   { label: "Family Library (FAM)", price: "$49 one-time" },
     COMM:  { label: "Community Library (COMM)", price: "$89 one-time" },
-    ADDON: { label: "Photo / Docs Add-On", price: "$49 one-time" }
+    ADDON: { label: "Photo / Docs Add-On", price: "$48 one-time" }
   };
 
   // Show only matching PayPal block
@@ -458,12 +528,12 @@
   }
 
   // Append package + order_id to THANK YOU redirects
-  // This helps you see which package was paid + which order was referenced
   const proofNext = document.getElementById("proofNext");
   const upsellNext = document.getElementById("upsellNext");
 
   function syncNextUrls() {
     const oid = (orderIdInput ? orderIdInput.value : "").trim();
+
     const proofUrl = new URL("https://tinyteamstudio.online/thank-you.html");
     proofUrl.searchParams.set("from", "payment");
     proofUrl.searchParams.set("package", pkg);
