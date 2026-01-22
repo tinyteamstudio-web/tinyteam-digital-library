@@ -112,20 +112,20 @@
     }
     .status.show{display:block}
 
-    /* NEW: upsell pricing box (small, consistent with your UI) */
-    .priceGrid{
+    /* Upsell tier cards */
+    .tierGrid{
       display:grid;
       grid-template-columns: 1fr;
       gap:10px;
       margin-top:12px;
     }
-    .priceCard{
+    .tierCard{
       border:1px solid rgba(0,0,0,0.10);
       border-radius:14px;
-      padding:12px 12px;
+      padding:12px;
       background:#fff;
     }
-    .priceCard .topline{
+    .tierCard .topline{
       display:flex;
       align-items:baseline;
       justify-content:space-between;
@@ -133,16 +133,16 @@
       flex-wrap:wrap;
       margin-bottom:6px;
     }
-    .priceCard .tier{
+    .tierCard .tier{
       font-weight:900;
       color:#111;
     }
-    .priceCard .amt{
+    .tierCard .amt{
       font-weight:900;
       color:#111827;
       white-space:nowrap;
     }
-    .priceCard ul{
+    .tierCard ul{
       margin:8px 0 0;
       padding-left:18px;
       line-height:1.75;
@@ -279,13 +279,12 @@
         <div class="noteBox">
           <strong>Customization Services (Upsell)</strong><br>
           <span class="muted small">
-            This is optional and separate from your base package.
-            Choose a tier or request a recommendation.
+            Optional and separate from your base package. Choose a tier, or ask us to recommend.
           </span>
 
-          <!-- ✅ NEW: PRICING TIERS (THIS IS WHERE YOUR PRICING GOES) -->
-          <div class="priceGrid" aria-label="Customization pricing tiers">
-            <div class="priceCard">
+          <!-- ✅ TIER CARDS -->
+          <div class="tierGrid" aria-label="Customization pricing tiers">
+            <div class="tierCard">
               <div class="topline">
                 <span class="tier">Tier A — Light Assist</span>
                 <span class="amt">USD 45</span>
@@ -298,7 +297,7 @@
               </ul>
             </div>
 
-            <div class="priceCard">
+            <div class="tierCard">
               <div class="topline">
                 <span class="tier">Tier B — Full Custom Design</span>
                 <span class="amt">USD 189</span>
@@ -310,7 +309,7 @@
               </ul>
             </div>
 
-            <div class="priceCard">
+            <div class="tierCard">
               <div class="topline">
                 <span class="tier">Tier C — Organize + Build Support</span>
                 <span class="amt">USD 449+</span>
@@ -325,7 +324,7 @@
           </div>
 
           <p class="oidHint" style="margin-top:10px;">
-            <strong>Tier C:</strong> final price is confirmed by email after we review the volume and condition of files.
+            <strong>Tier C:</strong> final price is confirmed by email after we review volume and file condition.
           </p>
 
           <form
@@ -352,7 +351,6 @@
               <input name="package" id="upsellPackage" type="text" readonly />
             </div>
 
-            <!-- Updated select to match tiers + your existing options -->
             <div class="oidRow">
               <select name="service_request" required>
                 <option value="">Choose a tier / service (required)</option>
@@ -463,7 +461,7 @@
   const params = new URLSearchParams(window.location.search);
   const pkg = (params.get("package") || "FAM").toUpperCase();
 
-  // Package meta (UPDATED to your locked pricing)
+  // Package meta (LOCKED pricing)
   const meta = {
     FAM:   { label: "Family Library (FAM)", price: "$49 one-time" },
     COMM:  { label: "Community Library (COMM)", price: "$89 one-time" },
@@ -563,7 +561,7 @@
     });
   }
 
-  // Upsell submit UX (optional, tiny)
+  // Upsell submit UX (tiny)
   const upsellForm = document.getElementById("upsellForm");
   const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
   if (upsellForm && upsellSubmitBtn) {
