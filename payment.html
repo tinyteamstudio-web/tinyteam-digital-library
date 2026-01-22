@@ -148,6 +148,7 @@
     </p>
 
     <div class="panel grid2">
+      <!-- LEFT -->
       <div>
         <h3 style="margin:0 0 8px;">Your Selected Package</h3>
         <p class="muted" style="margin:0 0 12px;line-height:1.7;" id="pkgText">Loading your package...</p>
@@ -179,15 +180,16 @@
           After payment, submit proof so we can verify and move your project to <strong>Paid</strong>.
         </p>
 
+        <!-- ✅ PAYMENT PROOF FORM (Formspree) -->
         <div class="noteBox" style="margin-top:12px;">
           <strong>Payment Proof Submission</strong><br>
           <span class="muted small">
-            Upload your receipt/screenshot (if allowed by your form plan) or paste a secure file link.
+            Upload your receipt/screenshot (if allowed by your Formspree plan) or paste a secure file link.
           </span>
 
           <form
             id="proofForm"
-            action="https://formspree.io/f/xqeergag"
+            action="https://formspree.io/f/xeeajpzy"
             method="POST"
             enctype="multipart/form-data"
             accept-charset="UTF-8"
@@ -196,23 +198,23 @@
             <input type="hidden" name="_subject" value="TinyTeam — Payment Proof" />
             <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html" />
 
-            <div class="oidRow" style="margin-top:10px;">
+            <div class="oidRow">
               <input id="payerEmailInput" name="payer_email" type="email" placeholder="Your Email (required)" autocomplete="email" required />
             </div>
 
-            <div class="oidRow" style="margin-top:10px;">
+            <div class="oidRow">
               <input id="orderIdHidden" name="order_id" type="text" placeholder="Order_ID (required)" required />
             </div>
 
-            <div class="oidRow" style="margin-top:10px;">
+            <div class="oidRow">
               <input id="pkgHidden" name="package" type="text" readonly />
             </div>
 
-            <div class="oidRow" style="margin-top:10px;">
+            <div class="oidRow">
               <input name="payment_proof_file" type="file" accept="image/*,application/pdf" />
             </div>
 
-            <div class="oidRow" style="margin-top:10px;">
+            <div class="oidRow">
               <input name="payment_proof_link" type="url" placeholder="OR paste a secure file link (Drive/Dropbox/etc.)" />
             </div>
 
@@ -304,6 +306,7 @@
         </p>
       </div>
 
+      <!-- RIGHT -->
       <div>
         <h3 style="margin:0 0 8px;">PayPal (Recommended)</h3>
         <p class="muted small" style="margin:0 0 12px;">
@@ -367,23 +370,34 @@
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
+    <div class="footer-links">
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Personal Facebook</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Funnels Facebook Page</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Facebook Page</a>
+    </div>
   </div>
 </footer>
 
 <script>
+  // Read URL params
   const params = new URLSearchParams(window.location.search);
   const pkg = (params.get("package") || "FAM").toUpperCase();
 
+  // Package meta
   const meta = {
     FAM:   { label: "Family Library (FAM)", price: "$48 one-time" },
     COMM:  { label: "Community Library (COMM)", price: "$89 one-time" },
     ADDON: { label: "Photo / Docs Add-On", price: "$49 one-time" }
   };
 
+  // Show only matching PayPal block
   document.querySelectorAll("#paypalArea .qr-card").forEach(card => {
     card.style.display = (card.dataset.package === pkg) ? "block" : "none";
   });
 
+  // Update package text + badge
   const pkgText = document.getElementById("pkgText");
   const pkgBadge = document.getElementById("pkgBadge");
   const chosen = meta[pkg] || meta.FAM;
@@ -397,10 +411,12 @@
     `;
   }
 
+  // Order ID prefill from URL (optional)
   const orderIdInput = document.getElementById("orderIdInput");
   const oidFromUrl = (params.get("order_id") || "").trim();
   if (orderIdInput && oidFromUrl) orderIdInput.value = oidFromUrl;
 
+  // Copy helper
   const copyBtn = document.getElementById("copyBtn");
   if (copyBtn && orderIdInput) {
     copyBtn.addEventListener("click", async () => {
@@ -412,6 +428,7 @@
     });
   }
 
+  // Sync OrderID to forms
   const orderIdHidden = document.getElementById("orderIdHidden");
   const pkgHidden = document.getElementById("pkgHidden");
   if (pkgHidden) pkgHidden.value = pkg;
@@ -431,6 +448,7 @@
     syncOrderId();
   }
 
+  // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
   const proofStatus = document.getElementById("proofStatus");
   const submitProofBtn = document.getElementById("submitProofBtn");
