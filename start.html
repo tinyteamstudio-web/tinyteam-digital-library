@@ -140,6 +140,15 @@
       font-size:14px;
     }
 
+    /* ✅ Minimal add: Auto Design preview line */
+    .autoPreview{
+      font-size:12.5px;
+      color:var(--muted);
+      margin-top:6px;
+      line-height:1.35;
+    }
+    .autoPreview strong{ color: var(--text); }
+
     @media (max-width: 780px){
       .grid{grid-template-columns:1fr}
     }
@@ -172,19 +181,24 @@
         <!-- Formspree helpers -->
         <input type="hidden" name="_subject" value="TinyTeam — Start Library Request">
 
-        <!-- ✅ UPDATED: redirect is set dynamically via JS (keeps your original behavior but adds from/package/order_id) -->
+        <!-- ✅ redirect set dynamically -->
         <input type="hidden" id="startRedirect" name="_redirect" value="https://tinyteamstudio.online/thank-you.html">
 
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-        <!-- ✅ NEW: Request ID (stored + carried forward) -->
+        <!-- ✅ Request ID (stored + carried forward) -->
         <input type="hidden" id="requestIdHidden" name="request_id" value="">
-        <!-- We also mirror it into order_id for downstream consistency -->
+        <!-- Mirror into order_id for downstream consistency -->
         <input type="hidden" id="orderIdHiddenStart" name="order_id" value="">
+
+        <!-- ✅ NEW: resolved auto design outputs (always filled) -->
+        <input type="hidden" id="designResolved" name="designTemplate_resolved" value="">
+        <input type="hidden" id="themeResolved" name="theme_resolved" value="">
+        <input type="hidden" id="colorResolved" name="color_resolved" value="">
 
         <div class="grid">
 
-          <!-- ✅ NEW (minimal): Request ID display (read-only) -->
+          <!-- Request ID display -->
           <div class="row full">
             <label for="requestIdView">Your Request ID (auto-generated)</label>
             <div class="inlineRow">
@@ -255,6 +269,11 @@
             </select>
           </div>
 
+          <!-- ✅ NEW: tiny preview line (full width) -->
+          <div class="row full">
+            <div class="autoPreview" id="autoPreview" aria-live="polite"></div>
+          </div>
+
           <div class="row full">
             <label for="familyIntro">Family Introduction / History (optional)</label>
             <textarea id="familyIntro" name="familyIntro" placeholder="Short introduction (history, story, dedication, etc.)"></textarea>
@@ -287,6 +306,7 @@
   <script>
     // ===========================
     // ✅ OPTION 2: AUTO REQUEST ID
+    // + ✅ AUTO DESIGN RESOLUTION
     // ===========================
     (function () {
       const params = new URLSearchParams(window.location.search);
@@ -301,7 +321,17 @@
       const redirectHidden = document.getElementById("startRedirect");
       const copyReqBtn = document.getElementById("copyReqBtn");
 
-      // Keep incoming package param (your original behavior)
+      // NEW: auto design fields + preview
+      const designSel = document.getElementById("designTemplate");
+      const themeSel  = document.getElementById("theme");
+      const colorSel  = document.getElementById("primaryColor");
+      const autoPreview = document.getElementById("autoPreview");
+
+      const designResolved = document.getElementById("designResolved");
+      const themeResolved  = document.getElementById("themeResolved");
+      const colorResolved  = document.getElementById("colorResolved");
+
+      // Keep incoming package param
       const pkgFromUrl = (params.get("package") || "").toUpperCase();
       if (pkgSel && (pkgFromUrl === "FAM" || pkgFromUrl === "COMM" || pkgFromUrl === "ADDON")) {
         pkgSel.value = pkgFromUrl;
@@ -321,7 +351,7 @@
       // Write into fields
       if (reqView) reqView.value = rid;
       if (reqHidden) reqHidden.value = rid;
-      if (orderHidden) orderHidden.value = rid; // keep downstream compatibility
+      if (orderHidden) orderHidden.value = rid;
 
       // Copy button
       if (copyReqBtn && reqView) {
@@ -336,30 +366,92 @@
         });
       }
 
+      // ---------- NEW: deterministic picker from Request ID ----------
+      function hashStr(str){
+        // simple stable hash
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+          h = ((h << 5) - h) + str.charCodeAt(i);
+          h |= 0;
+        }
+        return Math.abs(h);
+      }
+      function pick(list, seed){
+        return list[seed % list.length];
+      }
+      function labelForColor(val){
+        const map = {
+          "#2563eb":"Blue",
+          "#16a34a":"Green",
+          "#111827":"Neutral (Black/Gray)",
+          "#a855f7":"Purple",
+          "#f59e0b":"Warm (Gold)",
+          "#0ea5e9":"Sky"
+        };
+        return map[val] || val;
+      }
+
+      function resolveAutoDesign(){
+        const seedBase = hashStr(rid + "|" + (pkgSel ? pkgSel.value : "FAM"));
+
+        const designOptions = ["DESIGN_01","DESIGN_02","DESIGN_03","DESIGN_04","DESIGN_05","DESIGN_06"];
+        const themeOptions  = ["Classic","Modern","Minimal","Warm","Elegant"];
+        const colorOptions  = ["#2563eb","#16a34a","#111827","#a855f7","#f59e0b","#0ea5e9"];
+
+        const chosenDesign = (designSel && designSel.value) ? designSel.value : pick(designOptions, seedBase);
+        const chosenTheme  = (themeSel  && themeSel.value)  ? themeSel.value  : pick(themeOptions,  seedBase + 7);
+        const chosenColor  = (colorSel  && colorSel.value)  ? colorSel.value  : pick(colorOptions,  seedBase + 13);
+
+        // Always fill resolved fields (these are what your system should trust)
+        if (designResolved) designResolved.value = chosenDesign;
+        if (themeResolved)  themeResolved.value  = chosenTheme;
+        if (colorResolved)  colorResolved.value  = chosenColor;
+
+        // Preview line for the user
+        if (autoPreview) {
+          const autoOn = (!designSel || !designSel.value) && (!themeSel || !themeSel.value) && (!colorSel || !colorSel.value);
+          const modeText = autoOn ? "Auto will pick" : "Your selection";
+          autoPreview.innerHTML = `${modeText}: <strong>${chosenDesign.replace("_"," ")}</strong> • <strong>${chosenTheme}</strong> • <strong>${labelForColor(chosenColor)}</strong>`;
+        }
+      }
+
       // Sync payment link + redirect link (dynamic)
       function syncLinks(){
         const pkg = (pkgSel ? (pkgSel.value || "FAM") : "FAM").toUpperCase();
         const encodedPkg = encodeURIComponent(pkg);
         const encodedId = encodeURIComponent(rid);
 
-        // ✅ NEW: store last known values so payment can recover autofill
-        try{
-          localStorage.setItem("TT_LAST_ORDER_ID", rid);
-          localStorage.setItem("TT_LAST_PACKAGE", pkg);
-        }catch(e){}
-
         if (payBtn) {
           payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
         }
 
-        // Formspree redirect (thank-you) with context
+        // Thank-you redirect with context
         if (redirectHidden) {
           redirectHidden.value = `https://tinyteamstudio.online/thank-you.html?from=start&package=${encodedPkg}&order_id=${encodedId}`;
         }
+
+        // Re-resolve auto design when package changes (still deterministic)
+        resolveAutoDesign();
       }
 
       if (pkgSel) pkgSel.addEventListener("change", syncLinks);
+
+      // When user changes any select, update resolved + preview
+      if (designSel) designSel.addEventListener("change", resolveAutoDesign);
+      if (themeSel)  themeSel.addEventListener("change", resolveAutoDesign);
+      if (colorSel)  colorSel.addEventListener("change", resolveAutoDesign);
+
+      // Initial sync
       syncLinks();
+      resolveAutoDesign();
+
+      // Ensure resolved fields are set right before submit (safety)
+      const form = document.getElementById("startForm");
+      if (form) {
+        form.addEventListener("submit", () => {
+          resolveAutoDesign();
+        });
+      }
     })();
 
     // Tiny submit UX (your original)
