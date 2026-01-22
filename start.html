@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -140,7 +140,26 @@
     <div class="divider"></div>
 
     <div class="formWrap">
-      <form id="startForm" novalidate>
+
+      <!-- ✅ Formspree Inbox (NO GOOGLE) -->
+      <form
+        id="startForm"
+        action="https://formspree.io/f/xqeergag"
+        method="POST"
+        accept-charset="UTF-8"
+      >
+        <!-- Email subject -->
+        <input type="hidden" name="_subject" value="TinyTeam — New Library Request" />
+
+        <!-- Redirect after submit -->
+        <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html" />
+
+        <!-- Spam honeypot -->
+        <div style="display:none">
+          <label>Leave this empty</label>
+          <input name="_gotcha" tabindex="-1" autocomplete="off" />
+        </div>
+
         <div class="grid">
           <div class="row">
             <label for="ownerName">Owner Name *</label>
@@ -166,7 +185,6 @@
             </select>
           </div>
 
-          <!-- ✅ ADDED (minimal): 6 Auto Design choices -->
           <div class="row">
             <label for="designTemplate">Auto Design (choose 1)</label>
             <select id="designTemplate" name="designTemplate">
@@ -205,7 +223,6 @@
             </select>
           </div>
 
-          <!-- ✅ ADDED (minimal): Family intro / history page text -->
           <div class="row full">
             <label for="familyIntro">Family Introduction / History (optional)</label>
             <textarea id="familyIntro" name="familyIntro" placeholder="Write a short introduction you want included in the library (history, story, dedication, etc.)"></textarea>
@@ -236,15 +253,7 @@
   </div>
 
   <script>
-    // ✅ Apps Script Web App (bridge)
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzrMDP8Z6jzy-3WJKSe7TLEMhRCLl9WIKvmNTLtjgR7MSm2vhKrDOtRRxmkynnu_HETSw/exec";
-
-    // Auto-Design Option 1 defaults (front-end safety)
-    const DEFAULT_THEME = "Auto";
-    const DEFAULT_PRIMARY_COLOR = "#2563eb";
-    const DEFAULT_DESIGN_TEMPLATE = ""; // Auto (recommended)
-
-    // keep the selected package in the payment page when start.html is opened like:
+    // Keep the selected package in the payment page when start.html is opened like:
     // start.html?package=FAM  or  start.html?package=COMM
     (function () {
       const params = new URLSearchParams(window.location.search);
@@ -256,106 +265,37 @@
 
       const pkgSel = document.getElementById("package");
       if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
-    })(); /* ✅ FIX: this closing was missing */
+    })();
 
-    // keep "Proceed to Payment" synced with current package selection
-(function () {
-  const payBtn = document.getElementById("payBtn");
-  const pkgSel = document.getElementById("package");
-  if (!payBtn || !pkgSel) return;
+    // Keep "Proceed to Payment" synced with current package selection
+    (function () {
+      const payBtn = document.getElementById("payBtn");
+      const pkgSel = document.getElementById("package");
+      if (!payBtn || !pkgSel) return;
 
-  function syncPayLink() {
-    const v = (pkgSel.value || "FAM").toUpperCase();
-    payBtn.href = `payment.html?package=${encodeURIComponent(v)}`;
-  }
-
-  pkgSel.addEventListener("change", syncPayLink);
-  syncPayLink();
-})();
-
-
-    const form = document.getElementById("startForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const statusBox = document.getElementById("statusBox");
-
-    function setStatus(msg) {
-      statusBox.textContent = msg;
-      statusBox.classList.add("show");
-    }
-
-    function toFormBody(data) {
-      const p = new URLSearchParams();
-      Object.keys(data).forEach(k => p.append(k, data[k]));
-      return p.toString();
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const ownerName = (document.getElementById("ownerName").value || "").trim();
-      const ownerEmail = (document.getElementById("ownerEmail").value || "").trim();
-      const libraryTitle = (document.getElementById("libraryTitle").value || "").trim();
-      const pkg = (document.getElementById("package").value || "FAM").toUpperCase();
-
-      if (!ownerName || !ownerEmail || !libraryTitle) {
-        setStatus("Please complete the required fields (Name, Email, Library Title).");
-        return;
+      function syncPayLink() {
+        const v = (pkgSel.value || "FAM").toUpperCase();
+        payBtn.href = `payment.html?package=${encodeURIComponent(v)}`;
       }
 
-      const designTemplate = (document.getElementById("designTemplate").value || "").trim();
+      pkgSel.addEventListener("change", syncPayLink);
+      syncPayLink();
+    })();
 
-      let theme = (document.getElementById("theme").value || "").trim();
-      let primaryColor = (document.getElementById("primaryColor").value || "").trim();
-      if (!theme) theme = DEFAULT_THEME;
-      if (!primaryColor) primaryColor = DEFAULT_PRIMARY_COLOR;
+    // Optional: show a tiny "Submitting..." status (no fetch)
+    (function () {
+      const form = document.getElementById("startForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const statusBox = document.getElementById("statusBox");
+      if (!form || !submitBtn || !statusBox) return;
 
-      const familyIntro = (document.getElementById("familyIntro").value || "");
-      const notes = (document.getElementById("notes").value || "");
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-      setStatus("Submitting your request...");
-
-      try {
-        const payload = {
-          ownerName,
-          ownerEmail,
-          libraryTitle,
-          designTemplate: designTemplate || DEFAULT_DESIGN_TEMPLATE,
-          theme,
-          primaryColor,
-          package: pkg,
-          familyIntro,
-          notes
-        };
-
-        const res = await fetch(WEBAPP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-          body: toFormBody(payload)
-        });
-
-        let json;
-        try {
-          json = await res.json();
-        } catch (e) {
-          throw new Error("Server response was not JSON. Please confirm your Web App is deployed as 'Anyone' and returns JSON.");
-        }
-
-        if (!json || !json.ok) {
-          throw new Error((json && json.error) ? json.error : "Submission failed.");
-        }
-
-        const pid = encodeURIComponent(json.projectId || "");
-        const p = encodeURIComponent(pkg);
-        window.location.href = `success.html?pid=${pid}&package=${p}`;
-
-      } catch (err) {
-        setStatus("Error: " + (err && err.message ? err.message : String(err)));
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Request";
-      }
-    });
+      form.addEventListener("submit", () => {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+        statusBox.textContent = "Submitting your request...";
+        statusBox.classList.add("show");
+      });
+    })();
   </script>
 </body>
 </html>
