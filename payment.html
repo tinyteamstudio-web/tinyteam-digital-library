@@ -459,7 +459,25 @@
 <script>
   // Read URL params
   const params = new URLSearchParams(window.location.search);
-  const pkg = (params.get("package") || "FAM").toUpperCase();
+
+  // ✅ OPTION 2 recovery: if URL has no package/order_id, recover from localStorage
+  let pkg = (params.get("package") || "").toUpperCase();
+  let oidFromUrl = (params.get("order_id") || "").trim();
+
+  const validPkg = (v) => (v === "FAM" || v === "COMM" || v === "ADDON");
+
+  try {
+    if (!oidFromUrl) {
+      const savedOid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim();
+      if (savedOid) oidFromUrl = savedOid;
+    }
+    if (!pkg || !validPkg(pkg)) {
+      const savedPkg = (localStorage.getItem("TT_LAST_PACKAGE") || "").toUpperCase();
+      if (savedPkg && validPkg(savedPkg)) pkg = savedPkg;
+    }
+  } catch (e) {}
+
+  if (!pkg || !validPkg(pkg)) pkg = "FAM";
 
   // Package meta (LOCKED pricing)
   const meta = {
@@ -487,9 +505,8 @@
     `;
   }
 
-  // Order ID prefill from URL (optional)
+  // Order ID prefill (URL first, then localStorage recovery above)
   const orderIdInput = document.getElementById("orderIdInput");
-  const oidFromUrl = (params.get("order_id") || "").trim();
   if (orderIdInput && oidFromUrl) orderIdInput.value = oidFromUrl;
 
   // Copy helper
@@ -519,6 +536,12 @@
     const v = (orderIdInput ? orderIdInput.value : "").trim();
     if (orderIdHidden) orderIdHidden.value = v;
     if (upsellOrderId) upsellOrderId.value = v;
+
+    // ✅ keep localStorage updated (helps if they refresh or navigate)
+    try {
+      if (v) localStorage.setItem("TT_LAST_ORDER_ID", v);
+      if (pkg) localStorage.setItem("TT_LAST_PACKAGE", pkg);
+    } catch(e){}
   }
   if (orderIdInput) {
     orderIdInput.addEventListener("input", syncOrderId);
