@@ -9,6 +9,33 @@
     content="We received your request. TinyTeam is human-handled and privacy-first. Manual review happens before any project is created."
   />
   <link rel="stylesheet" href="assets/styles/main.css" />
+
+  <style>
+    /* Small safety styles (won't fight your main.css) */
+    .chip {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,0.10);
+      background:#fff;
+      font-weight:800;
+      font-size:12px;
+      color:rgba(0,0,0,0.70);
+      margin-top:8px;
+    }
+    .contextBox{
+      margin-top:12px;
+      padding:10px 12px;
+      border:1px dashed rgba(0,0,0,0.15);
+      border-radius:14px;
+      background:#f8fafc;
+      color:rgba(0,0,0,0.70);
+      font-size:0.95rem;
+      line-height:1.6;
+    }
+    .contextBox strong{ color:#111; }
+    .hidden{ display:none !important; }
+  </style>
 </head>
 
 <body>
@@ -27,19 +54,71 @@
 
   <!-- Confirmation -->
   <section id="thankyou-hero">
-    <h1>Thank you — we received your request</h1>
-    <p>
+    <h1 id="heroTitle">Thank you — we received your request</h1>
+    <p id="heroLead">
       Your submission was received successfully.
       TinyTeam is a privacy-first, human-handled process, and every request is reviewed carefully.
     </p>
-    <p class="muted">
+
+    <div class="chip" id="fromChip">Manual-first • Privacy-first ✅</div>
+
+    <!-- Smart context (from=start|payment|upsell + package + order_id) -->
+    <div class="contextBox hidden" id="contextBox">
+      <div><strong>Submission type:</strong> <span id="ctxFrom">—</span></div>
+      <div><strong>Package:</strong> <span id="ctxPkg">—</span></div>
+      <div><strong>Order ID:</strong> <span id="ctxOid">—</span></div>
+    </div>
+
+    <p class="muted" style="margin-top:14px;">
       Important: submitting the form does <strong>not</strong> create a project automatically.
       A Project ID is created only after manual review and validation.
     </p>
+
     <p class="muted">
       Your library is designed to become an <strong>heirloom</strong> — and can be prepared in a
       <strong>print-ready</strong> format (A4 / A3 / book-style) if you prefer a physical hard copy.
     </p>
+  </section>
+
+  <!-- Dynamic message blocks -->
+  <section id="thankyou-dynamic">
+    <div data-from="start" class="hidden">
+      <h2>Next step: go to Payment</h2>
+      <p>
+        If you’re ready to pay, proceed to the Payment page and follow the instructions for your selected package.
+      </p>
+      <p class="muted">
+        Reminder: Please pay only after you receive an approval/confirmation message from us.
+      </p>
+      <p><a class="btn" id="goPaymentBtn" href="payment.html?from=start">Proceed to Payment</a></p>
+    </div>
+
+    <div data-from="payment" class="hidden">
+      <h2>Payment proof received ✅</h2>
+      <p>
+        Thank you — we received your payment proof. We’ll verify it manually and email you the next steps.
+      </p>
+      <p class="muted">
+        Please keep an eye on your inbox (and spam/junk folder).
+      </p>
+    </div>
+
+    <div data-from="upsell" class="hidden">
+      <h2>Customization request received ✅</h2>
+      <p>
+        We received your customization request. We’ll reply by email to confirm scope, pricing, and next steps.
+      </p>
+      <p class="muted">
+        This is optional and separate from your base package.
+      </p>
+    </div>
+
+    <div id="fallback" class="hidden">
+      <h2>We received your submission ✅</h2>
+      <p class="muted">
+        If you landed here without a tracking tag, you’re still okay — your submission was received.
+      </p>
+    </div>
   </section>
 
   <!-- Guardrails -->
@@ -56,8 +135,8 @@
   <section id="thankyou-next">
     <h2>What happens next</h2>
     <ol>
-      <li><strong>Manual review</strong> — we check your request, scope, and QR reference.</li>
-      <li><strong>Payment verification</strong> — we confirm your proof of payment (if included).</li>
+      <li><strong>Manual review</strong> — we check your request, scope, and details.</li>
+      <li><strong>Payment verification</strong> — we confirm your proof of payment (if submitted).</li>
       <li><strong>Project setup</strong> — a Project ID is created after validation.</li>
       <li><strong>Email guidance</strong> — you’ll receive next steps, timelines, and any requested clarifications.</li>
     </ol>
@@ -111,6 +190,82 @@
     <a href="help/index.html">Help</a>
   </p>
 </footer>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+
+    const from = (params.get("from") || "").toLowerCase();     // start | payment | upsell
+    const pkg  = (params.get("package") || "").toUpperCase();  // FAM | COMM | ADDON
+    const oid  = (params.get("order_id") || "").trim();
+
+    // Show only the correct message block
+    const blocks = document.querySelectorAll("[data-from]");
+    let shown = false;
+
+    blocks.forEach(el => {
+      const match = el.getAttribute("data-from") === from;
+      el.classList.toggle("hidden", !match);
+      if (match) shown = true;
+    });
+
+    // Fallback if no match
+    const fallback = document.getElementById("fallback");
+    if (fallback) fallback.classList.toggle("hidden", shown);
+
+    // Update hero text depending on source
+    const heroTitle = document.getElementById("heroTitle");
+    const heroLead  = document.getElementById("heroLead");
+    const fromChip  = document.getElementById("fromChip");
+
+    const labelMap = {
+      start:   "Start Request Received ✅",
+      payment: "Payment Proof Received ✅",
+      upsell:  "Customization Request Received ✅"
+    };
+
+    if (fromChip) {
+      const chipText = from ? `Source: ${from.toUpperCase()}` : "Manual-first • Privacy-first ✅";
+      fromChip.textContent = chipText;
+    }
+
+    if (heroTitle && from && labelMap[from]) {
+      heroTitle.textContent = `Thank you — ${labelMap[from]}`;
+    }
+    if (heroLead && from === "payment") {
+      heroLead.textContent = "Your payment proof was received successfully. We’ll verify it manually and email you the next steps.";
+    }
+    if (heroLead && from === "upsell") {
+      heroLead.textContent = "Your customization request was received successfully. We’ll confirm scope and pricing by email.";
+    }
+    if (heroLead && from === "start") {
+      heroLead.textContent = "Your request was received successfully. After manual review, you’ll receive next-step instructions by email.";
+    }
+
+    // Show context box only if any data exists
+    const contextBox = document.getElementById("contextBox");
+    const ctxFrom = document.getElementById("ctxFrom");
+    const ctxPkg = document.getElementById("ctxPkg");
+    const ctxOid = document.getElementById("ctxOid");
+
+    if (contextBox && (from || pkg || oid)) {
+      contextBox.classList.remove("hidden");
+      if (ctxFrom) ctxFrom.textContent = from ? from : "—";
+      if (ctxPkg)  ctxPkg.textContent  = pkg  ? pkg  : "—";
+      if (ctxOid)  ctxOid.textContent  = oid  ? oid  : "—";
+    }
+
+    // Keep "Proceed to Payment" button carrying package + from
+    const goPaymentBtn = document.getElementById("goPaymentBtn");
+    if (goPaymentBtn) {
+      const url = new URL("payment.html", window.location.href);
+      url.searchParams.set("from", "start");
+      if (pkg) url.searchParams.set("package", pkg);
+      if (oid) url.searchParams.set("order_id", oid);
+      goPaymentBtn.href = url.toString().replace(window.location.origin + "/", "");
+    }
+  })();
+</script>
 
 </body>
 </html>
