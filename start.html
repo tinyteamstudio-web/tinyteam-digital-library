@@ -148,7 +148,9 @@
       >
         <!-- Formspree helpers -->
         <input type="hidden" name="_subject" value="TinyTeam — Start Library Request">
-        <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html">
+        <input type="hidden" name="source" value="start">
+        <!-- ✅ IMPORTANT: use _next (redirect) and point to PAYMENT with ?from=start -->
+        <input type="hidden" name="_next" id="nextUrl" value="https://tinyteamstudio.online/payment.html?from=start">
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
         <div class="grid">
@@ -231,7 +233,7 @@
 
         <div class="actions">
           <button class="btn" id="submitBtn" type="submit">Submit Request</button>
-          <a class="btn secondary" id="payBtn" href="payment.html">Proceed to Payment</a>
+          <a class="btn secondary" id="payBtn" href="payment.html?from=start">Proceed to Payment</a>
         </div>
 
         <div class="status" id="statusBox"></div>
@@ -239,37 +241,42 @@
     </div>
 
     <p class="mini">
-      <strong>Privacy note:</strong> Your submission is handled internally by TinyTeam for processing and delivery.
+      <strong>Privacy note:</strong> Manual-first and privacy-first. We review submissions internally and contact you by email for next steps.
     </p>
   </div>
 
   <script>
-    // Keep the selected package in the payment page (start.html?package=FAM)
+    // 1) Allow preselect package via URL: start.html?package=FAM|COMM|ADDON
     (function () {
       const params = new URLSearchParams(window.location.search);
       const pkg = (params.get("package") || "").toUpperCase();
       if (!pkg) return;
 
       const pkgSel = document.getElementById("package");
-      if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
+      if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) {
+        pkgSel.value = pkg;
+      }
     })();
 
-    // Keep "Proceed to Payment" synced with current package selection
+    // 2) Keep "Proceed to Payment" AND Formspree _next redirect synced with current package
     (function () {
       const payBtn = document.getElementById("payBtn");
       const pkgSel = document.getElementById("package");
-      if (!payBtn || !pkgSel) return;
+      const nextUrl = document.getElementById("nextUrl");
+      if (!payBtn || !pkgSel || !nextUrl) return;
 
-      function syncPayLink() {
+      function syncLinks() {
         const v = (pkgSel.value || "FAM").toUpperCase();
-        payBtn.href = `payment.html?package=${encodeURIComponent(v)}`;
+        const url = `https://tinyteamstudio.online/payment.html?from=start&package=${encodeURIComponent(v)}`;
+        payBtn.href = `payment.html?from=start&package=${encodeURIComponent(v)}`;
+        nextUrl.value = url;
       }
 
-      pkgSel.addEventListener("change", syncPayLink);
-      syncPayLink();
+      pkgSel.addEventListener("change", syncLinks);
+      syncLinks();
     })();
 
-    // Tiny submit UX (no heavy logic)
+    // 3) Tiny submit UX (no heavy logic)
     (function(){
       const form = document.getElementById("startForm");
       const btn = document.getElementById("submitBtn");
