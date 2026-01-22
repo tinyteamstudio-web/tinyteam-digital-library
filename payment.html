@@ -196,7 +196,11 @@
             style="margin-top:12px;"
           >
             <input type="hidden" name="_subject" value="TinyTeam — Payment Proof" />
-            <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html" />
+            <input type="hidden" name="source" value="payment_proof" />
+            <!-- ✅ IMPORTANT: use _next and include from=payment -->
+            <input type="hidden" name="_next" id="proofNext" value="https://tinyteamstudio.online/thank-you.html?from=payment" />
+
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
             <div class="oidRow">
               <input id="payerEmailInput" name="payer_email" type="email" placeholder="Your Email (required)" autocomplete="email" required />
@@ -259,7 +263,11 @@
             style="margin-top:12px;"
           >
             <input type="hidden" name="_subject" value="TinyTeam — Customization / Add-on Request" />
-            <input type="hidden" name="_redirect" value="https://tinyteamstudio.online/thank-you.html" />
+            <input type="hidden" name="source" value="upsell" />
+            <!-- ✅ IMPORTANT: use _next and include from=upsell -->
+            <input type="hidden" name="_next" id="upsellNext" value="https://tinyteamstudio.online/thank-you.html?from=upsell" />
+
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
             <div class="oidRow">
               <input name="order_id" id="upsellOrderId" type="text" placeholder="Order_ID (required)" required />
@@ -290,7 +298,7 @@
             </div>
 
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-              <button class="btn" type="submit">Request Customization</button>
+              <button class="btn" id="upsellSubmitBtn" type="submit">Request Customization</button>
               <span class="muted small">We’ll reply with scope + price.</span>
             </p>
           </form>
@@ -428,25 +436,50 @@
     });
   }
 
-  // Sync OrderID to forms
-  const orderIdHidden = document.getElementById("orderIdHidden");
+  // Sync Package to forms
   const pkgHidden = document.getElementById("pkgHidden");
   if (pkgHidden) pkgHidden.value = pkg;
 
   const upsellPackage = document.getElementById("upsellPackage");
   if (upsellPackage) upsellPackage.value = pkg;
 
+  // Sync OrderID to forms
+  const orderIdHidden = document.getElementById("orderIdHidden");
+  const upsellOrderId = document.getElementById("upsellOrderId");
+
   function syncOrderId() {
     const v = (orderIdInput ? orderIdInput.value : "").trim();
     if (orderIdHidden) orderIdHidden.value = v;
-
-    const upsellOrderId = document.getElementById("upsellOrderId");
     if (upsellOrderId) upsellOrderId.value = v;
   }
   if (orderIdInput) {
     orderIdInput.addEventListener("input", syncOrderId);
     syncOrderId();
   }
+
+  // Append package + order_id to THANK YOU redirects
+  // This helps you see which package was paid + which order was referenced
+  const proofNext = document.getElementById("proofNext");
+  const upsellNext = document.getElementById("upsellNext");
+
+  function syncNextUrls() {
+    const oid = (orderIdInput ? orderIdInput.value : "").trim();
+    const proofUrl = new URL("https://tinyteamstudio.online/thank-you.html");
+    proofUrl.searchParams.set("from", "payment");
+    proofUrl.searchParams.set("package", pkg);
+    if (oid) proofUrl.searchParams.set("order_id", oid);
+    if (proofNext) proofNext.value = proofUrl.toString();
+
+    const upsellUrl = new URL("https://tinyteamstudio.online/thank-you.html");
+    upsellUrl.searchParams.set("from", "upsell");
+    upsellUrl.searchParams.set("package", pkg);
+    if (oid) upsellUrl.searchParams.set("order_id", oid);
+    if (upsellNext) upsellNext.value = upsellUrl.toString();
+  }
+  if (orderIdInput) {
+    orderIdInput.addEventListener("input", syncNextUrls);
+  }
+  syncNextUrls();
 
   // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
@@ -457,6 +490,16 @@
       submitProofBtn.disabled = true;
       submitProofBtn.textContent = "Submitting...";
       proofStatus.classList.add("show");
+    });
+  }
+
+  // Upsell submit UX (optional, tiny)
+  const upsellForm = document.getElementById("upsellForm");
+  const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
+  if (upsellForm && upsellSubmitBtn) {
+    upsellForm.addEventListener("submit", () => {
+      upsellSubmitBtn.disabled = true;
+      upsellSubmitBtn.textContent = "Submitting...";
     });
   }
 </script>
