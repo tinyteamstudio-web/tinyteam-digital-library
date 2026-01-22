@@ -7,38 +7,24 @@
   <meta name="description" content="A calm, human-handled digital library for families, communities, and organizations — built for long-term preservation." />
   <link rel="stylesheet" href="assets/styles/main.css" />
 
-  <!-- PACKAGES UPGRADE (safe, local, no extra files) -->
   <style>
-    /* ================= PACKAGES (UPGRADED) ================= */
     #types .cards3 { align-items: stretch; }
-
     #types .card {
       border-radius: 22px;
       border: 1px solid rgba(0,0,0,0.08);
       box-shadow: 0 18px 40px rgba(0,0,0,0.08);
       overflow: hidden;
     }
-
     #types .card__body{
       padding: 22px;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
-
-    /* Background colors per card */
     #types .card--fam { background: linear-gradient(180deg, #f4fbf7, #ffffff); }
     #types .card--comm { background: linear-gradient(180deg, #eef6ff, #ffffff); }
     #types .card--addon { background: linear-gradient(180deg, #fff6ec, #ffffff); }
-
-    /* Icon */
-    #types .card__icon{
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-      line-height: 1;
-    }
-
-    /* Badge */
+    #types .card__icon{ font-size: 2.2rem; margin-bottom: 10px; }
     #types .card__badge{
       align-self: flex-end;
       background: #2f6fed;
@@ -49,442 +35,123 @@
       border-radius: 999px;
       margin-bottom: 10px;
     }
-
-    /* Better top alignment */
     #types .card__top{
       display: flex;
       justify-content: space-between;
       gap: 14px;
       align-items: flex-start;
     }
-
-    #types .card__top h3{
-      margin: 0;
-      font-size: 1.2rem;
-      line-height: 1.25;
-    }
-
-    /* PRICE — BIG EMPHASIS */
     #types .price{
       text-align: right;
       font-size: 2.35rem;
       font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
       padding: 10px 12px;
       border-radius: 14px;
       background: rgba(0,0,0,0.05);
-      min-width: 130px;
       white-space: nowrap;
     }
-
     #types .price__sub{
       display: block;
       margin-top: 6px;
       font-size: 0.95rem;
       font-weight: 600;
       color: rgba(0,0,0,0.6);
-      letter-spacing: 0;
     }
-
-    #types .card__subtitle{
-      margin: 12px 0 12px;
-      color: rgba(0,0,0,0.75);
-      line-height: 1.6;
-    }
-
-    #types .card__list{
-      margin: 10px 0 18px;
-      line-height: 1.7;
-    }
-
-    /* CTA pinned to bottom */
     #types .card__cta{ margin-top: auto; }
-    #types .card__cta .btn{
-      width: 100%;
-      text-align: center;
-    }
-
-    @media (max-width: 980px){
-      #types .price{ text-align: left; }
-    }
+    #types .card__cta .btn{ width: 100%; }
   </style>
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header>
-    <div>
-      <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
-      <nav>
-        <a href="#types">Packages</a>
-        <a href="#painpoints">Why This Exists</a>
-        <a href="#about">About</a>
-        <a href="#faq">FAQ</a>
-        <a href="help/index.html">Help</a>
-      </nav>
-    </div>
-  </header>
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="#types">Packages</a>
+      <a href="#faq">FAQ</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
 
-  <main>
+<main>
 
-    <!-- ================= HERO ================= -->
-    <section id="hero">
-      <div class="split">
-        <div class="media">
-          <img
-            class="hero__img"
-            src="assets/section-images/heritage-book.png"
-            alt="Heritage digital library"
-            width="1200"
-            height="800"
-            decoding="async"
-            fetchpriority="high"
-          />
+<section id="types">
+  <h2>Choose Your Library</h2>
+  <p class="muted">Simple, clear pricing. Built for long-term preservation.</p>
+
+  <div class="cards3">
+
+    <!-- FAM -->
+    <article class="card card--fam">
+      <div class="card__body">
+        <div class="card__icon">👨‍👩‍👧‍👦</div>
+        <div class="card__top">
+          <h3>Family Library (FAM)</h3>
+          <div class="price">$49 <span class="price__sub">one-time</span></div>
         </div>
-        <div class="content">
-          <h1>A Living Digital Library, Carefully Built for Families, Communities, and Organizations</h1>
-          <p>
-            We assemble private, long-lasting digital libraries that preserve people, relationships, stories, and documents —
-            handled with care, one project at a time.
-          </p>
-          <p class="muted">
-            Built to become an <strong>heirloom</strong> — something your family or community can return to for generations.
-            Available in <strong>print-ready</strong> formats if you prefer a hard copy.
-          </p>
-          <p>
-            <a class="btn" data-action="start" data-package="">Start Your Library</a>
-          </p>
+        <ul>
+          <li>Up to <strong>1,000 valid entries</strong></li>
+          <li>Privacy-first, human-handled</li>
+        </ul>
+        <p class="card__cta">
+          <a class="btn" data-action="start" data-package="FAM">Start FAM</a>
+        </p>
+      </div>
+    </article>
+
+    <!-- COMM -->
+    <article class="card card--comm">
+      <div class="card__body">
+        <div class="card__badge">Most Chosen</div>
+        <div class="card__icon">🌳</div>
+        <div class="card__top">
+          <h3>Community Library (COMM)</h3>
+          <div class="price">$89 <span class="price__sub">one-time</span></div>
         </div>
+        <ul>
+          <li>Up to <strong>2,000 valid entries</strong></li>
+          <li>Built for organizations & communities</li>
+        </ul>
+        <p class="card__cta">
+          <a class="btn" data-action="start" data-package="COMM">Start COMM</a>
+        </p>
       </div>
-    </section>
+    </article>
 
-    <!-- ================= PACKAGES ================= -->
-    <section id="types">
-      <h2>Choose Your Library</h2>
-      <p class="muted">
-        Simple, clear pricing. Built for long-term access and future generations.
-      </p>
-
-      <div class="cards3">
-
-        <!-- FAM -->
-        <article class="card card--fam">
-          <div class="card__body">
-            <div class="card__icon">👨‍👩‍👧‍👦</div>
-
-            <div class="card__top">
-              <h3>Family Library (FAM)</h3>
-              <div class="price">$48 <span class="price__sub">one-time</span></div>
-            </div>
-
-            <p class="card__subtitle">
-              Preserve generations of family members, relationships, stories, and milestones.
-            </p>
-
-            <ul class="card__list">
-              <li>Up to <strong>1,000 valid entries</strong></li>
-              <li>Privacy-first and human-handled</li>
-              <li>Print-ready options available</li>
-            </ul>
-
-            <p class="card__cta">
-              <a class="btn" data-action="start" data-package="FAM">Start FAM</a>
-            </p>
-          </div>
-        </article>
-
-        <!-- COMM -->
-        <article class="card card--comm">
-          <div class="card__body">
-            <div class="card__badge">Most Chosen</div>
-            <div class="card__icon">🌳</div>
-
-            <div class="card__top">
-              <h3>Community Library (COMM)</h3>
-              <div class="price">$89 <span class="price__sub">one-time</span></div>
-            </div>
-
-            <p class="card__subtitle">
-              Organize clans, groups, organizations, and community histories in one structured library.
-            </p>
-
-            <ul class="card__list">
-              <li>Up to <strong>2,000 valid entries</strong></li>
-              <li>Designed to stay understandable over time</li>
-              <li>Helps clarify branches and connections</li>
-            </ul>
-
-            <p class="card__cta">
-              <a class="btn" data-action="start" data-package="COMM">Start COMM</a>
-            </p>
-          </div>
-        </article>
-
-        <!-- ADDON -->
-        <article class="card card--addon">
-          <div class="card__body">
-            <div class="card__icon">📁</div>
-
-            <div class="card__top">
-              <h3>Add-Ons</h3>
-              <div class="price">+$49 <span class="price__sub">per library</span></div>
-            </div>
-
-            <p class="card__subtitle">
-              Photo / Docs / Memorabilia organization as a clean attachment library.
-            </p>
-
-            <ul class="card__list">
-              <li>Up to <strong>1,000</strong> photo/doc/memorabilia attachments</li>
-              <li>Clean labels + structured folders</li>
-              <li>Easy to browse for future generations</li>
-            </ul>
-
-            <p class="card__cta">
-              <a class="btn" data-action="start" data-package="ADDON">Ask for Add-On</a>
-            </p>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ================= PAIN POINTS ================= -->
-    <section id="painpoints">
-      <h2>Why This Exists</h2>
-      <p class="muted">
-        Most families and communities already have the information — it’s just scattered, unstructured, and easy to lose.
-      </p>
-
-      <div class="grid3">
-        <article class="mini-card">
-          <h3>Scattered information</h3>
-          <p>Names, photos, and stories are spread across phones, chats, and folders — with no single place to return to.</p>
-        </article>
-
-        <article class="mini-card">
-          <h3>No clear structure</h3>
-          <p>Relationships and timelines get confusing fast without a clean format that makes sense to everyone.</p>
-        </article>
-
-        <article class="mini-card">
-          <h3>Files get lost</h3>
-          <p>Phones get replaced, accounts get forgotten, and storage gets messy — years of history can vanish overnight.</p>
-        </article>
-
-        <article class="mini-card">
-          <h3>Privacy worries</h3>
-          <p>Many families avoid online tools because they don’t want their information public or exposed.</p>
-        </article>
-
-        <article class="mini-card">
-          <h3>No one continues it</h3>
-          <p>One person starts collecting, but without a simple shared library, the work stops when life gets busy.</p>
-        </article>
-
-        <article class="mini-card">
-          <h3>Not print-ready</h3>
-          <p>People want something they can hold, but most systems don’t prepare a clean version for printing.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- ================= ABOUT ================= -->
-    <section id="about">
-      <h2>About Me</h2>
-      <p class="muted">
-        The systems behind TinyTeam and SVP Funnels are built and reviewed personally — with care, structure, and long-term clarity in mind.
-      </p>
-
-      <div class="about-split">
-        <div class="about-photo">
-          <img
-            src="assets/logo/chin-veloso-about.jpg"
-            alt="Chin Veloso - Digital System Builder"
-            loading="lazy"
-            decoding="async"
-          />
+    <!-- ADD-ON -->
+    <article class="card card--addon">
+      <div class="card__body">
+        <div class="card__icon">📁</div>
+        <div class="card__top">
+          <h3>Add-On: Photo / Docs</h3>
+          <div class="price">+$48 <span class="price__sub">per library</span></div>
         </div>
-
-        <div class="about-content">
-          <h3>Hi, I’m Chin Veloso</h3>
-          <p>
-            I design practical digital systems that help businesses and communities operate clearly,
-            efficiently, and sustainably. I don’t automate blindly — I build systems meant to last.
-          </p>
-
-          <div class="about-brand">
-            <img src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels Logo" loading="lazy" decoding="async" />
-            <div>
-              <h4>SVP Funnels</h4>
-              <p>
-                I build streamlined funnels and automation for construction contractors,
-                supporting businesses from pre-construction to post-project growth.
-              </p>
-            </div>
-          </div>
-
-          <div class="about-brand">
-            <img src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio Logo" loading="lazy" decoding="async" />
-            <div>
-              <h4>TinyTeam Studio</h4>
-              <p>
-                I build long-term digital systems for genealogy, organizations, communities,
-                courses, and templates — designed to organize knowledge and preserve stories.
-              </p>
-            </div>
-          </div>
-
-        </div>
+        <ul>
+          <li>Up to <strong>1,000 attachments</strong></li>
+          <li>Photos, documents, memorabilia</li>
+        </ul>
+        <p class="card__cta">
+          <a class="btn" data-action="start" data-package="ADDON">Ask for Add-On</a>
+        </p>
       </div>
-    </section>
+    </article>
 
-    <!-- ================= FAQ ================= -->
-    <section id="faq">
-      <h2>Frequently Asked Questions</h2>
-      <p class="muted">Clear answers — so you feel safe and confident before starting.</p>
+  </div>
+</section>
 
-      <div class="faq">
+</main>
 
-        <details class="faq-item">
-          <summary>Is this public? Will my family information appear on Google?</summary>
-          <div class="faq-body">
-            No. TinyTeam is privacy-first. Your library is not published as a public directory and is not indexed by search engines.
-            Access is shared only with people you choose.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>How will my family easily access the library?</summary>
-          <div class="faq-body">
-            Your library is organized in a simple structure that does not require special apps or technical skills.
-            It is designed so even future generations can open, understand, and use it easily.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>Will future generations still be able to access this?</summary>
-          <div class="faq-body">
-            Yes. This is built as a lasting reference — not a temporary tool. Your children, grandchildren, and future relatives
-            can still access and understand the library years from now.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>What if some family members have never met each other?</summary>
-          <div class="faq-body">
-            That’s common. The library helps connect branches and relationships even if people have never met personally,
-            helping clarify lineage and strengthen family identity over time.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>Can this help connect our clan with other family branches?</summary>
-          <div class="faq-body">
-            Yes. When records are structured properly, it becomes easier to identify connections between branches.
-            Over time, families may discover shared lineage and reconnect through verified information.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>What information do I need to start?</summary>
-          <div class="faq-body">
-            Start with what you already have: names, relationships, key dates, and stories.
-            Missing details are okay — we guide you during validation and help complete the structure.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>What if some information is missing or uncertain?</summary>
-          <div class="faq-body">
-            That’s fine. Submit partial information. During review, we validate what’s provided and request only what is needed
-            to keep the library clean and accurate.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>Can I update or add new relatives later?</summary>
-          <div class="faq-body">
-            Yes. Families grow and new connections may be discovered. Updates can be handled carefully to preserve accuracy
-            and continuity of your library.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>Do you offer print-ready or physical copies?</summary>
-          <div class="faq-body">
-            Yes. We can prepare print-ready formats so you can keep a physical copy (like a family book or community archive)
-            alongside the digital version.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary>How do payments work?</summary>
-          <div class="faq-body">
-            Payments are not auto-charged. Everything is manually verified. After submission, we confirm details and guide you
-            through the next steps clearly and transparently.
-          </div>
-        </details>
-
-      </div>
-    </section>
-
-    <!-- ================= CTA ================= -->
-    <section id="cta">
-      <h2>Ready to Begin?</h2>
-      <p class="muted">
-        Your library is reviewed and built by real people — carefully, privately, and with long-term preservation in mind.
-      </p>
-      <p>
-        <a class="btn" data-action="start" data-package="">Start Your Library</a>
-      </p>
-    </section>
-
-  </main>
-
-  <!-- ================= FOOTER ================= -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-
-      <div class="footer-brand">
-        <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
-        <span class="footer-x">×</span>
-        <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio" />
-      </div>
-
-      <div class="footer-contacts">
-        <a href="mailto:chinveloso.consmaterials@gmail.com">SVP: chinveloso.consmaterials@gmail.com</a>
-        <span class="dot">•</span>
-        <a href="mailto:smallsteps@tinyteamstudio.online">TinyTeam: smallsteps@tinyteamstudio.online</a>
-      </div>
-
-      <div class="footer-links">
-        <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">SVP Personal Facebook</a>
-        <span class="dot">•</span>
-        <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Funnels Facebook Page</a>
-        <span class="dot">•</span>
-        <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Facebook Page</a>
-      </div>
-
-    </div>
-  </footer>
-
-  <!-- ================= LINK WIRING ================= -->
-  <script src="assets/config.js"></script>
-  <script>
-    const cfg = window.TINYTEAM_CONFIG || {};
-    const base = cfg.SUBMISSION_FORM_URL || "start.html";
-
-    document.querySelectorAll('[data-action="start"]').forEach(btn => {
-      btn.addEventListener("click", () => {
-        const pkg = btn.getAttribute("data-package") || "";
-        const url = pkg ? `${base}?package=${encodeURIComponent(pkg)}` : base;
-        window.location.href = url;  // same tab, cleaner funnel flow
-      });
+<script>
+  document.querySelectorAll('[data-action="start"]').forEach(btn => {
+    btn.addEventListener("click", () => {
+      const pkg = btn.getAttribute("data-package") || "";
+      const url = pkg ? `start.html?package=${encodeURIComponent(pkg)}` : "start.html";
+      window.location.href = url;
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
