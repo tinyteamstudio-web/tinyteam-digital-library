@@ -342,6 +342,12 @@
         const encodedPkg = encodeURIComponent(pkg);
         const encodedId = encodeURIComponent(rid);
 
+        // ✅ NEW: store last known values so payment can recover autofill
+        try{
+          localStorage.setItem("TT_LAST_ORDER_ID", rid);
+          localStorage.setItem("TT_LAST_PACKAGE", pkg);
+        }catch(e){}
+
         if (payBtn) {
           payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
         }
