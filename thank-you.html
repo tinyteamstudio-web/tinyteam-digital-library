@@ -76,7 +76,7 @@
 
     <p class="muted">
       Your library is designed to become an <strong>heirloom</strong> — and can be prepared in a
-      <strong>print-ready</strong> format (A4 / A3 / book-style) if you prefer a physical hard copy.
+      <strong>print-ready</strong> format (<strong>A3 / A4 / A5</strong>) if you prefer a physical hard copy.
     </p>
   </section>
 
@@ -90,7 +90,7 @@
       <p class="muted">
         Reminder: Please pay only after you receive an approval/confirmation message from us.
       </p>
-      <p><a class="btn" id="goPaymentBtn" href="payment.html?from=start">Proceed to Payment</a></p>
+      <p><a class="btn" id="goPaymentBtn" href="payment.html">Proceed to Payment</a></p>
     </div>
 
     <div data-from="payment" class="hidden">
@@ -140,7 +140,7 @@
       <li><strong>Project setup</strong> — a Project ID is created after validation.</li>
       <li><strong>Email guidance</strong> — you’ll receive next steps, timelines, and any requested clarifications.</li>
     </ol>
-    <p class="muted" style="margin-top:10px;">
+    <p class="muted" about="margin-top:10px;">
       Please keep an eye on your inbox (and spam/junk folder) for our confirmation email.
     </p>
   </section>
@@ -225,8 +225,7 @@
     };
 
     if (fromChip) {
-      const chipText = from ? `Source: ${from.toUpperCase()}` : "Manual-first • Privacy-first ✅";
-      fromChip.textContent = chipText;
+      fromChip.textContent = from ? `Source: ${from.toUpperCase()}` : "Manual-first • Privacy-first ✅";
     }
 
     if (heroTitle && from && labelMap[from]) {
@@ -255,11 +254,10 @@
       if (ctxOid)  ctxOid.textContent  = oid  ? oid  : "—";
     }
 
-    // Keep "Proceed to Payment" button carrying package + from
+    // "Proceed to Payment" must carry package + order_id
     const goPaymentBtn = document.getElementById("goPaymentBtn");
     if (goPaymentBtn) {
       const url = new URL("payment.html", window.location.href);
-      url.searchParams.set("from", "start");
       if (pkg) url.searchParams.set("package", pkg);
       if (oid) url.searchParams.set("order_id", oid);
       goPaymentBtn.href = url.toString().replace(window.location.origin + "/", "");
