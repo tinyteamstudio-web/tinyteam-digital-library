@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Start — TinyTeam</title>
-  <meta name="description" content="Start your TinyTeam library. Submit the form to begin processing." />
+  <meta name="description" content="Start your TinyTeam family library. Submit the form to begin manual review." />
 
   <style>
     :root{
@@ -118,7 +118,6 @@
     }
     .status.show{display:block}
 
-    /* ✅ Minimal add: tiny inline helper row for Request ID */
     .inlineRow{
       display:flex;
       gap:10px;
@@ -140,7 +139,6 @@
       font-size:14px;
     }
 
-    /* ✅ Minimal add: Auto Design preview line */
     .autoPreview{
       font-size:12.5px;
       color:var(--muted);
@@ -161,7 +159,7 @@
       <div>
         <h2>Start Your Library</h2>
         <p class="sub">
-          Submit the form below to start your TinyTeam library. After review, you’ll receive next-step instructions by email.
+          Submit the form below to start your TinyTeam family library. After manual review, you’ll receive next-step instructions by email.
         </p>
       </div>
       <div class="badge">Manual-first • Privacy-first ✅</div>
@@ -170,7 +168,6 @@
     <div class="divider"></div>
 
     <div class="formWrap">
-      <!-- ✅ FORM: Formspree -->
       <form
         id="startForm"
         action="https://formspree.io/f/xqeergag"
@@ -178,29 +175,23 @@
         accept-charset="UTF-8"
         novalidate
       >
-        <!-- Formspree helpers -->
         <input type="hidden" name="_subject" value="TinyTeam — Start Library Request">
-
-        <!-- ✅ redirect set dynamically -->
         <input type="hidden" id="startRedirect" name="_redirect" value="https://tinyteamstudio.online/thank-you.html">
-
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-        <!-- ✅ Request ID (stored + carried forward) -->
+        <!-- Order ID (carried forward) -->
         <input type="hidden" id="requestIdHidden" name="request_id" value="">
-        <!-- Mirror into order_id for downstream consistency -->
         <input type="hidden" id="orderIdHiddenStart" name="order_id" value="">
 
-        <!-- ✅ NEW: resolved auto design outputs (always filled) -->
+        <!-- Resolved design outputs (always filled) -->
         <input type="hidden" id="designResolved" name="designTemplate_resolved" value="">
         <input type="hidden" id="themeResolved" name="theme_resolved" value="">
         <input type="hidden" id="colorResolved" name="color_resolved" value="">
 
         <div class="grid">
 
-          <!-- Request ID display -->
           <div class="row full">
-            <label for="requestIdView">Your Request ID (auto-generated)</label>
+            <label for="requestIdView">Your Order ID (auto-generated)</label>
             <div class="inlineRow">
               <input id="requestIdView" type="text" readonly />
               <button class="miniBtn" id="copyReqBtn" type="button">Copy</button>
@@ -225,9 +216,9 @@
           <div class="row">
             <label for="package">Package</label>
             <select id="package" name="package">
-              <option value="FAM">Family Library (FAM)</option>
-              <option value="COMM">Community Library (COMM)</option>
-              <option value="ADDON">Photo / Docs Add-On</option>
+              <option value="FAM">Family Library — Large</option>
+              <option value="COMM">Family Library — Extra Large</option>
+              <option value="ADDON">Photos / Documents Add-On</option>
             </select>
           </div>
 
@@ -269,7 +260,6 @@
             </select>
           </div>
 
-          <!-- ✅ NEW: tiny preview line (full width) -->
           <div class="row full">
             <div class="autoPreview" id="autoPreview" aria-live="polite"></div>
           </div>
@@ -304,10 +294,10 @@
   </div>
 
   <script>
-    // ===========================
-    // ✅ OPTION 2: AUTO REQUEST ID
-    // + ✅ AUTO DESIGN RESOLUTION
-    // ===========================
+    // ============================================
+    // AUTO ORDER ID (TT-ORD-YYYY-000001 style)
+    // + AUTO DESIGN RESOLUTION (deterministic)
+    // ============================================
     (function () {
       const params = new URLSearchParams(window.location.search);
 
@@ -321,7 +311,6 @@
       const redirectHidden = document.getElementById("startRedirect");
       const copyReqBtn = document.getElementById("copyReqBtn");
 
-      // NEW: auto design fields + preview
       const designSel = document.getElementById("designTemplate");
       const themeSel  = document.getElementById("theme");
       const colorSel  = document.getElementById("primaryColor");
@@ -337,16 +326,27 @@
         pkgSel.value = pkgFromUrl;
       }
 
-      // If an ID already exists in URL, respect it (for retries)
+      // Respect existing order_id in URL (for retries / payment back-link)
       let rid = (params.get("order_id") || params.get("request_id") || "").trim();
 
-      function makeId(){
-        const year = new Date().getFullYear();
-        const rand = Math.random().toString(36).slice(2, 8).toUpperCase(); // 6 chars
-        return `TT-REQ-${year}-${rand}`;
+      function pad6(n){
+        const s = String(n);
+        return s.length >= 6 ? s.slice(-6) : ("000000" + s).slice(-6);
       }
 
-      if (!rid) rid = makeId();
+      function makeOrderId(){
+        const now = new Date();
+        const year = now.getFullYear();
+
+        // Creates a 6-digit value that changes over time (good enough for v1 manual-first flow).
+        // NOTE: True sequential numbering needs a server/database; this is client-safe and consistent in format.
+        const seconds = Math.floor(now.getTime() / 1000);
+        const six = seconds % 1000000;
+
+        return `TT-ORD-${year}-${pad6(six)}`;
+      }
+
+      if (!rid) rid = makeOrderId();
 
       // Write into fields
       if (reqView) reqView.value = rid;
@@ -366,9 +366,8 @@
         });
       }
 
-      // ---------- NEW: deterministic picker from Request ID ----------
+      // ---------- Deterministic picker from Order ID ----------
       function hashStr(str){
-        // simple stable hash
         let h = 0;
         for (let i = 0; i < str.length; i++) {
           h = ((h << 5) - h) + str.charCodeAt(i);
@@ -402,15 +401,15 @@
         const chosenTheme  = (themeSel  && themeSel.value)  ? themeSel.value  : pick(themeOptions,  seedBase + 7);
         const chosenColor  = (colorSel  && colorSel.value)  ? colorSel.value  : pick(colorOptions,  seedBase + 13);
 
-        // Always fill resolved fields (these are what your system should trust)
+        // Always fill resolved fields (system should trust these)
         if (designResolved) designResolved.value = chosenDesign;
         if (themeResolved)  themeResolved.value  = chosenTheme;
         if (colorResolved)  colorResolved.value  = chosenColor;
 
-        // Preview line for the user
+        // Preview line for user
         if (autoPreview) {
           const autoOn = (!designSel || !designSel.value) && (!themeSel || !themeSel.value) && (!colorSel || !colorSel.value);
-          const modeText = autoOn ? "Auto will pick" : "Your selection";
+          const modeText = autoOn ? "Auto selection" : "Your selection";
           autoPreview.innerHTML = `${modeText}: <strong>${chosenDesign.replace("_"," ")}</strong> • <strong>${chosenTheme}</strong> • <strong>${labelForColor(chosenColor)}</strong>`;
         }
       }
@@ -425,18 +424,14 @@
           payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
         }
 
-        // Thank-you redirect with context
         if (redirectHidden) {
           redirectHidden.value = `https://tinyteamstudio.online/thank-you.html?from=start&package=${encodedPkg}&order_id=${encodedId}`;
         }
 
-        // Re-resolve auto design when package changes (still deterministic)
         resolveAutoDesign();
       }
 
       if (pkgSel) pkgSel.addEventListener("change", syncLinks);
-
-      // When user changes any select, update resolved + preview
       if (designSel) designSel.addEventListener("change", resolveAutoDesign);
       if (themeSel)  themeSel.addEventListener("change", resolveAutoDesign);
       if (colorSel)  colorSel.addEventListener("change", resolveAutoDesign);
@@ -445,7 +440,7 @@
       syncLinks();
       resolveAutoDesign();
 
-      // Ensure resolved fields are set right before submit (safety)
+      // Safety: ensure resolved fields are set right before submit
       const form = document.getElementById("startForm");
       if (form) {
         form.addEventListener("submit", () => {
@@ -454,7 +449,7 @@
       }
     })();
 
-    // Tiny submit UX (your original)
+    // Tiny submit UX (kept)
     (function(){
       const form = document.getElementById("startForm");
       const btn = document.getElementById("submitBtn");
