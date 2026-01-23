@@ -853,3 +853,42 @@ article{ margin-top: 12px; }
     transform: none;
   }
 }
+<style>
+  /* ... your existing packages upgrade CSS ... */
+
+  /* ================= TRUST PROMISE STRIP ================= */
+  .trust-promise{
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.02);
+  }
+  .trust-promise strong{
+    display: block;
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+  }
+  .trust-promise .tp-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-top: 6px;
+  }
+  .trust-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    font-size: 0.9rem;
+    color: rgba(0,0,0,0.78);
+  }
+  .trust-quote{
+    margin-top: 8px;
+    font-style: italic;
+    color: rgba(0,0,0,0.70);
+  }
+</style>
