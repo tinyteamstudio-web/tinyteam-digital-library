@@ -434,3 +434,26 @@ input:focus, select:focus, textarea:focus{
 
   .footer-logo{ height: 26px; } /* IMPORTANT: keep logos small on mobile */
 }
+/* ===== About image: faster + no layout jump ===== */
+.about-photo{
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Reserve space so it loads smoothly */
+.about-photo img{
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 4 / 5;      /* portrait placeholder */
+  object-fit: cover;
+}
+
+/* Mobile: keep it light and not huge */
+@media (max-width: 800px){
+  .about-photo img{
+    aspect-ratio: 4 / 5;
+  }
+}
