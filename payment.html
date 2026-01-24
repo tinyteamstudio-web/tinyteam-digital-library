@@ -1,108 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Payment — TinyTeam</title>
-  <meta name="description" content="Payment instructions for approved TinyTeam requests." />
+  <meta name="description" content="Payment options for TinyTeam. Submit payment proof for verification." />
   <link rel="stylesheet" href="assets/styles/main.css" />
 
   <style>
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 70px 20px; }
-    .panel {
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 18px;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.06);
-      padding: 20px;
-      margin-top: 16px;
-    }
-    .grid2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; }
-    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-
-    .pay-title { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-    .badge {
-      background: rgba(24, 119, 242, 0.08);
-      color: rgba(24, 119, 242, 0.95);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .qr-card {
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 16px;
-      padding: 14px;
-      background: #fafafa;
-    }
-    .qr-card h4 { margin: 0 0 10px; }
-    .qr-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-    .qr-card a { font-weight: 800; }
-
-    .muted { color: rgba(0,0,0,0.65); }
-    .small { font-size: 0.95rem; }
-    .hr { height:1px; background: rgba(0,0,0,0.08); margin: 16px 0; }
-
-    .noteBox{
-      border:1px solid rgba(0,0,0,0.10);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: #f8fafc;
-      margin-top: 10px;
-    }
-    .noteBox strong{ color:#111; }
-
-    .oidRow{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-      margin-top: 10px;
-    }
-    .oidRow input, .oidRow select{
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,0.15);
-      min-width: 260px;
-      max-width: 520px;
-      width: 100%;
-      font-size: 14px;
-      background:#fff;
-    }
-    .oidRow button{
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 0;
-      background:#111827;
-      color:#fff;
-      font-weight:800;
-      cursor:pointer;
-      font-size: 14px;
-    }
-    .oidHint{ margin:8px 0 0; font-size: 0.92rem; color: rgba(0,0,0,0.65); line-height:1.6; }
-
-    .btn{
-      display:inline-block;
-      padding:12px 14px;
-      border-radius:12px;
-      background:#111827;
-      color:#fff;
-      text-decoration:none;
-      font-weight:800;
-      font-size:14px;
-      border:0;
-      cursor:pointer;
-    }
-    .btn.secondary{
-      background:#fff;
-      color:#111827;
-      border:1px solid rgba(0,0,0,0.12);
-    }
-
+    /* Small safety styles (won't fight your main.css) */
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
     .status{
       margin-top:10px;
       font-size:13px;
@@ -111,49 +18,10 @@
       line-height:1.5;
     }
     .status.show{display:block}
-
-    /* Upsell tier cards */
-    .tierGrid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-    .tierCard{
-      border:1px solid rgba(0,0,0,0.10);
-      border-radius:14px;
-      padding:12px;
+    .btn.secondary{
       background:#fff;
-    }
-    .tierCard .topline{
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:6px;
-    }
-    .tierCard .tier{
-      font-weight:900;
-      color:#111;
-    }
-    .tierCard .amt{
-      font-weight:900;
       color:#111827;
-      white-space:nowrap;
-    }
-    .tierCard ul{
-      margin:8px 0 0;
-      padding-left:18px;
-      line-height:1.75;
-    }
-
-    @media (max-width: 980px) {
-      .grid2 { grid-template-columns: 1fr; }
-      .grid4 { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 520px) {
-      .grid4 { grid-template-columns: 1fr; }
+      border:1px solid rgba(0,0,0,0.12);
     }
   </style>
 </head>
@@ -164,8 +32,7 @@
   <div>
     <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
     <nav>
-      <a href="index.html#types">Packages</a>
-      <a href="index.html#faq">FAQ</a>
+      <a href="start.html">Start</a>
       <a href="help/index.html">Help</a>
     </nav>
   </div>
@@ -173,169 +40,109 @@
 
 <main>
   <div class="wrap">
-    <div class="pay-title">
-      <h1 style="margin:0;">Payment</h1>
-      <span class="badge" id="pkgBadge">Approved Request</span>
-    </div>
 
-    <p class="muted small" style="line-height:1.7;margin-top:10px;">
-      <strong>Important:</strong> Please pay only after you receive an approval/confirmation message from us.
-      This prevents mistaken payments.
-    </p>
+    <section class="panel">
+      <h1>Payment</h1>
+      <p class="muted" style="line-height:1.7;">
+        Submit your <strong>Order ID</strong>, choose your package, then pay using the QR or link.
+        After paying, upload proof so we can verify manually.
+      </p>
 
-    <div class="panel grid2">
+      <p class="muted small" style="margin-top:10px;">
+        <strong>Member submission link:</strong> You will receive it by email after payment is verified.
+      </p>
+    </section>
+
+    <div class="grid2" style="margin-top:18px;">
+
       <!-- LEFT -->
       <div>
-        <h3 style="margin:0 0 8px;">Your Selected Package</h3>
-        <p class="muted" style="margin:0 0 12px;line-height:1.7;" id="pkgText">Loading your package...</p>
 
-        <div class="noteBox">
-          <strong>Order ID is required</strong><br>
-          <span class="muted small">
-            You will receive your <strong>Order_ID</strong> in our approval email.
-            Use the same Order_ID when submitting your payment proof.
-          </span>
+        <div class="panel">
+          <h3 style="margin:0 0 10px;">Step 1 — Enter Your Order ID</h3>
+          <p class="muted small" style="margin:0 0 12px;line-height:1.7;">
+            If you came from Start, this auto-fills. If not, paste your Order ID here.
+          </p>
 
-          <div class="oidRow">
-            <input id="orderIdInput" type="text"
-              placeholder="Paste your Order_ID here (e.g., TT-ORD-2026-000001)"
-              aria-label="Order ID" autocomplete="off" />
-            <button id="copyBtn" type="button">Copy</button>
+          <input id="orderIdInput" class="mono" type="text" placeholder="TT-ORD-2026-000123-ABC" />
+
+          <div style="margin-top:12px;">
+            <label class="muted small" style="display:block;margin-bottom:6px;">Package</label>
+            <select id="pkgSel">
+              <option value="FAM">Family Library (FAM) — $48</option>
+              <option value="COMM">Community Library (COMM) — $89</option>
+              <option value="ADDON">Photo / Docs Add-On — $49</option>
+            </select>
           </div>
 
-          <p class="oidHint">
-            If you don’t have your Order_ID yet, go back:
-            <a href="start.html" style="font-weight:800;">Start Your Library</a>
+          <p class="muted small" style="margin-top:10px;">
+            Note: Pay only if you are ready. Verification is manual and confirmed by email.
           </p>
         </div>
 
-        <div class="hr"></div>
+        <!-- PAYMENT PROOF FORM -->
+        <div class="panel" style="margin-top:14px;">
+          <h3 style="margin:0 0 10px;">Step 2 — Upload Payment Proof</h3>
 
-        <h3 style="margin:0 0 8px;">Submit Payment Proof</h3>
-        <p class="muted" style="margin:0 0 12px;line-height:1.7;">
-          After payment, submit proof so we can verify and move your project to <strong>Paid</strong>.
-        </p>
-
-        <!-- ✅ PAYMENT PROOF FORM (Formspree) -->
-        <div class="noteBox" style="margin-top:12px;">
-          <strong>Payment Proof Submission</strong><br>
-          <span class="muted small">
-            Upload your receipt/screenshot (if allowed by your Formspree plan) or paste a secure file link.
-          </span>
-
-          <form
-            id="proofForm"
-            action="https://formspree.io/f/xeeajpzy"
-            method="POST"
-            enctype="multipart/form-data"
-            accept-charset="UTF-8"
-            style="margin-top:12px;"
-          >
-            <input type="hidden" name="_subject" value="TinyTeam — Payment Proof" />
-            <input type="hidden" name="source" value="payment_proof" />
+          <form id="proofForm" action="https://formspree.io/f/xeeajpzy" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_next" id="proofNext" value="https://tinyteamstudio.online/thank-you.html?from=payment" />
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
             <div class="oidRow">
-              <input id="payerEmailInput" name="payer_email" type="email" placeholder="Your Email (required)" autocomplete="email" required />
+              <input name="order_id" id="orderIdHidden" type="text" placeholder="Order_ID (required)" required />
             </div>
 
             <div class="oidRow">
-              <input id="orderIdHidden" name="order_id" type="text" placeholder="Order_ID (required)" required />
+              <input name="email" type="email" placeholder="Your Email (required)" required />
             </div>
 
             <div class="oidRow">
-              <input id="pkgHidden" name="package" type="text" readonly />
+              <input name="package" id="packageHidden" type="text" readonly />
             </div>
 
             <div class="oidRow">
-              <input name="payment_proof_file" type="file" accept="image/*,application/pdf" />
+              <select name="payment_method" required>
+                <option value="">Payment Method (required)</option>
+                <option value="PayPal">PayPal</option>
+                <option value="GCash">GCash</option>
+                <option value="Maya">Maya</option>
+                <option value="GoTyme">GoTyme</option>
+                <option value="PNB">PNB</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div class="oidRow">
-              <input name="payment_proof_link" type="url" placeholder="OR paste a secure file link (Drive/Dropbox/etc.)" />
+              <input name="amount_paid" type="text" placeholder="Amount Paid (optional)" />
+            </div>
+
+            <div class="oidRow">
+              <input name="proof_link" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
+            </div>
+
+            <div class="oidRow">
+              <label class="muted small" style="display:block;margin-bottom:6px;">Upload Screenshot (optional)</label>
+              <input name="proof_file" type="file" />
             </div>
 
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <button class="btn" id="submitProofBtn" type="submit">Submit Payment Proof</button>
-              <span class="status" id="proofStatus">Submitting…</span>
+              <span class="muted small">We’ll verify and email you.</span>
             </p>
 
-            <p class="oidHint" style="margin-top:10px;">
-              If file upload is blocked, just paste a link above and submit.
-            </p>
+            <div class="status" id="proofStatus">Submitting proof…</div>
           </form>
         </div>
 
-        <!-- ✅ UPSELL SECTION -->
-        <div class="hr"></div>
-
-        <h3 style="margin:0 0 8px;">Optional: We Can Customize Everything For You</h3>
-        <p class="muted" style="margin:0 0 12px;line-height:1.7;">
-          Want premium, done-for-you support? Request customization below.
-          <strong>Exact scope is confirmed by email</strong> before any work starts.
-        </p>
-
-        <div class="noteBox">
-          <strong>Customization Services (Upsell)</strong><br>
-          <span class="muted small">
-            Optional and separate from your base package. Choose a tier, or ask us to recommend.
-          </span>
-
-          <!-- ✅ TIER CARDS -->
-          <div class="tierGrid" aria-label="Customization pricing tiers">
-            <div class="tierCard">
-              <div class="topline">
-                <span class="tier">Tier A — Light Assist</span>
-                <span class="amt">USD 45</span>
-              </div>
-              <div class="muted small">Small help / quick wins</div>
-              <ul class="muted small">
-                <li>Cover polish</li>
-                <li>Minor layout tweaks</li>
-                <li>Simple story page</li>
-              </ul>
-            </div>
-
-            <div class="tierCard">
-              <div class="topline">
-                <span class="tier">Tier B — Full Custom Design</span>
-                <span class="amt">USD 189</span>
-              </div>
-              <div class="muted small">Done-for-you design direction</div>
-              <ul class="muted small">
-                <li>Theme + cover</li>
-                <li>Page style + layout system</li>
-              </ul>
-            </div>
-
-            <div class="tierCard">
-              <div class="topline">
-                <span class="tier">Tier C — Organize + Build Support</span>
-                <span class="amt">USD 449+</span>
-              </div>
-              <div class="muted small">Heavy lift (final price depends on volume)</div>
-              <ul class="muted small">
-                <li>Organize / rename / sort by year</li>
-                <li>Captions, dates, notes</li>
-                <li>Timeline + story support</li>
-              </ul>
-            </div>
-          </div>
-
-          <p class="oidHint" style="margin-top:10px;">
-            <strong>Tier C:</strong> final price is confirmed by email after we review volume and file condition.
+        <!-- UPSELL / CUSTOMIZATION -->
+        <div class="panel" style="margin-top:14px;">
+          <h3 style="margin:0 0 10px;">Optional — Customize the Design for Me</h3>
+          <p class="muted small" style="margin:0 0 12px;line-height:1.7;">
+            Want TinyTeam to handle design polishing, arranging, and archive structuring? Request customization below.
           </p>
 
-          <form
-            id="upsellForm"
-            action="https://formspree.io/f/xzdepang"
-            method="POST"
-            accept-charset="UTF-8"
-            style="margin-top:12px;"
-          >
-            <input type="hidden" name="_subject" value="TinyTeam — Customization / Add-on Request" />
-            <input type="hidden" name="source" value="upsell" />
+          <form id="upsellForm" action="https://formspree.io/f/xzdepang" method="POST">
             <input type="hidden" name="_next" id="upsellNext" value="https://tinyteamstudio.online/thank-you.html?from=upsell" />
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
@@ -370,207 +177,172 @@
               <span class="muted small">We’ll reply with scope + confirmation.</span>
             </p>
           </form>
+
+          <p class="muted small" style="margin-top:12px;line-height:1.7;">
+            Need help? Email:
+            <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+          </p>
         </div>
 
-        <p class="muted small" style="margin-top:12px;line-height:1.7;">
-          Need help? Email:
-          <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
-        </p>
-
-        <p class="muted small" style="margin-top:8px;line-height:1.7;">
-          <strong>Member submission link:</strong> You will receive it by email after payment is verified.
-        </p>
       </div>
 
       <!-- RIGHT -->
       <div>
-        <h3 style="margin:0 0 8px;">PayPal (Recommended)</h3>
-        <p class="muted small" style="margin:0 0 12px;">
-          Scan the PayPal QR below or use the PayPal link.
-        </p>
 
-        <div id="paypalArea">
-          <div class="qr-card" data-package="FAM">
-            <h4>Family Library (FAM) — $49</h4>
-            <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
-            <p style="margin:10px 0 0;">
-              <a href="https://www.paypal.com/ncp/payment/T9KRP3UURZ63L" target="_blank" rel="noopener">Open PayPal Link</a>
-            </p>
-          </div>
+        <div class="panel">
+          <h3 style="margin:0 0 8px;">PayPal (Recommended)</h3>
+          <p class="muted small" style="margin:0 0 12px;">
+            Scan the PayPal QR below or use the PayPal link.
+          </p>
 
-          <div class="qr-card" data-package="COMM">
-            <h4>Community Library (COMM) — $89</h4>
-            <img src="assets/qr/TinyTeam – Com-qrcode.png" alt="PayPal COMM QR">
-            <p style="margin:10px 0 0;">
-              <a href="https://www.paypal.com/ncp/payment/K45JT94FYQD6C" target="_blank" rel="noopener">Open PayPal Link</a>
-            </p>
-          </div>
+          <div id="paypalArea">
+            <div class="qr-card" data-package="FAM">
+              <h4>Family Library (FAM) — $48</h4>
+              <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
+              <p style="margin:10px 0 0;">
+                <a href="https://www.paypal.com/ncp/payment/7H5SDCY7QG7TY" target="_blank" rel="noopener">Open PayPal Link</a>
+              </p>
+            </div>
 
-          <div class="qr-card" data-package="ADDON">
-            <h4>Photo / Docs Add-On — $48</h4>
-            <img src="assets/qr/TinyTeam – Pho-qrcode.png" alt="PayPal Add-On QR">
-            <p style="margin:10px 0 0;">
-              <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
-            </p>
+            <div class="qr-card" data-package="COMM">
+              <h4>Community Library (COMM) — $89</h4>
+              <img src="assets/qr/TinyTeam – Com-qrcode.png" alt="PayPal COMM QR">
+              <p style="margin:10px 0 0;">
+                <a href="https://www.paypal.com/ncp/payment/K45JT94FYQD6C" target="_blank" rel="noopener">Open PayPal Link</a>
+              </p>
+            </div>
+
+            <div class="qr-card" data-package="ADDON">
+              <h4>Photo / Docs Add-On — $49</h4>
+              <img src="assets/qr/TinyTeam – Pho-qrcode.png" alt="PayPal Add-On QR">
+              <p style="margin:10px 0 0;">
+                <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
+              </p>
+            </div>
           </div>
         </div>
+
+        <div class="panel" style="margin-top:14px;">
+          <h3 style="margin:0 0 8px;">Alternative Payment Options</h3>
+          <p class="muted small" style="margin:0 0 14px;line-height:1.7;">
+            If PayPal is not available, you may use the options below.
+            Keep your receipt/screenshot and submit it using the payment proof form.
+          </p>
+
+          <div class="grid4">
+            <div class="qr-card"><h4>GCash</h4><img src="assets/qr/gcash-qr.jpeg" alt="GCash QR"></div>
+            <div class="qr-card"><h4>Maya</h4><img src="assets/qr/maya-qr.jpeg" alt="Maya QR"></div>
+            <div class="qr-card"><h4>GoTyme</h4><img src="assets/qr/gotym-qr.jpeg" alt="GoTyme QR"></div>
+            <div class="qr-card"><h4>PNB</h4><img src="assets/qr/pnb-qr.jpeg" alt="PNB QR"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="btn" href="index.html">Back to Home</a>
+          <a class="btn secondary" href="start.html">Start a New Request</a>
+        </div>
+
       </div>
+
     </div>
 
-    <div class="panel">
-      <h3 style="margin:0 0 8px;">Alternative Payment Options</h3>
-      <p class="muted small" style="margin:0 0 14px;line-height:1.7;">
-        If PayPal is not available, you may use the options below.
-        Keep your receipt/screenshot and submit it using the payment proof form.
-      </p>
-
-      <div class="grid4">
-        <div class="qr-card"><h4>GCash</h4><img src="assets/qr/gcash-qr.jpeg" alt="GCash QR"></div>
-        <div class="qr-card"><h4>Maya</h4><img src="assets/qr/maya-qr.jpeg" alt="Maya QR"></div>
-        <div class="qr-card"><h4>GoTyme</h4><img src="assets/qr/gotym-qr.jpeg" alt="GoTyme QR"></div>
-        <div class="qr-card"><h4>PNB</h4><img src="assets/qr/pnb-qr.jpeg" alt="PNB QR"></div>
-      </div>
-    </div>
-
-    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
-      <a class="btn" href="index.html">Back to Home</a>
-      <a class="btn" href="start.html">Start a New Request</a>
-    </div>
   </div>
 </main>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-contacts">
-      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
-      <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
     <div class="footer-links">
-      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Personal Facebook</a>
+      <a href="index.html">Home</a>
       <span class="dot">•</span>
-      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">SVP Funnels Facebook Page</a>
+      <a href="help/index.html">Help</a>
       <span class="dot">•</span>
-      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Facebook Page</a>
+      <a href="reseller/index.html">Reseller Program</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // Read URL params
+(function(){
   const params = new URLSearchParams(window.location.search);
-
-  // ✅ OPTION 2 recovery: if URL has no package/order_id, recover from localStorage
   let pkg = (params.get("package") || "").toUpperCase();
-  let oidFromUrl = (params.get("order_id") || "").trim();
+  let oid = (params.get("order_id") || "").trim();
 
-  const validPkg = (v) => (v === "FAM" || v === "COMM" || v === "ADDON");
+  // Fallback to localStorage
+  try{
+    if (!pkg) pkg = (localStorage.getItem("TT_LAST_PACKAGE") || "").toUpperCase();
+    if (!oid) oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim();
+  }catch(e){}
 
-  try {
-    if (!oidFromUrl) {
-      const savedOid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim();
-      if (savedOid) oidFromUrl = savedOid;
-    }
-    if (!pkg || !validPkg(pkg)) {
-      const savedPkg = (localStorage.getItem("TT_LAST_PACKAGE") || "").toUpperCase();
-      if (savedPkg && validPkg(savedPkg)) pkg = savedPkg;
-    }
-  } catch (e) {}
-
-  if (!pkg || !validPkg(pkg)) pkg = "FAM";
-
-  // Package meta (LOCKED pricing)
-  const meta = {
-    FAM:   { label: "Family Library (FAM)", price: "$49 one-time" },
-    COMM:  { label: "Community Library (COMM)", price: "$89 one-time" },
-    ADDON: { label: "Photo / Docs Add-On", price: "$48 one-time" }
-  };
-
-  // Show only matching PayPal block
-  document.querySelectorAll("#paypalArea .qr-card").forEach(card => {
-    card.style.display = (card.dataset.package === pkg) ? "block" : "none";
-  });
-
-  // Update package text + badge
-  const pkgText = document.getElementById("pkgText");
-  const pkgBadge = document.getElementById("pkgBadge");
-  const chosen = meta[pkg] || meta.FAM;
-
-  if (pkgBadge) pkgBadge.textContent = chosen.label;
-  if (pkgText) {
-    pkgText.innerHTML = `
-      <strong>${chosen.label}</strong><br>
-      Amount: <strong>${chosen.price}</strong><br>
-      <span class="muted small">After payment, submit proof so we can verify and continue building your library.</span>
-    `;
-  }
-
-  // Order ID prefill (URL first, then localStorage recovery above)
+  const pkgSel = document.getElementById("pkgSel");
   const orderIdInput = document.getElementById("orderIdInput");
-  if (orderIdInput && oidFromUrl) orderIdInput.value = oidFromUrl;
 
-  // Copy helper
-  const copyBtn = document.getElementById("copyBtn");
-  if (copyBtn && orderIdInput) {
-    copyBtn.addEventListener("click", async () => {
-      const val = (orderIdInput.value || "").trim();
-      if (!val) return;
-      try { await navigator.clipboard.writeText(val); copyBtn.textContent = "Copied ✓"; }
-      catch(e){ copyBtn.textContent = "Copy"; }
-      setTimeout(() => copyBtn.textContent = "Copy", 1200);
-    });
+  if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
+  if (orderIdInput && oid) orderIdInput.value = oid;
+
+  // show only selected paypal card
+  function refreshPaypal(){
+    const chosen = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
+    const cards = document.querySelectorAll("#paypalArea .qr-card[data-package]");
+    cards.forEach(c => c.style.display = (c.dataset.package === chosen ? "" : "none"));
   }
 
-  // Sync Package to forms
-  const pkgHidden = document.getElementById("pkgHidden");
-  if (pkgHidden) pkgHidden.value = pkg;
-
+  // Sync hidden package fields
+  const packageHidden = document.getElementById("packageHidden");
   const upsellPackage = document.getElementById("upsellPackage");
-  if (upsellPackage) upsellPackage.value = pkg;
+  function syncPackage(){
+    const p = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
+    if (packageHidden) packageHidden.value = p;
+    if (upsellPackage) upsellPackage.value = p;
 
-  // Sync OrderID to forms
+    try { localStorage.setItem("TT_LAST_PACKAGE", p); } catch(e){}
+    refreshPaypal();
+    syncNextUrls();
+  }
+
+  // Sync OrderID to forms + localStorage
   const orderIdHidden = document.getElementById("orderIdHidden");
   const upsellOrderId = document.getElementById("upsellOrderId");
-
-  function syncOrderId() {
+  function syncOrderId(){
     const v = (orderIdInput ? orderIdInput.value : "").trim();
     if (orderIdHidden) orderIdHidden.value = v;
     if (upsellOrderId) upsellOrderId.value = v;
 
-    // ✅ keep localStorage updated (helps if they refresh or navigate)
-    try {
+    try{
       if (v) localStorage.setItem("TT_LAST_ORDER_ID", v);
-      if (pkg) localStorage.setItem("TT_LAST_PACKAGE", pkg);
-    } catch(e){}
-  }
-  if (orderIdInput) {
-    orderIdInput.addEventListener("input", syncOrderId);
-    syncOrderId();
+    }catch(e){}
+    syncNextUrls();
   }
 
   // Append package + order_id to THANK YOU redirects
-  const proofNext = document.getElementById("proofNext");
+  const proofNext  = document.getElementById("proofNext");
   const upsellNext = document.getElementById("upsellNext");
-
-  function syncNextUrls() {
-    const oid = (orderIdInput ? orderIdInput.value : "").trim();
+  function syncNextUrls(){
+    const p = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
+    const id = (orderIdInput ? orderIdInput.value : "").trim();
 
     const proofUrl = new URL("https://tinyteamstudio.online/thank-you.html");
-    proofUrl.searchParams.set("from", "payment");
-    proofUrl.searchParams.set("package", pkg);
-    if (oid) proofUrl.searchParams.set("order_id", oid);
+    proofUrl.searchParams.set("from","payment");
+    proofUrl.searchParams.set("package", p);
+    if (id) proofUrl.searchParams.set("order_id", id);
     if (proofNext) proofNext.value = proofUrl.toString();
 
     const upsellUrl = new URL("https://tinyteamstudio.online/thank-you.html");
-    upsellUrl.searchParams.set("from", "upsell");
-    upsellUrl.searchParams.set("package", pkg);
-    if (oid) upsellUrl.searchParams.set("order_id", oid);
+    upsellUrl.searchParams.set("from","upsell");
+    upsellUrl.searchParams.set("package", p);
+    if (id) upsellUrl.searchParams.set("order_id", id);
     if (upsellNext) upsellNext.value = upsellUrl.toString();
   }
-  if (orderIdInput) {
-    orderIdInput.addEventListener("input", syncNextUrls);
-  }
-  syncNextUrls();
+
+  if (pkgSel) pkgSel.addEventListener("change", syncPackage);
+  if (orderIdInput) orderIdInput.addEventListener("input", syncOrderId);
+
+  // Initial sync
+  syncPackage();
+  syncOrderId();
+  refreshPaypal();
 
   // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
@@ -584,7 +356,7 @@
     });
   }
 
-  // Upsell submit UX (tiny)
+  // Upsell submit UX
   const upsellForm = document.getElementById("upsellForm");
   const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
   if (upsellForm && upsellSubmitBtn) {
@@ -593,6 +365,7 @@
       upsellSubmitBtn.textContent = "Submitting...";
     });
   }
+})();
 </script>
 
 </body>
