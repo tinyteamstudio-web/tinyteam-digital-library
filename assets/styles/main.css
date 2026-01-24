@@ -27,10 +27,7 @@ body{
   line-height: 1.6;
 }
 
-a{
-  color: var(--accent);
-  text-decoration: none;
-}
+a{ color: var(--accent); text-decoration: none; }
 a:hover{ text-decoration: underline; }
 
 p{ margin: 0.75rem 0; }
@@ -46,8 +43,9 @@ h3{ font-size: 1.1rem; margin-top: 0; }
 
 ul, ol{ padding-left: 1.25rem; }
 li{ margin: 0.35rem 0; }
-
 small, .muted{ color: var(--muted); }
+
+strong{ font-weight: 800; }
 
 /* ========== Layout Containers ========== */
 header > div,
@@ -71,19 +69,9 @@ header > div{
   gap: 1rem;
   padding: 14px 0;
 }
-
-header a{
-  color: #fff;
-  text-decoration: none;
-}
-header nav a{
-  opacity: 0.9;
-  margin-left: 14px;
-}
-header nav a:hover{
-  opacity: 1;
-  text-decoration: underline;
-}
+header a{ color: #fff; text-decoration: none; }
+header nav a{ opacity: 0.9; margin-left: 14px; }
+header nav a:hover{ opacity: 1; text-decoration: underline; }
 
 /* ========== Sections ========== */
 section{
@@ -111,10 +99,7 @@ section img{
   height: auto;
   border-radius: 14px;
 }
-
-.media img{
-  box-shadow: var(--shadow);
-}
+.media img{ box-shadow: var(--shadow); }
 
 /* ========== Buttons ========== */
 .btn{
@@ -127,10 +112,7 @@ section img{
   border: 1px solid rgba(255,255,255,0.14);
   text-decoration: none;
 }
-.btn:hover{
-  filter: brightness(0.96);
-  text-decoration: none;
-}
+.btn:hover{ filter: brightness(0.96); text-decoration: none; }
 
 /* keep footer links clean */
 footer a{ font-weight: 600; }
@@ -146,43 +128,149 @@ footer a{ font-weight: 600; }
 .split.reverse{
   grid-template-columns: 1.1fr 0.9fr;
 }
-
 .split.reverse .media{ order: 2; }
 .split.reverse .content{ order: 1; }
 
-/* ========== Style cards inside Design Styles section ========== */
-.style-list article{
-  margin-top: 12px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: var(--shadow);
+/* ========== About layout (photo left + text right) ========== */
+.about-split{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+@media (min-width: 900px){
+  .about-split{ grid-template-columns: 420px 1fr; gap: 42px; align-items: start; }
 }
 
-/* ========== About placeholder (no image yet) ========== */
-.about-placeholder{
-  border: 2px dashed var(--border);
+.about-photo img{
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  display: block;
+  background: #fff;
+  box-shadow: 0 16px 34px rgba(0,0,0,0.10);
+}
+
+.about-brand{
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
   border-radius: 16px;
-  padding: 28px;
-  text-align: center;
+  background: rgba(255,255,255,0.8);
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.about-brand img{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.about-brand h4{ margin: 0 0 4px; font-size: 1.05rem; }
+.about-brand p{ margin: 0; color: rgba(0,0,0,0.72); }
+
+/* ========== Pricing cards (3-up like your screenshot) ========== */
+.pricing-grid{
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+@media (min-width: 980px){
+  .pricing-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+
+.pricing-card{
+  position: relative;
+  border-radius: 22px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
   background: #fff;
 }
-.about-placeholder strong{ font-size: 1.1rem; }
 
-.about-links ul{
-  list-style: none;
-  padding-left: 0;
-  margin: 8px 0;
+.pricing-card.fam{
+  background: linear-gradient(180deg, #f4fbf7, #ffffff);
 }
-.about-links li{ margin: 4px 0; }
+.pricing-card.comm{
+  background: linear-gradient(180deg, #eef6ff, #ffffff);
+}
+.pricing-card.addon{
+  background: linear-gradient(180deg, #fff6ec, #ffffff);
+}
+
+.pricing-card.featured{
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.12);
+}
+
+.badge{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #2f6fed;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.pricing-icon{ font-size: 2.2rem; margin-bottom: 10px; }
+.pricing-card h3{ margin: 0; font-size: 1.25rem; line-height: 1.3; }
+
+.price{
+  margin: 12px 0 6px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1a1a1a;
+}
+.currency{ font-size: 1.4rem; vertical-align: top; }
+.price-note{ font-size: 0.9rem; color: rgba(0,0,0,0.6); margin-top: -4px; }
+
+.pricing-desc{
+  margin: 12px 0;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.75);
+}
+.pricing-list{
+  margin: 12px 0 18px;
+  padding-left: 18px;
+  line-height: 1.7;
+}
+.btn-block{ width: 100%; margin-top: auto; text-align: center; }
+
+/* ========== FAQ ========== */
+.faq{
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+.faq-item{
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.faq-item summary{ cursor: pointer; font-weight: 600; }
+.faq-body{
+  margin-top: 10px;
+  color: rgba(0,0,0,0.72);
+  line-height: 1.6;
+  font-size: 14px;
+}
 
 /* ========== QR Payment Grid (Thank You page) ========== */
-.qr-grid{
-  display: grid;
-  gap: 16px;
-}
-
+.qr-grid{ display: grid; gap: 16px; }
 .qr-row{
   display: grid;
   grid-template-columns: 180px 1fr;
@@ -193,22 +281,20 @@ footer a{ font-weight: 600; }
   border-radius: 14px;
   background: #fff;
 }
-
 .qr-row img{
   width: 100%;
   height: auto;
   border-radius: 12px;
   border: 1px solid var(--border);
-  box-shadow: none; /* keep QR clean */
+  box-shadow: none;
 }
 
-/* ========== Compact Footer (Light + Centered) ========== */
-
+/* ========== Compact Footer (turquoise like your screenshot) ========== */
 .site-footer{
   background: #cfeeea;            /* light turquoise */
   color: #0f2f2b;
-  padding: 18px 16px;             /* SMALLER */
-  margin-top: 30px;               /* less space */
+  padding: 18px 16px;
+  margin-top: 30px;
   border-radius: 18px;
 }
 
@@ -216,25 +302,6 @@ footer a{ font-weight: 600; }
   max-width: 980px;
   margin: 0 auto;
   text-align: center;
-}
-
-.footer-brand{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.footer-logo{
-  height: 28px;                   /* small logos */
-  width: auto;
-  display: block;
-}
-
-.footer-x{
-  opacity: 0.7;
-  font-weight: 600;
 }
 
 .footer-contacts,
@@ -256,15 +323,9 @@ footer a{ font-weight: 600; }
 }
 
 .footer-contacts a:hover,
-.footer-links a:hover{
-  text-decoration: underline;
-}
+.footer-links a:hover{ text-decoration: underline; }
 
-.dot{
-  opacity: 0.55;
-}
-
-
+.dot{ opacity: 0.55; }
 
 /* ========== Mobile polish ========== */
 @media (max-width: 800px){
@@ -280,615 +341,9 @@ footer a{ font-weight: 600; }
   section{ padding: 18px; }
 
   .split,
-  .split.reverse{
-    grid-template-columns: 1fr;
-  }
+  .split.reverse{ grid-template-columns: 1fr; }
   .split.reverse .media,
-  .split.reverse .content{
-    order: initial;
-  }
+  .split.reverse .content{ order: initial; }
 
-  .qr-row{
-    grid-template-columns: 1fr;
-  }
+  .qr-row{ grid-template-columns: 1fr; }
 }
-/* ===== Small polish ===== */
-strong{ font-weight: 800; }
-
-section h2{ margin-bottom: 10px; }
-
-#hero{ overflow: hidden; }
-#hero img{ transform: translateY(2px); }
-
-article{ margin-top: 12px; }
-
-/* ========== Packages Cards (Make them feel light) ========== */
-
-/* 3-card grid on desktop, stacked on mobile */
-.cards3{
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr; /* mobile default */
-  margin-top: 14px;
-}
-
-@media (min-width: 900px){
-  .cards3{
-    grid-template-columns: repeat(3, 1fr);
-    align-items: start;
-  }
-}
-
-/* Make package images behave like thumbnails (not posters) */
-.card__media{ overflow: hidden; }
-
-.card__img{
-  width: 100%;
-  height: 220px;      /* KEY: controls the "heavy" feel */
-  object-fit: cover;
-  display: block;
-  border-radius: 14px;
-}
-
-/* Tighter card spacing */
-.card__body{
-  padding-top: 12px;
-}
-
-/* Small visual balance for price row */
-.card__top{
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-}
-
-/* Optional: softer list spacing */
-.card__list{
-  margin: 10px 0 0;
-}
-/* ===== Added Sections: Pain Points / About / FAQ ===== */
-
-.grid3{
-  display: grid;
-  gap: 14px;
-  grid-template-columns: 1fr;
-  margin-top: 14px;
-}
-
-@media (min-width: 900px){
-  .grid3{
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.mini-card{
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.04);
-}
-
-.mini-card h3{
-  margin: 0 0 8px;
-  font-size: 16px;
-}
-
-.mini-card p{
-  margin: 0;
-  color: rgba(0,0,0,0.72);
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-.about-split{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-
-@media (min-width: 900px){
-  .about-split{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.list-clean{
-  margin: 10px 0 0;
-  padding-left: 18px;
-  color: rgba(0,0,0,0.72);
-  line-height: 1.7;
-  font-size: 14px;
-}
-
-.faq{
-  margin-top: 14px;
-  display: grid;
-  gap: 10px;
-}
-
-.faq-item{
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 14px;
-  padding: 12px 14px;
-}
-
-.faq-item summary{
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.faq-body{
-  margin-top: 10px;
-  color: rgba(0,0,0,0.72);
-  line-height: 1.6;
-  font-size: 14px;
-}
-/* ================= ABOUT (PHOTO LEFT + TEXT RIGHT) ================= */
-#about {
-  padding: 80px 20px;
-}
-
-#about .about-split {
-  max-width: 1200px;
-  margin: 28px auto 0;
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-/* Photo */
-#about .about-photo img {
-  width: 100%;
-  height: auto;            /* IMPORTANT */
-  max-height: 520px;
-  object-fit: contain;     /* prevents blur */
-  border-radius: 18px;
-  display: block;
-  background: #fff;
-}
-
-
-/* Content */
-#about .about-content h3 {
-  margin: 0 0 10px;
-  font-size: 1.9rem;
-  letter-spacing: -0.3px;
-}
-
-#about .about-content p {
-  margin: 0 0 16px;
-  line-height: 1.7;
-}
-
-/* Brand blocks */
-#about .about-brand {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(0,0,0,0.08);
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  column-gap: 14px;
-  row-gap: 6px;
-  align-items: start;
-}
-
-#about .about-brand img {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-#about .about-brand h4 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-#about .about-brand p {
-  grid-column: 2 / -1;
-  margin: 0;
-  color: rgba(0,0,0,0.75);
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  #about .about-split {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  #about .about-photo {
-    max-width: 360px;
-    margin: 0 auto;
-  }
-/* ================= ABOUT (POLISHED CARD STYLE) ================= */
-#about {
-  padding: 70px 20px;
-}
-
-#about .muted {
-  max-width: 980px;
-}
-
-/* Turn the split layout into a premium "card" */
-#about .about-split {
-  max-width: 1200px;
-  margin: 22px auto 0;
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 42px;
-
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 22px;
-  padding: 38px;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.06);
-}
-
-/* Photo: make it feel like a portrait card */
-#about .about-photo img {
-  width: 100%;
-  height: 460px;
-  object-fit: cover;
-  border-radius: 18px;
-  display: block;
-  box-shadow: 0 16px 34px rgba(0,0,0,0.10);
-}
-
-/* Content typography + spacing */
-#about .about-content h3 {
-  margin: 0 0 8px;
-  font-size: 2rem;
-  letter-spacing: -0.3px;
-}
-
-#about .about-content p {
-  margin: 0 0 14px;
-  line-height: 1.7;
-  color: rgba(0,0,0,0.78);
-}
-
-/* Brand rows: cleaner, more “agency-level” */
-#about .about-brand {
-  margin-top: 18px;
-  padding: 16px 16px;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  background: rgba(0,0,0,0.02);
-
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 12px;
-  align-items: start;
-}
-
-#about .about-brand img {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  object-fit: cover;
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-}
-
-#about .about-brand h4 {
-  margin: 0 0 4px;
-  font-size: 1.05rem;
-}
-
-#about .about-brand p {
-  margin: 0;
-  color: rgba(0,0,0,0.72);
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  #about .about-split {
-    grid-template-columns: 1fr;
-    padding: 24px;
-  }
-
-  #about .about-photo img {
-    height: auto;
-  }
-}
-.site-footer {
-  padding: 40px 20px;
-  border-top: 1px solid rgba(0,0,0,0.08);
-  background: #fff;
-}
-
-.footer-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.footer-brand {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.footer-logo {
-  height: 34px;
-}
-
-.footer-x {
-  opacity: 0.6;
-}
-
-.footer-contacts,
-.footer-links {
-  margin-top: 8px;
-  font-size: 0.95rem;
-}
-
-.footer-contacts a,
-.footer-links a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.footer-contacts a:hover,
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-.dot {
-  margin: 0 8px;
-  opacity: 0.6;
-}
-/* ================= PACKAGES (MAKE IT LOOK LIKE REAL CARDS) ================= */
-#types {
-  padding: 70px 20px;
-}
-
-#types h2 {
-  margin-bottom: 10px;
-}
-
-#types .cards3 {
-  max-width: 1200px;
-  margin: 26px auto 0;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-/* Card base */
-#types .card {
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 18px;
-  box-shadow: 0 14px 32px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
-#types .card__body {
-  padding: 22px;
-}
-
-/* Header row (title + price aligned) */
-#types .card__top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-
-#types .card h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  line-height: 1.2;
-}
-
-#types .price {
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-#types .price__sub {
-  font-weight: 500;
-  opacity: 0.7;
-  margin-left: 6px;
-  font-size: 0.9em;
-}
-
-/* Subtitle */
-#types .card__subtitle {
-  margin: 0 0 12px;
-  color: rgba(0,0,0,0.75);
-  line-height: 1.6;
-}
-
-/* List spacing */
-#types .card__list {
-  margin: 0 0 16px;
-  padding-left: 18px;
-}
-
-#types .card__list li {
-  margin: 8px 0;
-  line-height: 1.5;
-}
-
-/* CTA button alignment */
-#types .card__cta {
-  margin-top: 14px;
-}
-
-/* Mobile */
-@media (max-width: 980px) {
-  #types .cards3 {
-    grid-template-columns: 1fr;
-  }
-}
-/* ================= PRICING – EMPHASIZED ================= */
-
-.pricing-grid {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-/* Base card */
-.pricing-card {
-  position: relative;
-  border-radius: 22px;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-}
-
-/* Background variations */
-.pricing-card.fam {
-  background: linear-gradient(180deg, #f4fbf7, #ffffff);
-}
-
-.pricing-card.comm {
-  background: linear-gradient(180deg, #eef6ff, #ffffff);
-}
-
-.pricing-card.addon {
-  background: linear-gradient(180deg, #fff6ec, #ffffff);
-}
-
-/* Featured card */
-.pricing-card.featured {
-  transform: translateY(-6px);
-  box-shadow: 0 26px 60px rgba(0,0,0,0.12);
-}
-
-/* Badge */
-.badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: #2f6fed;
-  color: #fff;
-  padding: 6px 10px;
-  font-size: 0.75rem;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-/* Icon */
-.pricing-icon {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-}
-
-/* Title */
-.pricing-card h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.3;
-}
-
-.pricing-card h3 span {
-  font-weight: 500;
-  color: rgba(0,0,0,0.55);
-}
-
-/* PRICE — BIG EMPHASIS */
-.price {
-  margin: 12px 0 6px;
-  font-size: 2.4rem;
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: #1a1a1a;
-}
-
-.currency {
-  font-size: 1.4rem;
-  vertical-align: top;
-}
-
-.price-note {
-  font-size: 0.9rem;
-  color: rgba(0,0,0,0.6);
-  margin-top: -4px;
-}
-
-/* Description */
-.pricing-desc {
-  margin: 12px 0;
-  line-height: 1.6;
-  color: rgba(0,0,0,0.75);
-}
-
-/* List */
-.pricing-list {
-  margin: 12px 0 18px;
-  padding-left: 18px;
-  line-height: 1.7;
-}
-
-/* Button */
-.btn-block {
-  width: 100%;
-  margin-top: auto;
-  text-align: center;
-}
-
-/* Mobile */
-@media (max-width: 980px) {
-  .pricing-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pricing-card.featured {
-    transform: none;
-  }
-}
-<style>
-  /* ... your existing packages upgrade CSS ... */
-
-  /* ================= TRUST PROMISE STRIP ================= */
-  .trust-promise{
-    margin-top: 12px;
-    padding: 12px 14px;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 14px;
-    background: rgba(0,0,0,0.02);
-  }
-  .trust-promise strong{
-    display: block;
-    font-size: 0.98rem;
-    margin-bottom: 6px;
-  }
-  .trust-promise .tp-row{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    margin-top: 6px;
-  }
-  .trust-pill{
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.06);
-    font-size: 0.9rem;
-    color: rgba(0,0,0,0.78);
-  }
-  .trust-quote{
-    margin-top: 8px;
-    font-style: italic;
-    color: rgba(0,0,0,0.70);
-  }
-</style>
