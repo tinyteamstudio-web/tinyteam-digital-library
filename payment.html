@@ -88,12 +88,24 @@
             <input type="hidden" name="_next" id="proofNext" value="https://tinyteamstudio.online/thank-you.html?from=payment" />
             <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
+            <!-- ✅ ADDED: routing flag for Option C webhook -->
+            <input type="hidden" name="formType" value="PAYMENT_PROOF" />
+
+            <!-- ✅ ADDED: normalized fields for your Google Sheet + Apps Script (hidden, no layout change) -->
+            <input type="hidden" name="OrderID" id="normOrderID" value="" />
+            <input type="hidden" name="ClientEmail" id="normClientEmail" value="" />
+            <input type="hidden" name="Package" id="normPackage" value="" />
+            <input type="hidden" name="PaymentMethod" id="normPaymentMethod" value="" />
+            <input type="hidden" name="AmountPaidUSD" id="normAmountPaidUSD" value="" />
+            <input type="hidden" name="ReferenceCode" id="normReferenceCode" value="" />
+            <input type="hidden" name="ProofLink" id="normProofLink" value="" />
+
             <div class="oidRow">
               <input name="order_id" id="orderIdHidden" type="text" placeholder="Order_ID (required)" required />
             </div>
 
             <div class="oidRow">
-              <input name="email" type="email" placeholder="Your Email (required)" required />
+              <input name="email" id="payerEmail" type="email" placeholder="Your Email (required)" required />
             </div>
 
             <div class="oidRow">
@@ -101,7 +113,7 @@
             </div>
 
             <div class="oidRow">
-              <select name="payment_method" required>
+              <select name="payment_method" id="paymentMethodSel" required>
                 <option value="">Payment Method (required)</option>
                 <option value="PayPal">PayPal</option>
                 <option value="GCash">GCash</option>
@@ -114,11 +126,11 @@
             </div>
 
             <div class="oidRow">
-              <input name="amount_paid" type="text" placeholder="Amount Paid (optional)" />
+              <input name="amount_paid" id="amountPaidInput" type="text" placeholder="Amount Paid (optional)" />
             </div>
 
             <div class="oidRow">
-              <input name="proof_link" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
+              <input name="proof_link" id="proofLinkInput" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
             </div>
 
             <div class="oidRow">
@@ -300,6 +312,7 @@
     try { localStorage.setItem("TT_LAST_PACKAGE", p); } catch(e){}
     refreshPaypal();
     syncNextUrls();
+    syncNormalized();
   }
 
   // Sync OrderID to forms + localStorage
@@ -314,6 +327,7 @@
       if (v) localStorage.setItem("TT_LAST_ORDER_ID", v);
     }catch(e){}
     syncNextUrls();
+    syncNormalized();
   }
 
   // Append package + order_id to THANK YOU redirects
@@ -336,13 +350,49 @@
     if (upsellNext) upsellNext.value = upsellUrl.toString();
   }
 
+  // ✅ NEW: keep normalized hidden fields updated (for webhook/sheets)
+  function syncNormalized(){
+    const oidVal = (document.getElementById("orderIdHidden") ? document.getElementById("orderIdHidden").value : "").trim();
+    const emailVal = (document.getElementById("payerEmail") ? document.getElementById("payerEmail").value : "").trim();
+    const pkgVal = (document.getElementById("packageHidden") ? document.getElementById("packageHidden").value : "").trim();
+    const methodVal = (document.getElementById("paymentMethodSel") ? document.getElementById("paymentMethodSel").value : "").trim();
+    const amtVal = (document.getElementById("amountPaidInput") ? document.getElementById("amountPaidInput").value : "").trim();
+    const proofVal = (document.getElementById("proofLinkInput") ? document.getElementById("proofLinkInput").value : "").trim();
+
+    const nOID = document.getElementById("normOrderID");
+    const nEmail = document.getElementById("normClientEmail");
+    const nPkg = document.getElementById("normPackage");
+    const nMethod = document.getElementById("normPaymentMethod");
+    const nAmt = document.getElementById("normAmountPaidUSD");
+    const nRef = document.getElementById("normReferenceCode");
+    const nProof = document.getElementById("normProofLink");
+
+    if (nOID) nOID.value = oidVal;
+    if (nEmail) nEmail.value = emailVal;
+    if (nPkg) nPkg.value = pkgVal;
+    if (nMethod) nMethod.value = methodVal;
+    if (nAmt) nAmt.value = amtVal;
+    if (nRef) nRef.value = ""; // keep empty unless you add a Reference Code field later
+    if (nProof) nProof.value = proofVal;
+  }
+
   if (pkgSel) pkgSel.addEventListener("change", syncPackage);
   if (orderIdInput) orderIdInput.addEventListener("input", syncOrderId);
+
+  const payerEmail = document.getElementById("payerEmail");
+  const paymentMethodSel = document.getElementById("paymentMethodSel");
+  const amountPaidInput = document.getElementById("amountPaidInput");
+  const proofLinkInput = document.getElementById("proofLinkInput");
+  if (payerEmail) payerEmail.addEventListener("input", syncNormalized);
+  if (paymentMethodSel) paymentMethodSel.addEventListener("change", syncNormalized);
+  if (amountPaidInput) amountPaidInput.addEventListener("input", syncNormalized);
+  if (proofLinkInput) proofLinkInput.addEventListener("input", syncNormalized);
 
   // Initial sync
   syncPackage();
   syncOrderId();
   refreshPaypal();
+  syncNormalized();
 
   // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
@@ -350,6 +400,7 @@
   const submitProofBtn = document.getElementById("submitProofBtn");
   if (proofForm && proofStatus && submitProofBtn) {
     proofForm.addEventListener("submit", () => {
+      syncNormalized();
       submitProofBtn.disabled = true;
       submitProofBtn.textContent = "Submitting...";
       proofStatus.classList.add("show");
