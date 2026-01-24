@@ -4,469 +4,290 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Start — TinyTeam</title>
-  <meta name="description" content="Start your TinyTeam family library. Submit the form to begin manual review." />
+  <meta name="description" content="Start your TinyTeam library. Submit the form to begin processing." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
 
+  <!-- Small safety styles only (won’t change your layout) -->
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --border:rgba(0,0,0,.10);
-      --brand:#2563eb;
-      --brand2:#111827;
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica;
-      background:var(--bg);
-      margin:0;
-      padding:24px;
-      color:var(--text);
-    }
-    .card{
-      max-width:980px;
-      margin:0 auto;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow:0 10px 24px rgba(0,0,0,.06);
-    }
-    .top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:18px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-    h2{margin:0 0 6px;font-size:22px}
-    .sub{margin:0;color:var(--muted);line-height:1.35}
-    .badge{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color:var(--muted);
-      background:#fff;
-      white-space:nowrap;
-    }
-    .divider{height:1px;background:rgba(0,0,0,.06);margin:16px 0}
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:12px;
-    }
-    .btn{
-      display:inline-block;
-      padding:12px 14px;
-      border-radius:12px;
-      background:var(--brand2);
-      color:#fff;
-      text-decoration:none;
-      font-weight:750;
-      font-size:14px;
-      border:0;
-      cursor:pointer;
-    }
-    .btn.secondary{
-      background:#fff;
-      color:var(--brand2);
-      border:1px solid var(--border);
-      font-weight:800;
-    }
-
-    .formWrap{
-      border:1px solid rgba(0,0,0,.10);
-      border-radius:16px;
-      overflow:hidden;
-      background:#fff;
-      padding:16px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .row{display:flex;flex-direction:column;gap:6px}
-    label{font-size:13px;color:var(--muted);font-weight:700}
-    input, select, textarea{
-      width:100%;
-      padding:12px 12px;
-      border-radius:12px;
-      border:1px solid rgba(0,0,0,.15);
-      font-size:14px;
-      outline:none;
-      background:#fff;
-    }
-    textarea{min-height:110px;resize:vertical}
-    .full{grid-column: 1 / -1}
-    .hint{font-size:12.5px;color:var(--muted);line-height:1.35;margin:10px 0 0}
-    .mini{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.35}
-    .mini strong{color:var(--text)}
-    .status{
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.4;
-      display:none;
-    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
+    .status{margin-top:10px;font-size:13px;color: rgba(0,0,0,0.65);display:none;line-height:1.5;}
     .status.show{display:block}
-
-    .inlineRow{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .inlineRow input{
-      flex:1;
-      min-width: 240px;
-    }
-    .miniBtn{
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--brand2);
-      font-weight:800;
-      cursor:pointer;
-      font-size:14px;
-    }
-
-    .autoPreview{
-      font-size:12.5px;
-      color:var(--muted);
-      margin-top:6px;
-      line-height:1.35;
-    }
-    .autoPreview strong{ color: var(--text); }
-
-    @media (max-width: 780px){
-      .grid{grid-template-columns:1fr}
-    }
+    .note{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.6;margin-top:10px;}
+    .autoPreview{margin-top:10px;padding:10px 12px;border:1px dashed rgba(0,0,0,0.16);border-radius:14px;background:#f8fafc;color:rgba(0,0,0,0.70);font-size:13px;line-height:1.6;}
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <div class="top">
-      <div>
-        <h2>Start Your Library</h2>
-        <p class="sub">
-          Submit the form below to start your TinyTeam family library. After manual review, you’ll receive next-step instructions by email.
-        </p>
-      </div>
-      <div class="badge">Manual-first • Privacy-first ✅</div>
-    </div>
 
-    <div class="divider"></div>
-
-    <div class="formWrap">
-      <form
-        id="startForm"
-        action="https://formspree.io/f/xqeergag"
-        method="POST"
-        accept-charset="UTF-8"
-        novalidate
-      >
-        <input type="hidden" name="_subject" value="TinyTeam — Start Library Request">
-        <input type="hidden" id="startRedirect" name="_redirect" value="https://tinyteamstudio.online/thank-you.html">
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-
-        <!-- Order ID (carried forward) -->
-        <input type="hidden" id="requestIdHidden" name="request_id" value="">
-        <input type="hidden" id="orderIdHiddenStart" name="order_id" value="">
-
-        <!-- Resolved design outputs (always filled) -->
-        <input type="hidden" id="designResolved" name="designTemplate_resolved" value="">
-        <input type="hidden" id="themeResolved" name="theme_resolved" value="">
-        <input type="hidden" id="colorResolved" name="color_resolved" value="">
-
-        <div class="grid">
-
-          <div class="row full">
-            <label for="requestIdView">Your Order ID (auto-generated)</label>
-            <div class="inlineRow">
-              <input id="requestIdView" type="text" readonly />
-              <button class="miniBtn" id="copyReqBtn" type="button">Copy</button>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="ownerName">Owner Name *</label>
-            <input id="ownerName" name="ownerName" type="text" placeholder="Full name" required />
-          </div>
-
-          <div class="row">
-            <label for="ownerEmail">Owner Email *</label>
-            <input id="ownerEmail" name="ownerEmail" type="email" placeholder="you@email.com" required />
-          </div>
-
-          <div class="row full">
-            <label for="libraryTitle">Library Title *</label>
-            <input id="libraryTitle" name="libraryTitle" type="text" placeholder="Example: The Santos Family Library" required />
-          </div>
-
-          <div class="row">
-            <label for="package">Package</label>
-            <select id="package" name="package">
-              <option value="FAM">Family Library — Large</option>
-              <option value="COMM">Family Library — Extra Large</option>
-              <option value="ADDON">Photos / Documents Add-On</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <label for="designTemplate">Auto Design (choose 1)</label>
-            <select id="designTemplate" name="designTemplate">
-              <option value="">Auto (recommended)</option>
-              <option value="DESIGN_01">Design 01</option>
-              <option value="DESIGN_02">Design 02</option>
-              <option value="DESIGN_03">Design 03</option>
-              <option value="DESIGN_04">Design 04</option>
-              <option value="DESIGN_05">Design 05</option>
-              <option value="DESIGN_06">Design 06</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <label for="theme">Theme Style</label>
-            <select id="theme" name="theme">
-              <option value="">Auto (recommended)</option>
-              <option value="Classic">Classic</option>
-              <option value="Modern">Modern</option>
-              <option value="Minimal">Minimal</option>
-              <option value="Warm">Warm</option>
-              <option value="Elegant">Elegant</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <label for="primaryColor">Color Mood</label>
-            <select id="primaryColor" name="primaryColor">
-              <option value="">Auto (recommended)</option>
-              <option value="#2563eb">Blue</option>
-              <option value="#16a34a">Green</option>
-              <option value="#111827">Neutral (Black/Gray)</option>
-              <option value="#a855f7">Purple</option>
-              <option value="#f59e0b">Warm (Gold)</option>
-              <option value="#0ea5e9">Sky</option>
-            </select>
-          </div>
-
-          <div class="row full">
-            <div class="autoPreview" id="autoPreview" aria-live="polite"></div>
-          </div>
-
-          <div class="row full">
-            <label for="familyIntro">Family Introduction / History (optional)</label>
-            <textarea id="familyIntro" name="familyIntro" placeholder="Short introduction (history, story, dedication, etc.)"></textarea>
-          </div>
-
-          <div class="row full">
-            <label for="notes">Notes (optional)</label>
-            <textarea id="notes" name="notes" placeholder="Anything you want us to know (names, dates, preferences, etc.)"></textarea>
-          </div>
-        </div>
-
-        <p class="hint">
-          <strong>Not sure?</strong> Leave Auto Design, Theme Style, and Color Mood on <strong>Auto</strong> — we’ll handle the design.
-        </p>
-
-        <div class="actions">
-          <button class="btn" id="submitBtn" type="submit">Submit Request</button>
-          <a class="btn secondary" id="payBtn" href="payment.html">Proceed to Payment</a>
-        </div>
-
-        <div class="status" id="statusBox"></div>
-      </form>
-    </div>
-
-    <p class="mini">
-      <strong>Privacy note:</strong> Your submission is handled internally by TinyTeam for processing and delivery.
-    </p>
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="start.html">Start</a>
+      <a href="help/index.html">Help</a>
+    </nav>
   </div>
+</header>
 
-  <script>
-    // ============================================
-    // AUTO ORDER ID (TT-ORD-YYYY-000001 style)
-    // + AUTO DESIGN RESOLUTION (deterministic)
-    // ============================================
-    (function () {
-      const params = new URLSearchParams(window.location.search);
+<main>
 
-      const pkgSel = document.getElementById("package");
-      const payBtn = document.getElementById("payBtn");
+  <section class="panel">
+    <h1>Start Your Library</h1>
+    <p class="muted">
+      Submit your request to begin manual review. TinyTeam is privacy-first and human-handled.
+      We will email you next steps after review.
+    </p>
 
-      const reqView = document.getElementById("requestIdView");
-      const reqHidden = document.getElementById("requestIdHidden");
-      const orderHidden = document.getElementById("orderIdHiddenStart");
+    <form id="startForm" action="https://formspree.io/f/xqeergag" method="POST">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+      <input type="hidden" name="_subject" value="TinyTeam — New Start Request" />
+      <input type="hidden" name="_next" id="startNext" value="https://tinyteamstudio.online/thank-you.html?from=start" />
 
-      const redirectHidden = document.getElementById("startRedirect");
-      const copyReqBtn = document.getElementById("copyReqBtn");
+      <!-- IDs -->
+      <input type="hidden" name="order_id" id="orderIdHidden" value="" />
 
-      const designSel = document.getElementById("designTemplate");
-      const themeSel  = document.getElementById("theme");
-      const colorSel  = document.getElementById("primaryColor");
-      const autoPreview = document.getElementById("autoPreview");
+      <div class="grid2">
+        <div>
+          <label>Full Name</label>
+          <input name="name" type="text" placeholder="Full name (required)" required />
+        </div>
+        <div>
+          <label>Email</label>
+          <input name="email" type="email" placeholder="Email (required)" required />
+        </div>
+      </div>
 
-      const designResolved = document.getElementById("designResolved");
-      const themeResolved  = document.getElementById("themeResolved");
-      const colorResolved  = document.getElementById("colorResolved");
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Package</label>
+          <select name="package" id="packageSel" required>
+            <option value="FAM">Family Library (FAM) — $48</option>
+            <option value="COMM">Community Library (COMM) — $89</option>
+            <option value="ADDON">Photos / Docs Add-On — $49</option>
+          </select>
+        </div>
+        <div>
+          <label>Order ID (auto-generated)</label>
+          <input id="orderIdView" class="mono" type="text" readonly />
+          <p class="muted small" style="margin:6px 0 0;">Keep this Order ID for payment proof + follow-ups.</p>
+        </div>
+      </div>
 
-      // Keep incoming package param
-      const pkgFromUrl = (params.get("package") || "").toUpperCase();
-      if (pkgSel && (pkgFromUrl === "FAM" || pkgFromUrl === "COMM" || pkgFromUrl === "ADDON")) {
-        pkgSel.value = pkgFromUrl;
-      }
+      <!-- Design (auto resolver, same behavior you already had) -->
+      <div class="grid3" style="margin-top:12px;">
+        <div>
+          <label>Design Template</label>
+          <select name="design_template" id="designSel">
+            <option value="">Auto (recommended)</option>
+            <option value="DESIGN_01">DESIGN_01</option>
+            <option value="DESIGN_02">DESIGN_02</option>
+            <option value="DESIGN_03">DESIGN_03</option>
+            <option value="DESIGN_04">DESIGN_04</option>
+            <option value="DESIGN_05">DESIGN_05</option>
+            <option value="DESIGN_06">DESIGN_06</option>
+          </select>
+        </div>
+        <div>
+          <label>Theme</label>
+          <select name="theme" id="themeSel">
+            <option value="">Auto (recommended)</option>
+            <option value="Classic">Classic</option>
+            <option value="Modern">Modern</option>
+            <option value="Minimal">Minimal</option>
+            <option value="Warm">Warm</option>
+            <option value="Elegant">Elegant</option>
+          </select>
+        </div>
+        <div>
+          <label>Primary Color</label>
+          <select name="primary_color" id="colorSel">
+            <option value="">Auto (recommended)</option>
+            <option value="#2563eb">Blue</option>
+            <option value="#16a34a">Green</option>
+            <option value="#111827">Neutral</option>
+            <option value="#a855f7">Purple</option>
+            <option value="#f59e0b">Warm (Gold)</option>
+            <option value="#0ea5e9">Sky</option>
+          </select>
+        </div>
+      </div>
 
-      // Respect existing order_id in URL (for retries / payment back-link)
-      let rid = (params.get("order_id") || params.get("request_id") || "").trim();
+      <!-- Resolved fields that system should trust -->
+      <input type="hidden" name="auto_design_resolved" id="designResolved" value="" />
+      <input type="hidden" name="auto_theme_resolved"  id="themeResolved"  value="" />
+      <input type="hidden" name="auto_color_resolved"  id="colorResolved"  value="" />
 
-      function pad6(n){
-        const s = String(n);
-        return s.length >= 6 ? s.slice(-6) : ("000000" + s).slice(-6);
-      }
+      <div class="autoPreview" id="autoPreview">Auto selection: <strong>—</strong></div>
 
-      function makeOrderId(){
-        const now = new Date();
-        const year = now.getFullYear();
+      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn" id="submitBtn" type="submit">Submit Request</button>
+        <!-- rename only (safer wording) -->
+        <a class="btn secondary" id="payBtn" href="payment.html">View Payment Options</a>
+      </div>
 
-        // Creates a 6-digit value that changes over time (good enough for v1 manual-first flow).
-        // NOTE: True sequential numbering needs a server/database; this is client-safe and consistent in format.
-        const seconds = Math.floor(now.getTime() / 1000);
-        const six = seconds % 1000000;
+      <p class="note">
+        Please wait for approval email before paying. This button only shows payment methods.
+      </p>
 
-        return `TT-ORD-${year}-${pad6(six)}`;
-      }
+      <div class="status" id="statusBox">Submitting your request…</div>
+    </form>
+  </section>
 
-      if (!rid) rid = makeOrderId();
+</main>
 
-      // Write into fields
-      if (reqView) reqView.value = rid;
-      if (reqHidden) reqHidden.value = rid;
-      if (orderHidden) orderHidden.value = rid;
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <span class="dot">•</span>
+      <a href="help/index.html">Help</a>
+    </div>
+  </div>
+</footer>
 
-      // Copy button
-      if (copyReqBtn && reqView) {
-        copyReqBtn.addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(reqView.value || "");
-            copyReqBtn.textContent = "Copied ✓";
-          } catch(e){
-            copyReqBtn.textContent = "Copy";
-          }
-          setTimeout(() => copyReqBtn.textContent = "Copy", 1200);
-        });
-      }
+<script>
+(function(){
+  const params = new URLSearchParams(window.location.search);
 
-      // ---------- Deterministic picker from Order ID ----------
-      function hashStr(str){
-        let h = 0;
-        for (let i = 0; i < str.length; i++) {
-          h = ((h << 5) - h) + str.charCodeAt(i);
-          h |= 0;
-        }
-        return Math.abs(h);
-      }
-      function pick(list, seed){
-        return list[seed % list.length];
-      }
-      function labelForColor(val){
-        const map = {
-          "#2563eb":"Blue",
-          "#16a34a":"Green",
-          "#111827":"Neutral (Black/Gray)",
-          "#a855f7":"Purple",
-          "#f59e0b":"Warm (Gold)",
-          "#0ea5e9":"Sky"
-        };
-        return map[val] || val;
-      }
+  const pkgSel = document.getElementById("packageSel");
+  const orderIdView = document.getElementById("orderIdView");
+  const orderIdHidden = document.getElementById("orderIdHidden");
+  const startNext = document.getElementById("startNext");
+  const payBtn = document.getElementById("payBtn");
 
-      function resolveAutoDesign(){
-        const seedBase = hashStr(rid + "|" + (pkgSel ? pkgSel.value : "FAM"));
+  const designSel = document.getElementById("designSel");
+  const themeSel  = document.getElementById("themeSel");
+  const colorSel  = document.getElementById("colorSel");
+  const designResolved = document.getElementById("designResolved");
+  const themeResolved  = document.getElementById("themeResolved");
+  const colorResolved  = document.getElementById("colorResolved");
+  const autoPreview    = document.getElementById("autoPreview");
 
-        const designOptions = ["DESIGN_01","DESIGN_02","DESIGN_03","DESIGN_04","DESIGN_05","DESIGN_06"];
-        const themeOptions  = ["Classic","Modern","Minimal","Warm","Elegant"];
-        const colorOptions  = ["#2563eb","#16a34a","#111827","#a855f7","#f59e0b","#0ea5e9"];
+  const pkgFromUrl = (params.get("package") || "").toUpperCase();
+  if (pkgSel && (pkgFromUrl === "FAM" || pkgFromUrl === "COMM" || pkgFromUrl === "ADDON")) {
+    pkgSel.value = pkgFromUrl;
+  }
 
-        const chosenDesign = (designSel && designSel.value) ? designSel.value : pick(designOptions, seedBase);
-        const chosenTheme  = (themeSel  && themeSel.value)  ? themeSel.value  : pick(themeOptions,  seedBase + 7);
-        const chosenColor  = (colorSel  && colorSel.value)  ? colorSel.value  : pick(colorOptions,  seedBase + 13);
+  let rid = (params.get("order_id") || "").trim();
 
-        // Always fill resolved fields (system should trust these)
-        if (designResolved) designResolved.value = chosenDesign;
-        if (themeResolved)  themeResolved.value  = chosenTheme;
-        if (colorResolved)  colorResolved.value  = chosenColor;
+  function pad6(n){
+    const s = String(n);
+    return s.length >= 6 ? s.slice(-6) : ("000000" + s).slice(-6);
+  }
 
-        // Preview line for user
-        if (autoPreview) {
-          const autoOn = (!designSel || !designSel.value) && (!themeSel || !themeSel.value) && (!colorSel || !colorSel.value);
-          const modeText = autoOn ? "Auto selection" : "Your selection";
-          autoPreview.innerHTML = `${modeText}: <strong>${chosenDesign.replace("_"," ")}</strong> • <strong>${chosenTheme}</strong> • <strong>${labelForColor(chosenColor)}</strong>`;
-        }
-      }
+  function makeOrderId(){
+    const now = new Date();
+    const year = now.getFullYear();
+    const seconds = Math.floor(now.getTime() / 1000);
+    const six = seconds % 1000000;
 
-      // Sync payment link + redirect link (dynamic)
-      function syncLinks(){
-        const pkg = (pkgSel ? (pkgSel.value || "FAM") : "FAM").toUpperCase();
-        const encodedPkg = encodeURIComponent(pkg);
-        const encodedId = encodeURIComponent(rid);
+    // add suffix to reduce collision risk
+    const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let suffix = "";
+    for (let i = 0; i < 3; i++) suffix += alphabet[Math.floor(Math.random() * alphabet.length)];
 
-        if (payBtn) {
-          payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
-        }
+    return `TT-ORD-${year}-${pad6(six)}-${suffix}`;
+  }
 
-        if (redirectHidden) {
-          redirectHidden.value = `https://tinyteamstudio.online/thank-you.html?from=start&package=${encodedPkg}&order_id=${encodedId}`;
-        }
+  if (!rid) rid = makeOrderId();
 
-        resolveAutoDesign();
-      }
+  if (orderIdView) orderIdView.value = rid;
+  if (orderIdHidden) orderIdHidden.value = rid;
 
-      if (pkgSel) pkgSel.addEventListener("change", syncLinks);
-      if (designSel) designSel.addEventListener("change", resolveAutoDesign);
-      if (themeSel)  themeSel.addEventListener("change", resolveAutoDesign);
-      if (colorSel)  colorSel.addEventListener("change", resolveAutoDesign);
+  // persist for smooth navigation to payment page
+  try{
+    localStorage.setItem("TT_LAST_ORDER_ID", rid);
+    localStorage.setItem("TT_LAST_PACKAGE", (pkgSel ? (pkgSel.value||"FAM") : "FAM").toUpperCase());
+  }catch(e){}
 
-      // Initial sync
-      syncLinks();
-      resolveAutoDesign();
+  function hashStr(str){
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = ((h << 5) - h) + str.charCodeAt(i);
+      h |= 0;
+    }
+    return Math.abs(h);
+  }
 
-      // Safety: ensure resolved fields are set right before submit
-      const form = document.getElementById("startForm");
-      if (form) {
-        form.addEventListener("submit", () => {
-          resolveAutoDesign();
-        });
-      }
-    })();
+  function pick(arr, seed){ return arr[seed % arr.length]; }
 
-    // Tiny submit UX (kept)
-    (function(){
-      const form = document.getElementById("startForm");
-      const btn = document.getElementById("submitBtn");
-      const box = document.getElementById("statusBox");
-      if (!form || !btn || !box) return;
+  function labelForColor(val){
+    const map = {
+      "#2563eb":"Blue",
+      "#16a34a":"Green",
+      "#111827":"Neutral (Black/Gray)",
+      "#a855f7":"Purple",
+      "#f59e0b":"Warm (Gold)",
+      "#0ea5e9":"Sky"
+    };
+    return map[val] || val;
+  }
 
-      function show(msg){
-        box.textContent = msg;
-        box.classList.add("show");
-      }
+  function resolveAutoDesign(){
+    const seedBase = hashStr(rid + "|" + (pkgSel ? pkgSel.value : "FAM"));
 
-      form.addEventListener("submit", () => {
-        btn.disabled = true;
-        btn.textContent = "Submitting...";
-        show("Submitting your request...");
-      });
-    })();
-  </script>
+    const designOptions = ["DESIGN_01","DESIGN_02","DESIGN_03","DESIGN_04","DESIGN_05","DESIGN_06"];
+    const themeOptions  = ["Classic","Modern","Minimal","Warm","Elegant"];
+    const colorOptions  = ["#2563eb","#16a34a","#111827","#a855f7","#f59e0b","#0ea5e9"];
+
+    const chosenDesign = (designSel && designSel.value) ? designSel.value : pick(designOptions, seedBase);
+    const chosenTheme  = (themeSel  && themeSel.value)  ? themeSel.value  : pick(themeOptions,  seedBase + 7);
+    const chosenColor  = (colorSel  && colorSel.value)  ? colorSel.value  : pick(colorOptions,  seedBase + 13);
+
+    if (designResolved) designResolved.value = chosenDesign;
+    if (themeResolved)  themeResolved.value  = chosenTheme;
+    if (colorResolved)  colorResolved.value  = chosenColor;
+
+    if (autoPreview) {
+      const autoOn = (!designSel.value) && (!themeSel.value) && (!colorSel.value);
+      const modeText = autoOn ? "Auto selection" : "Your selection";
+      autoPreview.innerHTML = `${modeText}: <strong>${chosenDesign.replace("_"," ")}</strong> • <strong>${chosenTheme}</strong> • <strong>${labelForColor(chosenColor)}</strong>`;
+    }
+  }
+
+  function syncLinks(){
+    const pkg = (pkgSel ? (pkgSel.value || "FAM") : "FAM").toUpperCase();
+    const encodedPkg = encodeURIComponent(pkg);
+    const encodedId  = encodeURIComponent(rid);
+
+    if (payBtn) payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
+    if (startNext) startNext.value = `https://tinyteamstudio.online/thank-you.html?from=start&package=${encodedPkg}&order_id=${encodedId}`;
+
+    try{
+      localStorage.setItem("TT_LAST_ORDER_ID", rid);
+      localStorage.setItem("TT_LAST_PACKAGE", pkg);
+    }catch(e){}
+
+    resolveAutoDesign();
+  }
+
+  if (pkgSel)   pkgSel.addEventListener("change", syncLinks);
+  if (designSel)designSel.addEventListener("change", resolveAutoDesign);
+  if (themeSel) themeSel.addEventListener("change", resolveAutoDesign);
+  if (colorSel) colorSel.addEventListener("change", resolveAutoDesign);
+
+  syncLinks();
+  resolveAutoDesign();
+
+  // ensure resolved fields set at submit
+  const form = document.getElementById("startForm");
+  if (form) form.addEventListener("submit", resolveAutoDesign);
+
+})();
+(function(){
+  const form = document.getElementById("startForm");
+  const btn  = document.getElementById("submitBtn");
+  const box  = document.getElementById("statusBox");
+  if (!form || !btn || !box) return;
+
+  form.addEventListener("submit", () => {
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+    box.classList.add("show");
+  });
+})();
+</script>
+
 </body>
 </html>
