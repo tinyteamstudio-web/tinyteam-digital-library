@@ -10,19 +10,35 @@
   />
   <link rel="stylesheet" href="../assets/styles/main.css" />
 
-  <!-- Page-only helper styles for the form embed -->
+  <!-- Page-only helper styles (minimal) -->
   <style>
-    .form-embed{
+    .apply-box{
       border: 1px solid rgba(31, 38, 35, 0.12);
       border-radius: 14px;
       overflow: hidden;
       background: #fff;
+      padding: 16px;
     }
-    .form-embed iframe{
-      width: 100%;
-      height: 735px;
-      border: 0;
-      display: block;
+    .apply-box .muted{ margin-top: 10px; }
+    .apply-actions{
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .btn.secondary{
+      background: #fff;
+      color: #1f2623;
+      border: 1px solid rgba(31, 38, 35, 0.18);
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      background: rgba(31, 38, 35, 0.06);
+      padding: 2px 6px;
+      border-radius: 8px;
+      word-break: break-all;
     }
   </style>
 </head>
@@ -67,7 +83,7 @@
   <section id="reseller-how">
     <h2>How it works</h2>
     <ol>
-      <li><strong>Apply</strong> using the form below.</li>
+      <li><strong>Apply</strong> using the application link below.</li>
       <li><strong>Get approved</strong> and receive your unique reseller code.</li>
       <li><strong>Share TinyTeam</strong> through your own content, community, or funnel.</li>
       <li><strong>Client submits</strong> their request on TinyTeam’s official Start page and enters your code.</li>
@@ -104,21 +120,32 @@
   <section id="reseller-apply">
     <h2>Apply to become a reseller</h2>
 
-    <div class="form-embed">
-      <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLScsIyh-0Z7NFRDpM5hs3hobVVTZiozMv0xSwE9eL-7c6M3EnA/viewform?embedded=true"
-        width="640"
-        height="735"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
-        title="TinyTeam Reseller Application Form"
-      >Loading…</iframe>
-    </div>
+    <div class="apply-box">
+      <p>
+        We removed the embedded Google Form to prevent future issues (blank iframe, scroll lock, and mobile embed problems).
+      </p>
 
-    <p class="muted" style="margin-top:12px;">
-      After approval, you’ll receive your reseller code and the official TinyTeam reseller guidelines by email.
-    </p>
+      <div class="apply-actions">
+        <a
+          class="btn"
+          id="applyBtn"
+          href="https://docs.google.com/forms/d/e/1FAIpQLScsIyh-0Z7NFRDpM5hs3hobVVTZiozMv0xSwE9eL-7c6M3EnA/viewform"
+          target="_blank"
+          rel="noopener"
+        >Apply via Google Form</a>
+
+        <a class="btn secondary" href="../start.html">Start Your Library</a>
+      </div>
+
+      <p class="muted" style="margin-top:12px;">
+        Backup link (copy/paste if the button doesn’t open):
+      </p>
+      <p class="mono" id="applyLinkText"></p>
+
+      <p class="muted" style="margin-top:12px;">
+        After approval, you’ll receive your reseller code and the official TinyTeam reseller guidelines by email.
+      </p>
+    </div>
   </section>
 
   <section id="reseller-links">
@@ -141,6 +168,15 @@
     <a href="../help/index.html">Help</a>
   </p>
 </footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById("applyBtn");
+    const txt = document.getElementById("applyLinkText");
+    if (!btn || !txt) return;
+    txt.textContent = btn.href;
+  })();
+</script>
 
 </body>
 </html>
