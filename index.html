@@ -6,89 +6,6 @@
   <title>TinyTeam Digital Library</title>
   <meta name="description" content="A calm, human-handled digital library for families — built for long-term preservation and reconnection." />
   <link rel="stylesheet" href="assets/styles/main.css" />
-
-  <!-- PACKAGES UPGRADE (safe, local, no extra files) -->
-  <style>
-    /* ================= PACKAGES (UPGRADED) ================= */
-    #types .cards3 { align-items: stretch; }
-    #types .card {
-      border-radius: 22px;
-      border: 1px solid rgba(0,0,0,0.08);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    #types .card__body{
-      padding: 22px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    #types .card--fam  { background: linear-gradient(180deg, #f4fbf7, #ffffff); }
-    #types .card--comm { background: linear-gradient(180deg, #eef6ff, #ffffff); }
-    #types .card--addon{ background: linear-gradient(180deg, #fff6ec, #ffffff); }
-
-    #types .card__icon{
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-      line-height: 1;
-    }
-    #types .card__badge{
-      align-self: flex-end;
-      background: #2f6fed;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-    }
-    #types .card__top{
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    #types .card__top h3{
-      margin: 0;
-      font-size: 1.2rem;
-      line-height: 1.25;
-    }
-    #types .price{
-      text-align: right;
-      font-size: 2.35rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,0.05);
-      min-width: 118px;
-    }
-    #types .price__sub{
-      display:block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0;
-      color: rgba(0,0,0,0.55);
-      margin-top: 6px;
-    }
-    #types .card__subtitle{
-      margin: 12px 0 0;
-      color: rgba(0,0,0,0.72);
-      line-height: 1.6;
-    }
-    #types .card__list{
-      margin: 14px 0 0;
-      padding-left: 18px;
-      color: rgba(0,0,0,0.72);
-      line-height: 1.6;
-    }
-    #types .card__cta{
-      margin-top: auto;
-      padding-top: 16px;
-    }
-    #types .btn-block { width: 100%; margin-top: auto; text-align: center; }
-  </style>
 </head>
 
 <body>
@@ -108,7 +25,7 @@
 
 <main>
 
-  <!-- HERO (keep your existing hero content & image structure) -->
+  <!-- HERO -->
   <section id="hero" class="hero">
     <div class="hero-grid">
       <div class="hero-image">
@@ -131,12 +48,10 @@
     </div>
   </section>
 
-  <!-- ================= PACKAGES ================= -->
+  <!-- PACKAGES -->
   <section id="types">
     <h2>Choose Your Library</h2>
-    <p class="muted">
-      Simple pricing. No expiration. Upgrade anytime without breaking lineage.
-    </p>
+    <p class="muted">Simple pricing. No expiration. Upgrade anytime without breaking lineage.</p>
 
     <div class="cards3">
 
@@ -157,7 +72,7 @@
             <li>Print-ready export available</li>
           </ul>
           <p class="card__cta">
-            <a class="btn" data-action="start" data-package="FAM">Start FAM</a>
+            <a class="btn" href="start.html?package=FAM">Start FAM</a>
           </p>
         </div>
       </article>
@@ -180,7 +95,7 @@
             <li>Expandable anytime</li>
           </ul>
           <p class="card__cta">
-            <a class="btn" data-action="start" data-package="COMM">Start COMM</a>
+            <a class="btn" href="start.html?package=COMM">Start COMM</a>
           </p>
         </div>
       </article>
@@ -202,7 +117,7 @@
             <li>Easy to browse for future generations</li>
           </ul>
           <p class="card__cta">
-            <a class="btn" data-action="start" data-package="ADDON">Ask for Add-On</a>
+            <a class="btn" href="start.html?package=ADDON">Ask for Add-On</a>
           </p>
         </div>
       </article>
@@ -210,65 +125,162 @@
     </div>
   </section>
 
-  <!-- Keep your existing Why/About/FAQ sections as-is in your file -->
-  <!-- (No changes needed here) -->
+  <!-- WHY -->
+  <section id="why">
+    <h2>Why This Exists</h2>
+    <p class="muted">Families don’t lose history in one day — it fades slowly. TinyTeam helps you preserve it with clarity and care.</p>
+
+    <div class="grid3">
+      <div class="mini-card">
+        <h3>Scattered information</h3>
+        <p>Names, photos, and stories end up across phones, chats, albums, and folders — with no single home to return to.</p>
+      </div>
+      <div class="mini-card">
+        <h3>No clear structure</h3>
+        <p>Without a simple structure, branches become confusing — especially across generations and different households.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Files get lost</h3>
+        <p>Phones get replaced, accounts get forgotten, links expire — and family history disappears quietly.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Privacy worries</h3>
+        <p>Many families avoid online tools because they don’t want their information public or searchable.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Hard to reconnect</h3>
+        <p>When relatives haven’t seen each other for years, it’s hard to know where to start — TinyTeam builds a bridge.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Not print-ready</h3>
+        <p>Most digital collections can’t become a clean archive later — we build yours with print in mind.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2>About</h2>
+    <p class="muted">I personally design and review each library — built for clarity, privacy, and long-term preservation.</p>
+
+    <div class="about-split about-card">
+      <div class="about-photo">
+        <img src="assets/logo/chin-veloso-about.jpg" alt="Chin Veloso" />
+      </div>
+
+      <div class="about-content">
+        <h3>Hi, I’m Chin Veloso</h3>
+        <p>
+          I build practical digital systems that help families, communities, and organizations preserve what matters —
+          with structure, privacy, and long-term clarity in mind. TinyTeam is intentionally <strong>human-handled</strong>,
+          so every library is reviewed carefully and built with care.
+        </p>
+
+        <div class="about-brand">
+          <img src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels logo" />
+          <div>
+            <h4>SVP Funnels</h4>
+            <p>I build streamlined funnels and automation for construction contractors — from pre-construction to post-project growth.</p>
+          </div>
+        </div>
+
+        <div class="about-brand">
+          <img src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio logo" />
+          <div>
+            <h4>TinyTeam Studio</h4>
+            <p>I build long-term digital libraries for genealogy, organizations, communities, courses, and templates — designed to preserve stories and organize knowledge.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <p class="muted">Clear answers — so you feel safe and confident before starting.</p>
+
+    <div class="faq">
+      <details class="faq-item">
+        <summary>What if our family is complicated?</summary>
+        <div class="faq-body">That’s normal. We’ll structure branches clearly and keep notes private and respectful.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can this work even if we don’t know everyone in the family?</summary>
+        <div class="faq-body">Yes. You can start with what you know, and update later as you discover more relatives.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How can this connect relatives who haven’t seen each other for years?</summary>
+        <div class="faq-body">We organize the story + relationships in a way that makes reconnection easy and non-awkward.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What if we only know nicknames, old photos, or stories from elders?</summary>
+        <div class="faq-body">That’s enough to start. We can label items carefully and refine as details become available.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Can it connect my mother’s side and father’s side properly?</summary>
+        <div class="faq-body">Yes. We structure each side cleanly, then connect them through the correct relationships.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What about sensitive family situations?</summary>
+        <div class="faq-body">We handle sensitive notes privately and structure the archive in a safe, respectful way.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Is this public? Will our family show up on Google?</summary>
+        <div class="faq-body">No. TinyTeam is privacy-first. No public profiles. No searchable database.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Why is TinyTeam different from a normal family tree tool?</summary>
+        <div class="faq-body">Because it’s human-built and archival: structure + stories + print-ready organization — not just names on a chart.</div>
+      </details>
+    </div>
+
+    <p class="muted small" style="margin-top:12px;">Every family has a story. Some are simple. Many are complicated. All are welcome here.</p>
+  </section>
 
 </main>
 
 <footer class="site-footer">
   <div class="footer-inner">
 
-    <!-- Logos -->
     <div class="footer-brand">
-      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
-      <span class="footer-x">×</span>
-      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Studio logo">
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels logo">
     </div>
 
-    <!-- Emails -->
     <div class="footer-contacts">
       <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
 
-    <!-- Core pages -->
     <div class="footer-links">
       <a href="index.html">Home</a>
       <span class="dot">•</span>
       <a href="help/index.html">Help</a>
       <span class="dot">•</span>
       <a href="reseller/index.html">Reseller Program</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">TinyTeam Digital Library (Facebook)</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">SVP Digital System (Facebook)</a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">Chin Veloso (Facebook)</a>
     </div>
 
-    <!-- Social (subtle, professional) -->
-    <div class="footer-links" style="margin-top:6px;">
-      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
-        TinyTeam Digital Library (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">
-        SVP Digital System (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">
-        Chin Veloso (Facebook)
-      </a>
+    <div class="muted small" style="margin-top:10px;">
+      Human-handled • Privacy-first • No public profiles
     </div>
 
   </div>
 </footer>
-
-
-<script>
-  // Keep your structure; just make buttons actually go to Start with package.
-  (function(){
-    const btns = document.querySelectorAll('[data-action="start"][data-package]');
-    btns.forEach(b => {
-      b.setAttribute('href', `start.html?package=${encodeURIComponent(b.dataset.package)}`);
-    });
-  })();
-</script>
 
 </body>
 </html>
