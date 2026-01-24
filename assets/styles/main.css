@@ -457,3 +457,18 @@ input:focus, select:focus, textarea:focus{
     aspect-ratio: 4 / 5;
   }
 }
+/* ===== HERO: make image fill the left card cleanly ===== */
+.hero-image{
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.hero-image img{
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  max-height: 320px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0; /* container handles rounding */
+}
