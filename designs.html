@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Design Previews — TinyTeam</title>
+  <meta name="description" content="Preview TinyTeam design templates before choosing." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
+
+  <style>
+    /* Minimal, safe add-ons only */
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+    .muted2 { color: rgba(0,0,0,0.65); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 860px){ .grid{ grid-template-columns: 1fr; } }
+    .card {
+      background:#fff;
+      border:1px solid rgba(0,0,0,0.10);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.06);
+    }
+    .thumb {
+      width:100%;
+      aspect-ratio: 16 / 10;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,0.10);
+      background: #f3f4f6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .thumb img { width:100%; height:100%; object-fit: cover; display:block; }
+    .tag { display:inline-block; padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,0.10); font-weight:800; font-size:12px; }
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .small { font-size: 13px; line-height: 1.6; }
+    .noteBox{
+      margin: 14px 0;
+      padding: 12px 14px;
+      border:1px dashed rgba(0,0,0,0.18);
+      border-radius:16px;
+      background:#f8fafc;
+    }
+    code.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace; }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="start.html">Start</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel">
+    <h1>Design Previews</h1>
+    <p class="muted2">
+      These templates represent the <strong>layout style</strong> for your final library.
+      Your genealogy/community archive is still <strong>human-designed</strong> after manual review.
+    </p>
+
+    <div class="noteBox small">
+      <strong>How to use this page:</strong><br>
+      1) Browse the designs below<br>
+      2) Click <strong>Select this design</strong><br>
+      3) You’ll return to <code class="mono">start.html</code> with the design pre-filled
+    </div>
+
+    <div class="grid">
+
+      <!-- DESIGN 01 -->
+      <article class="card" id="DESIGN_01">
+        <div class="tag">DESIGN_01</div>
+        <h2 style="margin:10px 0 6px;">Classic Tree Layout</h2>
+        <p class="muted2 small">Balanced, traditional spacing. Best for multi-generation family trees.</p>
+        <div class="thumb" aria-label="DESIGN_01 preview">
+          <!-- Replace src when you have real images -->
+          <img src="assets/designs/DESIGN_01.jpg" alt="DESIGN_01 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_01.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_01">Select this design</a>
+          <a class="btn secondary" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>
+        </div>
+      </article>
+
+      <!-- DESIGN 02 -->
+      <article class="card" id="DESIGN_02">
+        <div class="tag">DESIGN_02</div>
+        <h2 style="margin:10px 0 6px;">Modern Cards Layout</h2>
+        <p class="muted2 small">Clean cards, modern typography. Great for community/member rosters too.</p>
+        <div class="thumb" aria-label="DESIGN_02 preview">
+          <img src="assets/designs/DESIGN_02.jpg" alt="DESIGN_02 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_02.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_02">Select this design</a>
+        </div>
+      </article>
+
+      <!-- DESIGN 03 -->
+      <article class="card" id="DESIGN_03">
+        <div class="tag">DESIGN_03</div>
+        <h2 style="margin:10px 0 6px;">Minimal Line Layout</h2>
+        <p class="muted2 small">Minimal borders and lines. Best for print-friendly A4/A3 layouts.</p>
+        <div class="thumb" aria-label="DESIGN_03 preview">
+          <img src="assets/designs/DESIGN_03.jpg" alt="DESIGN_03 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_03.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_03">Select this design</a>
+        </div>
+      </article>
+
+      <!-- DESIGN 04 -->
+      <article class="card" id="DESIGN_04">
+        <div class="tag">DESIGN_04</div>
+        <h2 style="margin:10px 0 6px;">Warm Heritage Layout</h2>
+        <p class="muted2 small">Heirloom feel, soft spacing. Great for family storytelling.</p>
+        <div class="thumb" aria-label="DESIGN_04 preview">
+          <img src="assets/designs/DESIGN_04.jpg" alt="DESIGN_04 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_04.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_04">Select this design</a>
+        </div>
+      </article>
+
+      <!-- DESIGN 05 -->
+      <article class="card" id="DESIGN_05">
+        <div class="tag">DESIGN_05</div>
+        <h2 style="margin:10px 0 6px;">Elegant Portrait Layout</h2>
+        <p class="muted2 small">Best when you’ll include profile photos / portraits / memorabilia.</p>
+        <div class="thumb" aria-label="DESIGN_05 preview">
+          <img src="assets/designs/DESIGN_05.jpg" alt="DESIGN_05 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_05.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_05">Select this design</a>
+        </div>
+      </article>
+
+      <!-- DESIGN 06 -->
+      <article class="card" id="DESIGN_06">
+        <div class="tag">DESIGN_06</div>
+        <h2 style="margin:10px 0 6px;">Community Directory Layout</h2>
+        <p class="muted2 small">Works best for organizations/clans with lots of members and sections.</p>
+        <div class="thumb" aria-label="DESIGN_06 preview">
+          <img src="assets/designs/DESIGN_06.jpg" alt="DESIGN_06 preview" onerror="this.remove()">
+          <span class="muted2 small">Add preview image: <code class="mono">assets/designs/DESIGN_06.jpg</code></span>
+        </div>
+        <div class="btnRow">
+          <a class="btn" href="start.html?design=DESIGN_06">Select this design</a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="noteBox small" style="margin-top:18px;">
+      <strong>Adding the real preview images:</strong><br>
+      Create folder: <code class="mono">assets/designs/</code><br>
+      Upload files named exactly:<br>
+      <code class="mono">DESIGN_01.jpg</code>, <code class="mono">DESIGN_02.jpg</code>, <code class="mono">DESIGN_03.jpg</code>,
+      <code class="mono">DESIGN_04.jpg</code>, <code class="mono">DESIGN_05.jpg</code>, <code class="mono">DESIGN_06.jpg</code>
+    </div>
+
+    <p class="muted2 small" style="margin-top:10px;">
+      If you don’t have preview images yet, this page still works — it will show the filename hints until you upload them.
+    </p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
+      <span class="footer-x">×</span>
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+    </div>
+    <div class="footer-contacts">
+      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
