@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reseller Application — TinyTeam</title>
+  <meta name="description" content="Apply to become an approved TinyTeam reseller. All applications are reviewed manually." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
+</head>
+
+<body>
+
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="start.html">Start</a>
+      <a href="reseller/index.html">Reseller Program</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="panel">
+    <h1>Apply to Become a Reseller</h1>
+
+    <p class="muted">
+      TinyTeam works with a limited number of trusted partners.
+      All reseller applications are reviewed manually.
+    </p>
+
+    <form
+      method="POST"
+      action="https://script.google.com/macros/s/AKfycbzMaNt4G4qWhE9nSRIWPT7M4TA8VqbTg0aOpJlRLPrEt62TbyAhvDl29TNSOu8jtlC80A/exec?key=TT_PRIVATE_2026_01"
+    >
+      <!-- REQUIRED -->
+      <input type="hidden" name="formType" value="RESELLER" />
+
+      <div class="grid2">
+        <div>
+          <label>Full Name</label>
+          <input name="ResellerName" type="text" required />
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input name="ResellerEmail" type="email" required />
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label>Why do you want to partner with TinyTeam?</label>
+        <textarea name="Notes" rows="4" placeholder="Short explanation (optional)"></textarea>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn" type="submit">Submit Application</button>
+        <a class="btn secondary" href="reseller/index.html">Back</a>
+      </div>
+
+      <p class="muted" style="margin-top:12px;">
+        Approved applicants will receive their reseller code and guidelines by email.
+      </p>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <p><strong>TinyTeam Digital Library</strong></p>
+  <p>
+    <a href="index.html">Home</a> ·
+    <a href="reseller/index.html">Reseller Program</a> ·
+    <a href="help/index.html">Help</a>
+  </p>
+</footer>
+
+</body>
+</html>
