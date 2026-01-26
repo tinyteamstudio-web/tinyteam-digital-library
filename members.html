@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Members — TinyTeam</title>
+  <meta name="description" content="Add members to your TinyTeam library. Manual-first, privacy-first." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
+
+  <!-- Small safety styles only (won’t change your layout) -->
+  <style>
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
+    .status{margin-top:10px;font-size:13px;color: rgba(0,0,0,0.65);display:none;line-height:1.5;}
+    .status.show{display:block}
+    .note{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.6;margin-top:10px;}
+    .miniHelp{font-size:12px;color:rgba(0,0,0,0.60);margin-top:6px;line-height:1.5;}
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="start.html">Start</a>
+      <a href="members.html">Members</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="panel">
+    <h1>Add Members</h1>
+    <p class="muted">
+      Add one member per submission. This is manual-first and privacy-first.
+      If you’re unsure, leave fields blank and add notes — TinyTeam will clarify by email.
+    </p>
+
+    <form id="membersForm" method="POST"
+      action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
+
+      <input type="hidden" name="formType" value="MEMBER" />
+
+      <!-- Core IDs -->
+      <div class="grid2">
+        <div>
+          <label>Order ID</label>
+          <input id="orderId" name="order_id" class="mono" type="text" placeholder="TT-ORD-YYYY-XXXXXX-XXX" required />
+          <p class="miniHelp">Use the Order ID generated from Start. (Auto-filled if available)</p>
+        </div>
+        <div>
+          <label>Library ID (optional)</label>
+          <input id="libraryId" name="library_id" class="mono" type="text" placeholder="TT-LIB-..." />
+          <p class="miniHelp">Leave blank if not assigned yet.</p>
+        </div>
+      </div>
+
+      <!-- Member identity -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Full Name</label>
+          <input name="fullName" type="text" placeholder="Member full name (required)" required />
+        </div>
+        <div>
+          <label>Gender (optional)</label>
+          <select name="gender">
+            <option value="">—</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Birth Date (optional)</label>
+          <input name="birthDate" type="date" />
+        </div>
+        <div>
+          <label>Death Date (optional)</label>
+          <input name="deathDate" type="date" />
+        </div>
+      </div>
+
+      <!-- Relationships -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Relationship to Root (optional)</label>
+          <input name="relationshipToRoot" type="text" placeholder="e.g., Root, Father, Mother, Child, Spouse, Grandparent" />
+          <p class="miniHelp">“Root” means the main person the tree starts from.</p>
+        </div>
+        <div>
+          <label>Spouse Name (optional)</label>
+          <input name="spouseName" type="text" placeholder="Spouse full name" />
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Father Name (optional)</label>
+          <input name="fatherName" type="text" placeholder="Father full name" />
+        </div>
+        <div>
+          <label>Mother Name (optional)</label>
+          <input name="motherName" type="text" placeholder="Mother full name" />
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div style="margin-top:12px;">
+        <label>Notes (optional)</label>
+        <textarea name="notes" rows="4" placeholder="Any clarifications, nicknames, place of birth, maiden name, uncertainties, etc."></textarea>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn" id="submitBtn" type="submit">Submit Member</button>
+        <a class="btn secondary" href="start.html">Back to Start</a>
+      </div>
+
+      <p class="note">
+        Tip: Add members one-by-one. After you submit, you can add another member using the same Order ID.
+      </p>
+
+      <div class="status" id="statusBox">Submitting member…</div>
+    </form>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- Logos -->
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
+      <span class="footer-x">×</span>
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+    </div>
+
+    <!-- Emails -->
+    <div class="footer-contacts">
+      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
+      <span class="dot">•</span>
+      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+    </div>
+
+    <!-- Core pages -->
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <span class="dot">•</span>
+      <a href="help/index.html">Help</a>
+      <span class="dot">•</span>
+      <a href="reseller/index.html">Reseller Program</a>
+    </div>
+
+    <!-- Social -->
+    <div class="footer-links" style="margin-top:6px;">
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
+        TinyTeam Digital Library (Facebook)
+      </a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">
+        SVP Digital System (Facebook)
+      </a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">
+        Chin Veloso (Facebook)
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Auto-fill Order ID from:
+  // 1) URL param ?order_id=...
+  // 2) localStorage TT_LAST_ORDER_ID (set by start.html)
+  const params = new URLSearchParams(window.location.search);
+  const oidFromUrl = (params.get("order_id") || "").trim();
+
+  const orderIdEl = document.getElementById("orderId");
+  const libIdEl   = document.getElementById("libraryId");
+
+  let oid = oidFromUrl;
+
+  if (!oid) {
+    try { oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim(); } catch(e){}
+  }
+
+  if (orderIdEl && oid) orderIdEl.value = oid;
+
+  // Optional: allow ?library_id=
+  const lidFromUrl = (params.get("library_id") || "").trim();
+  if (libIdEl && lidFromUrl) libIdEl.value = lidFromUrl;
+
+  // Submit UI state
+  const form = document.getElementById("membersForm");
+  const btn  = document.getElementById("submitBtn");
+  const box  = document.getElementById("statusBox");
+  if (form && btn && box) {
+    form.addEventListener("submit", () => {
+      btn.disabled = true;
+      btn.textContent = "Submitting...";
+      box.classList.add("show");
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
