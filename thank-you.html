@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -193,11 +193,25 @@
 
 <script>
   (function () {
+    // ✅ Minimal safety: if Apps Script redirects to "thankyou.html" (wrong),
+    // this page will still work and keep the query string.
+    // (No design change, just compatibility.)
+    try {
+      const path = (location.pathname || "").toLowerCase();
+      if (path.endsWith("/thankyou.html")) {
+        location.replace("thank-you.html" + location.search);
+        return;
+      }
+    } catch(e){}
+
     const params = new URLSearchParams(window.location.search);
 
     const from = (params.get("from") || "").toLowerCase();     // start | payment | upsell
     const pkg  = (params.get("package") || "").toUpperCase();  // FAM | COMM | ADDON
-    const oid  = (params.get("order_id") || "").trim();
+
+    // ✅ Minimal compatibility:
+    // support BOTH "order_id" (older) and "RequestID" (new HTML form posts)
+    const oid  = (params.get("order_id") || params.get("RequestID") || "").trim();
 
     // Show only the correct message block
     const blocks = document.querySelectorAll("[data-from]");
