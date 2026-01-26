@@ -32,14 +32,6 @@
       color: #1f2623;
       border: 1px solid rgba(31, 38, 35, 0.18);
     }
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12.5px;
-      background: rgba(31, 38, 35, 0.06);
-      padding: 2px 6px;
-      border-radius: 8px;
-      word-break: break-all;
-    }
   </style>
 </head>
 
@@ -117,33 +109,28 @@
     </ul>
   </section>
 
+  <!-- ✅ CLEAN MANUAL APPLY SECTION -->
   <section id="reseller-apply">
     <h2>Apply to become a reseller</h2>
 
     <div class="apply-box">
       <p>
-        We removed the embedded Google Form to prevent future issues (blank iframe, scroll lock, and mobile embed problems).
+        TinyTeam works with a limited number of trusted partners to protect families,
+        preserve quality, and ensure ethical representation.
+      </p>
+
+      <p>
+        If you’re interested in becoming a reseller, please submit an application.
+        All applications are reviewed manually.
       </p>
 
       <div class="apply-actions">
-        <a
-          class="btn"
-          id="applyBtn"
-          href="https://docs.google.com/forms/d/e/1FAIpQLScsIyh-0Z7NFRDpM5hs3hobVVTZiozMv0xSwE9eL-7c6M3EnA/viewform"
-          target="_blank"
-          rel="noopener"
-        >Apply via Google Form</a>
-
+        <a class="btn" href="../reseller-apply.html">Apply as a Reseller</a>
         <a class="btn secondary" href="../start.html">Start Your Library</a>
       </div>
 
-      <p class="muted" style="margin-top:12px;">
-        Backup link (copy/paste if the button doesn’t open):
-      </p>
-      <p class="mono" id="applyLinkText"></p>
-
-      <p class="muted" style="margin-top:12px;">
-        After approval, you’ll receive your reseller code and the official TinyTeam reseller guidelines by email.
+      <p class="muted">
+        Approved resellers will receive their official reseller code and guidelines by email.
       </p>
     </div>
   </section>
@@ -168,15 +155,6 @@
     <a href="../help/index.html">Help</a>
   </p>
 </footer>
-
-<script>
-  (function(){
-    const btn = document.getElementById("applyBtn");
-    const txt = document.getElementById("applyLinkText");
-    if (!btn || !txt) return;
-    txt.textContent = btn.href;
-  })();
-</script>
 
 </body>
 </html>
