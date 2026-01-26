@@ -39,28 +39,29 @@
       We will email you next steps after review.
     </p>
 
-   <form method="POST"
-  action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
-  <input type="hidden" name="formType" value="START">
+    <form id="startForm" method="POST"
+      action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
+      <input type="hidden" name="formType" value="START">
 
       <!-- IDs -->
-      <input type="hidden" name="order_id" id="orderIdHidden" value="" />
+      <!-- IMPORTANT: This is your RequestID in the sheet -->
+      <input type="hidden" name="RequestID" id="orderIdHidden" value="" />
 
       <div class="grid2">
         <div>
           <label>Full Name</label>
-          <input name="name" type="text" placeholder="Full name (required)" required />
+          <input name="OwnerName" type="text" placeholder="Full name (required)" required />
         </div>
         <div>
           <label>Email</label>
-          <input name="email" type="email" placeholder="Email (required)" required />
+          <input name="OwnerEmail" type="email" placeholder="Email (required)" required />
         </div>
       </div>
 
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Package</label>
-          <select name="package" id="packageSel" required>
+          <select name="Package" id="packageSel" required>
             <option value="FAM">Family Library (FAM) — $48</option>
             <option value="COMM">Community Library (COMM) — $89</option>
             <option value="ADDON">Photos / Docs Add-On — $49</option>
@@ -113,15 +114,14 @@
       </div>
 
       <!-- Resolved fields that system should trust -->
-      <input type="hidden" name="auto_design_resolved" id="designResolved" value="" />
-      <input type="hidden" name="auto_theme_resolved"  id="themeResolved"  value="" />
-      <input type="hidden" name="auto_color_resolved"  id="colorResolved"  value="" />
+      <input type="hidden" name="DesignResolved" id="designResolved" value="" />
+      <input type="hidden" name="ThemeResolved"  id="themeResolved"  value="" />
+      <input type="hidden" name="ColorResolved"  id="colorResolved"  value="" />
 
       <div class="autoPreview" id="autoPreview">Auto selection: <strong>—</strong></div>
 
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn" id="submitBtn" type="submit">Submit Request</button>
-        <!-- rename only (safer wording) -->
         <a class="btn secondary" id="payBtn" href="payment.html">View Payment Options</a>
       </div>
 
@@ -137,22 +137,18 @@
 
 <footer class="site-footer">
   <div class="footer-inner">
-
-    <!-- Logos -->
     <div class="footer-brand">
       <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
       <span class="footer-x">×</span>
       <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
     </div>
 
-    <!-- Emails -->
     <div class="footer-contacts">
       <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
 
-    <!-- Core pages -->
     <div class="footer-links">
       <a href="index.html">Home</a>
       <span class="dot">•</span>
@@ -161,7 +157,6 @@
       <a href="reseller/index.html">Reseller Program</a>
     </div>
 
-    <!-- Social (subtle, professional) -->
     <div class="footer-links" style="margin-top:6px;">
       <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
         TinyTeam Digital Library (Facebook)
@@ -175,10 +170,8 @@
         Chin Veloso (Facebook)
       </a>
     </div>
-
   </div>
 </footer>
-
 
 <script>
 (function(){
@@ -216,7 +209,6 @@
     const seconds = Math.floor(now.getTime() / 1000);
     const six = seconds % 1000000;
 
-    // add suffix to reduce collision risk
     const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let suffix = "";
     for (let i = 0; i < 3; i++) suffix += alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -229,7 +221,6 @@
   if (orderIdView) orderIdView.value = rid;
   if (orderIdHidden) orderIdHidden.value = rid;
 
-  // persist for smooth navigation to payment page
   try{
     localStorage.setItem("TT_LAST_ORDER_ID", rid);
     localStorage.setItem("TT_LAST_PACKAGE", (pkgSel ? (pkgSel.value||"FAM") : "FAM").toUpperCase());
@@ -304,10 +295,8 @@
   syncLinks();
   resolveAutoDesign();
 
-  // ensure resolved fields set at submit
   const form = document.getElementById("startForm");
   if (form) form.addEventListener("submit", resolveAutoDesign);
-
 })();
 (function(){
   const form = document.getElementById("startForm");
