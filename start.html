@@ -47,6 +47,9 @@
       <!-- IMPORTANT: This is your RequestID in the sheet -->
       <input type="hidden" name="RequestID" id="orderIdHidden" value="" />
 
+      <!-- ✅ RESELLER (hidden canonical field for Apps Script + Sheets) -->
+      <input type="hidden" name="ReferralCode" id="referralHidden" value="" />
+
       <div class="grid2">
         <div>
           <label>Full Name</label>
@@ -72,6 +75,15 @@
           <input id="orderIdView" class="mono" type="text" readonly />
           <p class="muted small" style="margin:6px 0 0;">Keep this Order ID for payment proof + follow-ups.</p>
         </div>
+      </div>
+
+      <!-- ✅ RESELLER (visible optional code input) -->
+      <div style="margin-top:12px;">
+        <label>Reseller Code (optional)</label>
+        <input id="referralInput" type="text" placeholder="Enter reseller code (if any)" />
+        <p class="muted small" style="margin:6px 0 0;">
+          If someone referred you, enter their code so they get credited.
+        </p>
       </div>
 
       <!-- Design (auto resolver, same behavior you already had) -->
@@ -180,8 +192,11 @@
   const pkgSel = document.getElementById("packageSel");
   const orderIdView = document.getElementById("orderIdView");
   const orderIdHidden = document.getElementById("orderIdHidden");
-  const startNext = document.getElementById("startNext");
   const payBtn = document.getElementById("payBtn");
+
+  // ✅ RESELLER elements
+  const referralInput = document.getElementById("referralInput");
+  const referralHidden = document.getElementById("referralHidden");
 
   const designSel = document.getElementById("designSel");
   const themeSel  = document.getElementById("themeSel");
@@ -220,6 +235,17 @@
 
   if (orderIdView) orderIdView.value = rid;
   if (orderIdHidden) orderIdHidden.value = rid;
+
+  // ✅ RESELLER: read from URL (?ref=CODE or ?referral=CODE) and prefill
+  const refFromUrl = (params.get("ref") || params.get("referral") || params.get("ReferralCode") || "").trim();
+  if (refFromUrl && referralInput) referralInput.value = refFromUrl;
+
+  function syncReferral(){
+    if (!referralHidden) return;
+    const raw = (referralInput ? referralInput.value : "").trim();
+    // Keep it safe + clean for sheet
+    referralHidden.value = raw ? raw.toUpperCase() : "";
+  }
 
   try{
     localStorage.setItem("TT_LAST_ORDER_ID", rid);
@@ -277,7 +303,6 @@
     const encodedId  = encodeURIComponent(rid);
 
     if (payBtn) payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
-    if (startNext) startNext.value = `https://tinyteamstudio.online/thank-you.html?from=start&package=${encodedPkg}&order_id=${encodedId}`;
 
     try{
       localStorage.setItem("TT_LAST_ORDER_ID", rid);
@@ -285,6 +310,7 @@
     }catch(e){}
 
     resolveAutoDesign();
+    syncReferral();
   }
 
   if (pkgSel)   pkgSel.addEventListener("change", syncLinks);
@@ -292,11 +318,18 @@
   if (themeSel) themeSel.addEventListener("change", resolveAutoDesign);
   if (colorSel) colorSel.addEventListener("change", resolveAutoDesign);
 
+  // ✅ RESELLER: keep hidden field updated
+  if (referralInput) referralInput.addEventListener("input", syncReferral);
+
   syncLinks();
   resolveAutoDesign();
+  syncReferral();
 
   const form = document.getElementById("startForm");
-  if (form) form.addEventListener("submit", resolveAutoDesign);
+  if (form) form.addEventListener("submit", () => {
+    resolveAutoDesign();
+    syncReferral();
+  });
 })();
 (function(){
   const form = document.getElementById("startForm");
