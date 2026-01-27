@@ -193,6 +193,57 @@
     window.location.href = `${FORM_BASE}?${params.toString()}`;
   });
 </script>
+<!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
+<style>
+  .tt-messenger-bubble {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 68px;
+    height: 68px;
+    background: #1877f2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 99999;
+    box-shadow: 0 0 0 rgba(24,119,242, 0.6);
+    animation: ttPulse 2s infinite;
+  }
+
+  .tt-messenger-bubble:hover {
+    transform: scale(1.08);
+  }
+
+  .tt-messenger-bubble span {
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  @keyframes ttPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(24,119,242, 0.6);
+    }
+    70% {
+      box-shadow: 0 0 0 18px rgba(24,119,242, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(24,119,242, 0);
+    }
+  }
+</style>
+
+<a
+  href="https://m.me/918023754727652"
+  class="tt-messenger-bubble"
+  target="_blank"
+  rel="noopener"
+  aria-label="Chat with TinyTeam on Messenger"
+>
+  <span>💬</span>
+</a>
 
 </body>
 </html>
