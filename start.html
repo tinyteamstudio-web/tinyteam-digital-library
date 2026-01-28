@@ -132,6 +132,25 @@
 
       <div class="autoPreview" id="autoPreview">Auto selection: <strong>—</strong></div>
 
+      <!-- ✅ Email consent (privacy-first / international standard) -->
+      <div class="field" style="margin-top:14px;">
+        <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; line-height:1.35;">
+          <input
+            type="checkbox"
+            name="EmailConsent"
+            value="YES"
+            style="margin-top:3px;"
+          />
+          <span>
+            I agree to receive emails related to my TinyTeam request (confirmation, clarifications, payment instructions, and delivery).
+            <br />
+            <small style="opacity:0.75;">
+              You can opt out anytime by replying “STOP”.
+            </small>
+          </span>
+        </label>
+      </div>
+
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn" id="submitBtn" type="submit">Submit Request</button>
         <a class="btn secondary" id="payBtn" href="payment.html">View Payment Options</a>
@@ -341,25 +360,6 @@
     box.classList.add("show");
   });
 })();
-  <!-- Email consent (privacy-first / international standard) -->
-<div class="field" style="margin-top:14px;">
-  <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; line-height:1.35;">
-    <input
-      type="checkbox"
-      name="EmailConsent"
-      value="YES"
-      style="margin-top:3px;"
-    />
-    <span>
-      I agree to receive emails related to my TinyTeam request (confirmation, clarifications, payment instructions, and delivery).
-      <br />
-      <small style="opacity:0.75;">
-        You can opt out anytime by replying “STOP”.
-      </small>
-    </span>
-  </label>
-</div>
-
 </script>
 
 <!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
