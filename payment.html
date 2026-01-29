@@ -84,14 +84,16 @@
         <div class="panel" style="margin-top:14px;">
           <h3 style="margin:0 0 10px;">Step 2 — Upload Payment Proof</h3>
 
-          <form id="proofForm" action="https://formspree.io/f/xeeajpzy" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_next" id="proofNext" value="https://tinyteamstudio.online/thank-you.html?from=payment" />
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <!-- UPDATED: Formspree → Google Apps Script Web App (same pattern as start.html) -->
+          <form id="proofForm"
+                action="https://script.google.com/macros/s/AKfycbyifJZUD-mBN-NBEUuTbM5GK38LcFtfP6g-W93s_lZ47QlcA7zRxavfgouECcH_2WxkyA/exec?key=TT_PRIVATE_2026_01"
+                method="POST">
+            <!-- UPDATED: _next/_gotcha removed (Formspree-only) -->
 
-            <!-- ✅ ADDED: routing flag for Option C webhook -->
-            <input type="hidden" name="formType" value="PAYMENT_PROOF" />
+            <!-- UPDATED: route flag must match Apps Script doPost(e) routing -->
+            <input type="hidden" name="formType" value="PAYMENT" />
 
-            <!-- ✅ ADDED: normalized fields for your Google Sheet + Apps Script (hidden, no layout change) -->
+            <!-- keep normalized fields (Apps Script will read these) -->
             <input type="hidden" name="OrderID" id="normOrderID" value="" />
             <input type="hidden" name="ClientEmail" id="normClientEmail" value="" />
             <input type="hidden" name="Package" id="normPackage" value="" />
@@ -133,10 +135,8 @@
               <input name="proof_link" id="proofLinkInput" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
             </div>
 
-            <div class="oidRow">
-              <label class="muted small" style="display:block;margin-bottom:6px;">Upload Screenshot (optional)</label>
-              <input name="proof_file" type="file" />
-            </div>
+            <!-- UPDATED: File upload removed (Google Apps Script Web App cannot receive files from HTML forms like this) -->
+            <!-- Keep: user uses ProofLink (Google Drive link) as official proof -->
 
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <button class="btn" id="submitProofBtn" type="submit">Submit Payment Proof</button>
@@ -145,6 +145,11 @@
 
             <div class="status" id="proofStatus">Submitting proof…</div>
           </form>
+
+          <!-- OPTIONAL NOTE: keep UI clean, but clarify proof method -->
+          <p class="muted small" style="margin:10px 0 0;line-height:1.6;">
+            Tip: Upload your screenshot to Google Drive and paste the share link in “Proof link”.
+          </p>
         </div>
 
         <!-- UPSELL / CUSTOMIZATION -->
@@ -154,16 +159,29 @@
             Want TinyTeam to handle design polishing, arranging, and archive structuring? Request customization below.
           </p>
 
-          <form id="upsellForm" action="https://formspree.io/f/xzdepang" method="POST">
-            <input type="hidden" name="_next" id="upsellNext" value="https://tinyteamstudio.online/thank-you.html?from=upsell" />
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <!-- UPDATED: Formspree → Google Apps Script Web App -->
+          <form id="upsellForm"
+                action="https://script.google.com/macros/s/AKfycbyifJZUD-mBN-NBEUuTbM5GK38LcFtfP6g-W93s_lZ47QlcA7zRxavfgouECcH_2WxkyA/exec?key=TT_PRIVATE_2026_01"
+                method="POST">
+            <!-- UPDATED: _next/_gotcha removed (Formspree-only) -->
+
+            <!-- UPDATED: route flag to Apps Script -->
+            <input type="hidden" name="formType" value="UPS
+ELL" />
+
+            <!-- Normalized fields (safe, does not change layout) -->
+            <input type="hidden" name="OrderID" id="upsellNormOrderID" value="" />
+            <input type="hidden" name="ClientEmail" id="upsellNormClientEmail" value="" />
+            <input type="hidden" name="Package" id="upsellNormPackage" value="" />
+            <input type="hidden" name="ServiceRequest" id="upsellNormService" value="" />
+            <input type="hidden" name="Details" id="upsellNormDetails" value="" />
 
             <div class="oidRow">
               <input name="order_id" id="upsellOrderId" type="text" placeholder="Order_ID (required)" required />
             </div>
 
             <div class="oidRow">
-              <input name="email" type="email" placeholder="Your Email (required)" required />
+              <input name="email" id="upsellEmail" type="email" placeholder="Your Email (required)" required />
             </div>
 
             <div class="oidRow">
@@ -171,7 +189,7 @@
             </div>
 
             <div class="oidRow">
-              <select name="service_request" required>
+              <select name="service_request" id="serviceReqSel" required>
                 <option value="">Choose a tier / service (required)</option>
                 <option value="Tier A — Light Assist (USD 45)">Tier A — Light Assist (USD 45)</option>
                 <option value="Tier B — Full Custom Design (USD 189)">Tier B — Full Custom Design (USD 189)</option>
@@ -181,7 +199,7 @@
             </div>
 
             <div class="oidRow">
-              <input name="details" type="text" placeholder="Short notes (optional) e.g., “Arrange 300 photos by year”" />
+              <input name="details" id="upsellDetails" type="text" placeholder="Short notes (optional) e.g., “Arrange 300 photos by year”" />
             </div>
 
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
@@ -343,6 +361,7 @@
     refreshPaypal();
     syncNextUrls();
     syncNormalized();
+    syncUpsellNormalized();
   }
 
   // Sync OrderID to forms + localStorage
@@ -358,6 +377,7 @@
     }catch(e){}
     syncNextUrls();
     syncNormalized();
+    syncUpsellNormalized();
   }
 
   // Append package + order_id to THANK YOU redirects
@@ -406,6 +426,27 @@
     if (nProof) nProof.value = proofVal;
   }
 
+  // ✅ NEW: normalized fields for upsell route
+  function syncUpsellNormalized(){
+    const oidVal = (document.getElementById("upsellOrderId") ? document.getElementById("upsellOrderId").value : "").trim();
+    const emailVal = (document.getElementById("upsellEmail") ? document.getElementById("upsellEmail").value : "").trim();
+    const pkgVal = (document.getElementById("upsellPackage") ? document.getElementById("upsellPackage").value : "").trim();
+    const srvVal = (document.getElementById("serviceReqSel") ? document.getElementById("serviceReqSel").value : "").trim();
+    const detVal = (document.getElementById("upsellDetails") ? document.getElementById("upsellDetails").value : "").trim();
+
+    const nOID = document.getElementById("upsellNormOrderID");
+    const nEmail = document.getElementById("upsellNormClientEmail");
+    const nPkg = document.getElementById("upsellNormPackage");
+    const nSrv = document.getElementById("upsellNormService");
+    const nDet = document.getElementById("upsellNormDetails");
+
+    if (nOID) nOID.value = oidVal;
+    if (nEmail) nEmail.value = emailVal;
+    if (nPkg) nPkg.value = pkgVal;
+    if (nSrv) nSrv.value = srvVal;
+    if (nDet) nDet.value = detVal;
+  }
+
   if (pkgSel) pkgSel.addEventListener("change", syncPackage);
   if (orderIdInput) orderIdInput.addEventListener("input", syncOrderId);
 
@@ -418,11 +459,22 @@
   if (amountPaidInput) amountPaidInput.addEventListener("input", syncNormalized);
   if (proofLinkInput) proofLinkInput.addEventListener("input", syncNormalized);
 
+  // Upsell listeners
+  const upsellEmail = document.getElementById("upsellEmail");
+  const serviceReqSel = document.getElementById("serviceReqSel");
+  const upsellDetails = document.getElementById("upsellDetails");
+  const upsellOrderEl = document.getElementById("upsellOrderId");
+  if (upsellEmail) upsellEmail.addEventListener("input", syncUpsellNormalized);
+  if (serviceReqSel) serviceReqSel.addEventListener("change", syncUpsellNormalized);
+  if (upsellDetails) upsellDetails.addEventListener("input", syncUpsellNormalized);
+  if (upsellOrderEl) upsellOrderEl.addEventListener("input", syncUpsellNormalized);
+
   // Initial sync
   syncPackage();
   syncOrderId();
   refreshPaypal();
   syncNormalized();
+  syncUpsellNormalized();
 
   // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
@@ -442,6 +494,7 @@
   const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
   if (upsellForm && upsellSubmitBtn) {
     upsellForm.addEventListener("submit", () => {
+      syncUpsellNormalized();
       upsellSubmitBtn.disabled = true;
       upsellSubmitBtn.textContent = "Submitting...";
     });
