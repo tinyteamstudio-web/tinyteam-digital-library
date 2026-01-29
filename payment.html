@@ -359,7 +359,6 @@
 
     try { localStorage.setItem("TT_LAST_PACKAGE", p); } catch(e){}
     refreshPaypal();
-    syncNextUrls();
     syncNormalized();
     syncUpsellNormalized();
   }
@@ -375,29 +374,8 @@
     try{
       if (v) localStorage.setItem("TT_LAST_ORDER_ID", v);
     }catch(e){}
-    syncNextUrls();
     syncNormalized();
     syncUpsellNormalized();
-  }
-
-  // Append package + order_id to THANK YOU redirects
-  const proofNext  = document.getElementById("proofNext");
-  const upsellNext = document.getElementById("upsellNext");
-  function syncNextUrls(){
-    const p = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
-    const id = (orderIdInput ? orderIdInput.value : "").trim();
-
-    const proofUrl = new URL("https://tinyteamstudio.online/thank-you.html");
-    proofUrl.searchParams.set("from","payment");
-    proofUrl.searchParams.set("package", p);
-    if (id) proofUrl.searchParams.set("order_id", id);
-    if (proofNext) proofNext.value = proofUrl.toString();
-
-    const upsellUrl = new URL("https://tinyteamstudio.online/thank-you.html");
-    upsellUrl.searchParams.set("from","upsell");
-    upsellUrl.searchParams.set("package", p);
-    if (id) upsellUrl.searchParams.set("order_id", id);
-    if (upsellNext) upsellNext.value = upsellUrl.toString();
   }
 
   // ✅ NEW: keep normalized hidden fields updated (for webhook/sheets)
