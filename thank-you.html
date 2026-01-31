@@ -140,7 +140,7 @@
       <li><strong>Project setup</strong> — a Project ID is created after validation.</li>
       <li><strong>Email guidance</strong> — you’ll receive next steps, timelines, and any requested clarifications.</li>
     </ol>
-    <p class="muted" about="margin-top:10px;">
+    <p class="muted" style="margin-top:10px;">
       Please keep an eye on your inbox (and spam/junk folder) for our confirmation email.
     </p>
   </section>
@@ -209,11 +209,9 @@
     const from = (params.get("from") || "").toLowerCase();     // start | payment | upsell
     const pkg  = (params.get("package") || "").toUpperCase();  // FAM | COMM | ADDON
 
-    // ✅ Minimal compatibility:
-    // support BOTH "order_id" (older) and "RequestID" (new HTML form posts)
+    // support BOTH "order_id" and "RequestID"
     const oid  = (params.get("order_id") || params.get("RequestID") || "").trim();
 
-    // Show only the correct message block
     const blocks = document.querySelectorAll("[data-from]");
     let shown = false;
 
@@ -223,11 +221,9 @@
       if (match) shown = true;
     });
 
-    // Fallback if no match
     const fallback = document.getElementById("fallback");
     if (fallback) fallback.classList.toggle("hidden", shown);
 
-    // Update hero text depending on source
     const heroTitle = document.getElementById("heroTitle");
     const heroLead  = document.getElementById("heroLead");
     const fromChip  = document.getElementById("fromChip");
@@ -255,7 +251,6 @@
       heroLead.textContent = "Your request was received successfully. After manual review, you’ll receive next-step instructions by email.";
     }
 
-    // Show context box only if any data exists
     const contextBox = document.getElementById("contextBox");
     const ctxFrom = document.getElementById("ctxFrom");
     const ctxPkg = document.getElementById("ctxPkg");
@@ -268,7 +263,6 @@
       if (ctxOid)  ctxOid.textContent  = oid  ? oid  : "—";
     }
 
-    // "Proceed to Payment" must carry package + order_id
     const goPaymentBtn = document.getElementById("goPaymentBtn");
     if (goPaymentBtn) {
       const url = new URL("payment.html", window.location.href);
@@ -278,6 +272,7 @@
     }
   })();
 </script>
+
 <!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
 <style>
   .tt-messenger-bubble {
@@ -308,15 +303,9 @@
   }
 
   @keyframes ttPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 18px rgba(24,119,242, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
+    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
   }
 </style>
 
