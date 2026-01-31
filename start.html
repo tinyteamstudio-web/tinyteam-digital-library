@@ -39,9 +39,14 @@
       We will email you next steps after review.
     </p>
 
-   <form id="startForm" method="POST"
-  action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
+    <form id="startForm" method="POST"
+      action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
+
       <input type="hidden" name="formType" value="START">
+
+      <!-- ✅ Stable fields for BuildFrame intake (invisible, no layout impact) -->
+      <input type="hidden" name="LeadType" value="START" />
+      <input type="hidden" name="Status" value="RECEIVED" />
 
       <!-- IDs -->
       <!-- IMPORTANT: This is your RequestID in the sheet -->
@@ -152,26 +157,25 @@
 
       <div class="autoPreview" id="autoPreview">Auto selection: <strong>—</strong></div>
 
-     <!-- ✅ Email consent (required to proceed) -->
-<div class="field" style="margin-top:14px;">
-  <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; line-height:1.35;">
-    <input
-      type="checkbox"
-      name="EmailConsent"
-      value="YES"
-      required
-      style="margin-top:3px;"
-    />
-    <span>
-      I agree to receive emails related to my TinyTeam request (confirmation, clarifications, payment instructions, and delivery).
-      <br />
-      <small style="opacity:0.75;">
-        This consent is required to proceed.
-      </small>
-    </span>
-  </label>
-</div>
-
+      <!-- ✅ Email consent (required to proceed) -->
+      <div class="field" style="margin-top:14px;">
+        <label style="display:flex; gap:10px; align-items:flex-start; font-size:14px; line-height:1.35;">
+          <input
+            type="checkbox"
+            name="EmailConsent"
+            value="YES"
+            required
+            style="margin-top:3px;"
+          />
+          <span>
+            I agree to receive emails related to my TinyTeam request (confirmation, clarifications, payment instructions, and delivery).
+            <br />
+            <small style="opacity:0.75;">
+              This consent is required to proceed.
+            </small>
+          </span>
+        </label>
+      </div>
 
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn" id="submitBtn" type="submit">Submit Request</button>
