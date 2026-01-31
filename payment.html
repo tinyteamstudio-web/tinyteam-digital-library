@@ -84,16 +84,13 @@
         <div class="panel" style="margin-top:14px;">
           <h3 style="margin:0 0 10px;">Step 2 — Upload Payment Proof</h3>
 
-          <!-- UPDATED: Formspree → Google Apps Script Web App (same pattern as start.html) -->
           <form id="proofForm"
-                action="https://script.google.com/macros/s/AKfycbyifJZUD-mBN-NBEUuTbM5GK38LcFtfP6g-W93s_lZ47QlcA7zRxavfgouECcH_2WxkyA/exec?key=TT_PRIVATE_2026_01"
+                action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01"
                 method="POST">
-            <!-- UPDATED: _next/_gotcha removed (Formspree-only) -->
 
-            <!-- UPDATED: route flag must match Apps Script doPost(e) routing -->
             <input type="hidden" name="formType" value="PAYMENT" />
 
-            <!-- keep normalized fields (Apps Script will read these) -->
+            <!-- normalized fields -->
             <input type="hidden" name="OrderID" id="normOrderID" value="" />
             <input type="hidden" name="ClientEmail" id="normClientEmail" value="" />
             <input type="hidden" name="Package" id="normPackage" value="" />
@@ -135,9 +132,6 @@
               <input name="proof_link" id="proofLinkInput" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
             </div>
 
-            <!-- UPDATED: File upload removed (Google Apps Script Web App cannot receive files from HTML forms like this) -->
-            <!-- Keep: user uses ProofLink (Google Drive link) as official proof -->
-
             <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <button class="btn" id="submitProofBtn" type="submit">Submit Payment Proof</button>
               <span class="muted small">We’ll verify and email you.</span>
@@ -146,7 +140,6 @@
             <div class="status" id="proofStatus">Submitting proof…</div>
           </form>
 
-          <!-- OPTIONAL NOTE: keep UI clean, but clarify proof method -->
           <p class="muted small" style="margin:10px 0 0;line-height:1.6;">
             Tip: Upload your screenshot to Google Drive and paste the share link in “Proof link”.
           </p>
@@ -159,17 +152,13 @@
             Want TinyTeam to handle design polishing, arranging, and archive structuring? Request customization below.
           </p>
 
-          <!-- UPDATED: Formspree → Google Apps Script Web App -->
           <form id="upsellForm"
-                action="https://script.google.com/macros/s/AKfycbyifJZUD-mBN-NBEUuTbM5GK38LcFtfP6g-W93s_lZ47QlcA7zRxavfgouECcH_2WxkyA/exec?key=TT_PRIVATE_2026_01"
+                action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01"
                 method="POST">
-            <!-- UPDATED: _next/_gotcha removed (Formspree-only) -->
 
-            <!-- UPDATED: route flag to Apps Script -->
-           <input type="hidden" name="formType" value="UPSELL" />
+            <input type="hidden" name="formType" value="UPSELL" />
 
-
-            <!-- Normalized fields (safe, does not change layout) -->
+            <!-- normalized fields -->
             <input type="hidden" name="OrderID" id="upsellNormOrderID" value="" />
             <input type="hidden" name="ClientEmail" id="upsellNormClientEmail" value="" />
             <input type="hidden" name="Package" id="upsellNormPackage" value="" />
@@ -282,21 +271,18 @@
 <footer class="site-footer">
   <div class="footer-inner">
 
-    <!-- Logos -->
     <div class="footer-brand">
       <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
       <span class="footer-x">×</span>
       <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
     </div>
 
-    <!-- Emails -->
     <div class="footer-contacts">
       <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
 
-    <!-- Core pages -->
     <div class="footer-links">
       <a href="index.html">Home</a>
       <span class="dot">•</span>
@@ -305,7 +291,6 @@
       <a href="reseller/index.html">Reseller Program</a>
     </div>
 
-    <!-- Social (subtle, professional) -->
     <div class="footer-links" style="margin-top:6px;">
       <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
         TinyTeam Digital Library (Facebook)
@@ -323,14 +308,12 @@
   </div>
 </footer>
 
-
 <script>
 (function(){
   const params = new URLSearchParams(window.location.search);
   let pkg = (params.get("package") || "").toUpperCase();
   let oid = (params.get("order_id") || "").trim();
 
-  // Fallback to localStorage
   try{
     if (!pkg) pkg = (localStorage.getItem("TT_LAST_PACKAGE") || "").toUpperCase();
     if (!oid) oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim();
@@ -342,14 +325,12 @@
   if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
   if (orderIdInput && oid) orderIdInput.value = oid;
 
-  // show only selected paypal card
   function refreshPaypal(){
     const chosen = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
     const cards = document.querySelectorAll("#paypalArea .qr-card[data-package]");
     cards.forEach(c => c.style.display = (c.dataset.package === chosen ? "" : "none"));
   }
 
-  // Sync hidden package fields
   const packageHidden = document.getElementById("packageHidden");
   const upsellPackage = document.getElementById("upsellPackage");
   function syncPackage(){
@@ -363,7 +344,6 @@
     syncUpsellNormalized();
   }
 
-  // Sync OrderID to forms + localStorage
   const orderIdHidden = document.getElementById("orderIdHidden");
   const upsellOrderId = document.getElementById("upsellOrderId");
   function syncOrderId(){
@@ -371,14 +351,11 @@
     if (orderIdHidden) orderIdHidden.value = v;
     if (upsellOrderId) upsellOrderId.value = v;
 
-    try{
-      if (v) localStorage.setItem("TT_LAST_ORDER_ID", v);
-    }catch(e){}
+    try{ if (v) localStorage.setItem("TT_LAST_ORDER_ID", v); }catch(e){}
     syncNormalized();
     syncUpsellNormalized();
   }
 
-  // ✅ NEW: keep normalized hidden fields updated (for webhook/sheets)
   function syncNormalized(){
     const oidVal = (document.getElementById("orderIdHidden") ? document.getElementById("orderIdHidden").value : "").trim();
     const emailVal = (document.getElementById("payerEmail") ? document.getElementById("payerEmail").value : "").trim();
@@ -400,11 +377,10 @@
     if (nPkg) nPkg.value = pkgVal;
     if (nMethod) nMethod.value = methodVal;
     if (nAmt) nAmt.value = amtVal;
-    if (nRef) nRef.value = ""; // keep empty unless you add a Reference Code field later
+    if (nRef) nRef.value = "";
     if (nProof) nProof.value = proofVal;
   }
 
-  // ✅ NEW: normalized fields for upsell route
   function syncUpsellNormalized(){
     const oidVal = (document.getElementById("upsellOrderId") ? document.getElementById("upsellOrderId").value : "").trim();
     const emailVal = (document.getElementById("upsellEmail") ? document.getElementById("upsellEmail").value : "").trim();
@@ -437,7 +413,6 @@
   if (amountPaidInput) amountPaidInput.addEventListener("input", syncNormalized);
   if (proofLinkInput) proofLinkInput.addEventListener("input", syncNormalized);
 
-  // Upsell listeners
   const upsellEmail = document.getElementById("upsellEmail");
   const serviceReqSel = document.getElementById("serviceReqSel");
   const upsellDetails = document.getElementById("upsellDetails");
@@ -447,14 +422,12 @@
   if (upsellDetails) upsellDetails.addEventListener("input", syncUpsellNormalized);
   if (upsellOrderEl) upsellOrderEl.addEventListener("input", syncUpsellNormalized);
 
-  // Initial sync
   syncPackage();
   syncOrderId();
   refreshPaypal();
   syncNormalized();
   syncUpsellNormalized();
 
-  // Submitting indicator (proof form)
   const proofForm = document.getElementById("proofForm");
   const proofStatus = document.getElementById("proofStatus");
   const submitProofBtn = document.getElementById("submitProofBtn");
@@ -467,7 +440,6 @@
     });
   }
 
-  // Upsell submit UX
   const upsellForm = document.getElementById("upsellForm");
   const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
   if (upsellForm && upsellSubmitBtn) {
@@ -479,6 +451,7 @@
   }
 })();
 </script>
+
 <!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
 <style>
   .tt-messenger-bubble {
@@ -509,15 +482,9 @@
   }
 
   @keyframes ttPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 18px rgba(24,119,242, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
+    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
   }
 </style>
 
