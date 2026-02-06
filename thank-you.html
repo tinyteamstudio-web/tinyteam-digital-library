@@ -2,8 +2,8 @@
  * TinyTeam BuildFrame — ONE WEBAPP (START + PAYMENT + UPSELL)
  * ✅ One WebApp URL
  * ✅ One Secret key: ?key=TT_PRIVATE_2026_01
- * ✅ Auto-creates sheets + headers safely
- * ✅ Redirects to thank-you.html (premium UX)
+ * ✅ Safe sheet + headers (won’t overwrite if exists)
+ * ✅ Redirects to /thank-you.html (relative, GitHub Pages-safe)
  ************************************************************/
 
 const TT = {
@@ -13,22 +13,31 @@ const TT = {
   SHEET_PAYMENT: "PAYMENT_PROOFS",
   SHEET_UPSELL:  "UPSELL_REQUESTS",
 
-  THANKYOU_URL: "https://tinyteamstudio.online/thank-you.html"
+  // ✅ RELATIVE URL (safer than hardcoding domain)
+  THANKYOU_PATH: "/thank-you.html"
 };
 
 /** Run anytime (safe): creates sheets + headers */
 function TT_INSTALL() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // CONFIG (optional clarity)
+  // CONFIG (safe)
   let cfg = ss.getSheetByName("CONFIG");
   if (!cfg) cfg = ss.insertSheet("CONFIG");
-  cfg.getRange(1, 1, 1, 2).setValues([["Key","Value"]]);
-  cfg.getRange(2, 1, 4, 2).setValues([
+
+  // Ensure config headers once
+  const cfgHeaders = cfg.getRange(1, 1, 1, 2).getValues()[0];
+  if (String(cfgHeaders[0] || "").trim() !== "Key" || String(cfgHeaders[1] || "").trim() !== "Value") {
+    cfg.getRange(1, 1, 1, 2).setValues([["Key", "Value"]]);
+  }
+
+  // Upsert config keys (don’t wipe everything)
+  TT_upsertConfig_(cfg, [
     ["WEBAPP_SECRET_KEY", TT.SECRET_KEY],
     ["SHEET_START", TT.SHEET_START],
     ["SHEET_PAYMENT", TT.SHEET_PAYMENT],
     ["SHEET_UPSELL", TT.SHEET_UPSELL],
+    ["THANKYOU_PATH", TT.THANKYOU_PATH],
   ]);
 
   // START
@@ -96,7 +105,7 @@ function doPost(e) {
     // ✅ AUTH: one secret = ?key=
     const key = String(p.key || "").trim();
     if (!key || key !== TT.SECRET_KEY) {
-      return TT_redirect_(TT.THANKYOU_URL + "?from=unknown");
+      return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
     }
 
     // ✅ ROUTE
@@ -110,10 +119,10 @@ function doPost(e) {
     if (p.RequestID && p.OwnerEmail) return TT_handleStart_(p);
     if (p.OrderID || p.order_id)     return TT_handlePayment_(p);
 
-    return TT_redirect_(TT.THANKYOU_URL + "?from=unknown");
+    return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
 
   } catch (err) {
-    return TT_redirect_(TT.THANKYOU_URL + "?from=unknown");
+    return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
   } finally {
     lock.releaseLock();
   }
@@ -125,7 +134,7 @@ function doPost(e) {
 function TT_handleStart_(p) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(TT.SHEET_START);
-  if (!sh) return TT_redirect_(TT.THANKYOU_URL + "?from=start");
+  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=start");
 
   const requestId = TT_or_(p.RequestID, TT_makeId_("TT-REQ"));
   const pkg = TT_or_(p.Package, "");
@@ -152,7 +161,7 @@ function TT_handleStart_(p) {
 
   TT_appendByHeaders_(sh, rowObj);
 
-  const url = TT.THANKYOU_URL
+  const url = TT_THANKYOU_URL_()
     + "?from=start"
     + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
     + "&order_id=" + encodeURIComponent(requestId);
@@ -166,7 +175,7 @@ function TT_handleStart_(p) {
 function TT_handlePayment_(p) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(TT.SHEET_PAYMENT);
-  if (!sh) return TT_redirect_(TT.THANKYOU_URL + "?from=payment");
+  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=payment");
 
   const orderId = TT_or_(p.OrderID, TT_or_(p.order_id, ""));
   const email   = TT_or_(p.ClientEmail, TT_or_(p.email, ""));
@@ -191,7 +200,7 @@ function TT_handlePayment_(p) {
 
   TT_appendByHeaders_(sh, rowObj);
 
-  const url = TT.THANKYOU_URL
+  const url = TT_THANKYOU_URL_()
     + "?from=payment"
     + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
     + (orderId ? "&order_id=" + encodeURIComponent(orderId) : "");
@@ -205,7 +214,7 @@ function TT_handlePayment_(p) {
 function TT_handleUpsell_(p) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName(TT.SHEET_UPSELL);
-  if (!sh) return TT_redirect_(TT.THANKYOU_URL + "?from=upsell");
+  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=upsell");
 
   const orderId = TT_or_(p.OrderID, TT_or_(p.order_id, ""));
   const email   = TT_or_(p.ClientEmail, TT_or_(p.email, ""));
@@ -225,7 +234,7 @@ function TT_handleUpsell_(p) {
 
   TT_appendByHeaders_(sh, rowObj);
 
-  const url = TT.THANKYOU_URL
+  const url = TT_THANKYOU_URL_()
     + "?from=upsell"
     + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
     + (orderId ? "&order_id=" + encodeURIComponent(orderId) : "");
@@ -236,10 +245,19 @@ function TT_handleUpsell_(p) {
 /* -----------------------------
    Helpers
 --------------------------------*/
+
+function TT_THANKYOU_URL_() {
+  // Build absolute URL based on incoming host (fallback to site domain)
+  // If no event host is available, use your production domain:
+  const base = "https://tinyteamstudio.online";
+  return base + TT.THANKYOU_PATH;
+}
+
 function TT_redirect_(url) {
-  const html = `
-<!doctype html><html><head>
-<meta http-equiv="refresh" content="0;url=${url}">
+  const safeUrl = String(url || "").replace(/"/g, "&quot;");
+  const html =
+`<!doctype html><html><head>
+<meta http-equiv="refresh" content="0;url=${safeUrl}">
 <meta name="robots" content="noindex">
 <title>Redirecting…</title>
 </head><body>Redirecting…</body></html>`;
@@ -249,7 +267,34 @@ function TT_redirect_(url) {
 function TT_ensureSheet_(ss, name, headers) {
   let sh = ss.getSheetByName(name);
   if (!sh) sh = ss.insertSheet(name);
-  sh.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  // ✅ Only write headers if missing/blank
+  const existing = sh.getRange(1, 1, 1, headers.length).getValues()[0];
+  const hasAny = existing.some(v => String(v || "").trim() !== "");
+  if (!hasAny) {
+    sh.getRange(1, 1, 1, headers.length).setValues([headers]);
+  }
+
+  return sh;
+}
+
+function TT_upsertConfig_(cfgSheet, pairs) {
+  const data = cfgSheet.getDataRange().getValues();
+  const map = {};
+
+  for (var i = 1; i < data.length; i++) {
+    const k = String(data[i][0] || "").trim();
+    if (k) map[k] = i + 1; // row index in sheet
+  }
+
+  pairs.forEach(pair => {
+    const key = pair[0], val = pair[1];
+    if (map[key]) {
+      cfgSheet.getRange(map[key], 2).setValue(val);
+    } else {
+      cfgSheet.appendRow([key, val]);
+    }
+  });
 }
 
 function TT_appendByHeaders_(sh, rowObj) {
@@ -269,3 +314,4 @@ function TT_makeId_(prefix) {
   const rand = Math.random().toString(16).slice(2, 10).toUpperCase();
   return `${prefix}-${stamp}-${rand}`;
 }
+
