@@ -154,3 +154,31 @@
 
 </body>
 </html>
+<script>
+
+  /* ✅ Auto-derive ClientID from ORDERS using OrderID (zero UI changes)
+     Requires Apps Script doGet support:
+     ?key=TT_PRIVATE_2026_01&action=lookupOrder&orderId=...
+     Expected JSON: { ok:true, clientId:"TT-CLT-000001" }
+  */
+  const WEBAPP_LOOKUP_URL =
+    "https://script.google.com/macros/s/AKfycbz7zW4jMNjAM8f7RQQ1gvqmZQiOlKrwWoMaHyMabVqamb0dLQDTgzoelzmhyPFHfsHSag/exec";
+
+  async function ttLookupClientId(orderId){
+    const oid = (orderId || "").trim();
+    if(!oid) return "";
+    try{
+      const url = WEBAPP_LOOKUP_URL
+        + "?key=TT_PRIVATE_2026_01"
+        + "&action=lookupOrder"
+        + "&orderId=" + encodeURIComponent(oid);
+
+      const res = await fetch(url, { method:"GET", cache:"no-store" });
+      const data = await res.json();
+      if(data && data.ok && data.clientId) return String(data.clientId).trim();
+    }catch(e){}
+    return "";
+  }
+
+</script>
+ 
