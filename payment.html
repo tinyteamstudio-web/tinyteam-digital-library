@@ -8,21 +8,10 @@
   <link rel="stylesheet" href="assets/styles/main.css" />
 
   <style>
-    /* Small safety styles (won't fight your main.css) */
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
-    .status{
-      margin-top:10px;
-      font-size:13px;
-      color: rgba(0,0,0,0.65);
-      display:none;
-      line-height:1.5;
-    }
+    .status{margin-top:10px;font-size:13px;color:rgba(0,0,0,0.65);display:none;line-height:1.5}
     .status.show{display:block}
-    .btn.secondary{
-      background:#fff;
-      color:#111827;
-      border:1px solid rgba(0,0,0,0.12);
-    }
+    .btn.secondary{background:#fff;color:#111827;border:1px solid rgba(0,0,0,0.12)}
   </style>
 </head>
 
@@ -39,464 +28,129 @@
 </header>
 
 <main>
-  <div class="wrap">
+<div class="wrap">
 
-    <section class="panel">
-      <h1>Payment</h1>
-      <p class="muted" style="line-height:1.7;">
-        Submit your <strong>Order ID</strong>, choose your package, then pay using the QR or link.
-        After paying, upload proof so we can verify manually.
-      </p>
+<section class="panel">
+  <h1>Payment</h1>
+  <p class="muted" style="line-height:1.7;">
+    Submit your <strong>Order ID</strong>, choose your package, then pay using the QR or link.
+    After paying, upload proof so we can verify manually.
+  </p>
+</section>
 
-      <p class="muted small" style="margin-top:10px;">
-        <strong>Member submission link:</strong> You will receive it by email after payment is verified.
-      </p>
-    </section>
+<div class="grid2" style="margin-top:18px;">
 
-    <div class="grid2" style="margin-top:18px;">
+<!-- LEFT -->
+<div>
 
-      <!-- LEFT -->
-      <div>
+<div class="panel">
+  <h3>Step 1 — Enter Your Order ID</h3>
+  <input id="orderIdInput" class="mono" type="text" placeholder="TT-ORD-2026-000123-ABC" />
 
-        <div class="panel">
-          <h3 style="margin:0 0 10px;">Step 1 — Enter Your Order ID</h3>
-          <p class="muted small" style="margin:0 0 12px;line-height:1.7;">
-            If you came from Start, this auto-fills. If not, paste your Order ID here.
-          </p>
-
-          <input id="orderIdInput" class="mono" type="text" placeholder="TT-ORD-2026-000123-ABC" />
-
-          <div style="margin-top:12px;">
-            <label class="muted small" style="display:block;margin-bottom:6px;">Package</label>
-            <select id="pkgSel">
-              <option value="FAM">Family Library (FAM) — $48</option>
-              <option value="COMM">Community Library (COMM) — $89</option>
-              <option value="ADDON">Photo / Docs Add-On — $49</option>
-            </select>
-          </div>
-
-          <p class="muted small" style="margin-top:10px;">
-            Note: Pay only if you are ready. Verification is manual and confirmed by email.
-          </p>
-        </div>
-
-        <!-- PAYMENT PROOF FORM -->
-        <div class="panel" style="margin-top:14px;">
-          <h3 style="margin:0 0 10px;">Step 2 — Upload Payment Proof</h3>
-
-          <form id="proofForm"
-  action="https://script.google.com/macros/s/AKfycbz7zW4jMNjAM8f7RQQ1gvqmZQiOlKrwWoMaHyMabVqamb0dLQDTgzoelzmhyPFHfsHSag/exec?key=TT_PRIVATE_2026_01"
-  method="POST">
-
-            <input type="hidden" name="formType" value="PAYMENT" />
-
-            <!-- normalized fields -->
-            <input type="hidden" name="OrderID" id="normOrderID" value="" />
-            <input type="hidden" name="ClientEmail" id="normClientEmail" value="" />
-            <input type="hidden" name="Package" id="normPackage" value="" />
-            <input type="hidden" name="PaymentMethod" id="normPaymentMethod" value="" />
-            <input type="hidden" name="AmountPaidUSD" id="normAmountPaidUSD" value="" />
-            <input type="hidden" name="ReferenceCode" id="normReferenceCode" value="" />
-            <input type="hidden" name="ProofLink" id="normProofLink" value="" />
-
-            <div class="oidRow">
-              <input name="order_id" id="orderIdHidden" type="text" placeholder="Order_ID (required)" required />
-            </div>
-
-            <div class="oidRow">
-              <input name="email" id="payerEmail" type="email" placeholder="Your Email (required)" required />
-            </div>
-
-            <div class="oidRow">
-              <input name="package" id="packageHidden" type="text" readonly />
-            </div>
-
-            <div class="oidRow">
-              <select name="payment_method" id="paymentMethodSel" required>
-                <option value="">Payment Method (required)</option>
-                <option value="PayPal">PayPal</option>
-                <option value="GCash">GCash</option>
-                <option value="Maya">Maya</option>
-                <option value="GoTyme">GoTyme</option>
-                <option value="PNB">PNB</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div class="oidRow">
-              <input name="amount_paid" id="amountPaidInput" type="text" placeholder="Amount Paid (optional)" />
-            </div>
-
-            <div class="oidRow">
-              <input name="proof_link" id="proofLinkInput" type="url" placeholder="Proof link (optional) e.g., Google Drive link" />
-            </div>
-
-            <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-              <button class="btn" id="submitProofBtn" type="submit">Submit Payment Proof</button>
-              <span class="muted small">We’ll verify and email you.</span>
-            </p>
-
-            <div class="status" id="proofStatus">Submitting proof…</div>
-          </form>
-
-          <p class="muted small" style="margin:10px 0 0;line-height:1.6;">
-            Tip: Upload your screenshot to Google Drive and paste the share link in “Proof link”.
-          </p>
-        </div>
-
-        <!-- UPSELL / CUSTOMIZATION -->
-        <div class="panel" style="margin-top:14px;">
-          <h3 style="margin:0 0 10px;">Optional — Customize the Design for Me</h3>
-          <p class="muted small" style="margin:0 0 12px;line-height:1.7;">
-            Want TinyTeam to handle design polishing, arranging, and archive structuring? Request customization below.
-          </p>
-
-        <form id="upsellForm"
-  action="https://script.google.com/macros/s/AKfycbz7zW4jMNjAM8f7RQQ1gvqmZQiOlKrwWoMaHyMabVqamb0dLQDTgzoelzmhyPFHfsHSag/exec?key=TT_PRIVATE_2026_01"
-  method="POST">
-
-            <input type="hidden" name="formType" value="UPSELL" />
-
-            <!-- normalized fields -->
-            <input type="hidden" name="OrderID" id="upsellNormOrderID" value="" />
-            <input type="hidden" name="ClientEmail" id="upsellNormClientEmail" value="" />
-            <input type="hidden" name="Package" id="upsellNormPackage" value="" />
-            <input type="hidden" name="ServiceRequest" id="upsellNormService" value="" />
-            <input type="hidden" name="Details" id="upsellNormDetails" value="" />
-
-            <div class="oidRow">
-              <input name="order_id" id="upsellOrderId" type="text" placeholder="Order_ID (required)" required />
-            </div>
-
-            <div class="oidRow">
-              <input name="email" id="upsellEmail" type="email" placeholder="Your Email (required)" required />
-            </div>
-
-            <div class="oidRow">
-              <input name="package" id="upsellPackage" type="text" readonly />
-            </div>
-
-            <div class="oidRow">
-              <select name="service_request" id="serviceReqSel" required>
-                <option value="">Choose a tier / service (required)</option>
-                <option value="Tier A — Light Assist (USD 45)">Tier A — Light Assist (USD 45)</option>
-                <option value="Tier B — Full Custom Design (USD 189)">Tier B — Full Custom Design (USD 189)</option>
-                <option value="Tier C — Organize + Build Support (USD 449+)">Tier C — Organize + Build Support (USD 449+)</option>
-                <option value="Not sure — recommend for me">Not sure — recommend for me</option>
-              </select>
-            </div>
-
-            <div class="oidRow">
-              <input name="details" id="upsellDetails" type="text" placeholder="Short notes (optional) e.g., “Arrange 300 photos by year”" />
-            </div>
-
-            <p style="margin:12px 0 0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-              <button class="btn" id="upsellSubmitBtn" type="submit">Request Customization</button>
-              <span class="muted small">We’ll reply with scope + confirmation.</span>
-            </p>
-          </form>
-
-          <p class="muted small" style="margin-top:12px;line-height:1.7;">
-            Need help? Email:
-            <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
-          </p>
-        </div>
-
-      </div>
-
-      <!-- RIGHT -->
-      <div>
-
-        <div class="panel">
-          <h3 style="margin:0 0 8px;">PayPal (Recommended)</h3>
-          <p class="muted small" style="margin:0 0 12px;">
-            Scan the PayPal QR below or use the PayPal link.
-          </p>
-
-          <div id="paypalArea">
-            <div class="qr-card" data-package="FAM">
-              <h4>Family Library (FAM) — $48</h4>
-              <img src="assets/qr/TinyTeam – Fam-qrcode.png" alt="PayPal FAM QR">
-              <p style="margin:10px 0 0;">
-                <a href="https://www.paypal.com/ncp/payment/7H5SDCY7QG7TY" target="_blank" rel="noopener">Open PayPal Link</a>
-              </p>
-            </div>
-
-            <div class="qr-card" data-package="COMM">
-              <h4>Community Library (COMM) — $89</h4>
-              <img src="assets/qr/TinyTeam – Com-qrcode.png" alt="PayPal COMM QR">
-              <p style="margin:10px 0 0;">
-                <a href="https://www.paypal.com/ncp/payment/K45JT94FYQD6C" target="_blank" rel="noopener">Open PayPal Link</a>
-              </p>
-            </div>
-
-            <div class="qr-card" data-package="ADDON">
-              <h4>Photo / Docs Add-On — $49</h4>
-              <img src="assets/qr/TinyTeam – Pho-qrcode.png" alt="PayPal Add-On QR">
-              <p style="margin:10px 0 0;">
-                <a href="https://www.paypal.com/ncp/payment/45DWPFTGV72MY" target="_blank" rel="noopener">Open PayPal Link</a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" style="margin-top:14px;">
-          <h3 style="margin:0 0 8px;">Alternative Payment Options</h3>
-          <p class="muted small" style="margin:0 0 14px;line-height:1.7;">
-            If PayPal is not available, you may use the options below.
-            Keep your receipt/screenshot and submit it using the payment proof form.
-          </p>
-
-          <div class="grid4">
-            <div class="qr-card"><h4>GCash</h4><img src="assets/qr/gcash-qr.jpeg" alt="GCash QR"></div>
-            <div class="qr-card"><h4>Maya</h4><img src="assets/qr/maya-qr.jpeg" alt="Maya QR"></div>
-            <div class="qr-card"><h4>GoTyme</h4><img src="assets/qr/gotym-qr.jpeg" alt="GoTyme QR"></div>
-            <div class="qr-card"><h4>PNB</h4><img src="assets/qr/pnb-qr.jpeg" alt="PNB QR"></div>
-          </div>
-        </div>
-
-        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
-          <a class="btn" href="index.html">Back to Home</a>
-          <a class="btn secondary" href="start.html">Start a New Request</a>
-        </div>
-
-      </div>
-
-    </div>
-
+  <div style="margin-top:12px;">
+    <label class="muted small">Package</label>
+    <select id="pkgSel">
+      <option value="FAM">Family Library (FAM) — $48</option>
+      <option value="COMM">Community Library (COMM) — $89</option>
+      <option value="ADDON">Photo / Docs Add-On — $49</option>
+    </select>
   </div>
+</div>
+
+<!-- PAYMENT FORM -->
+<div class="panel" style="margin-top:14px;">
+<form
+  action="https://script.google.com/macros/s/AKfycbz7zW4jMNjAM8f7RQQ1gvqmZQiOlKrwWoMaHyMabVqamb0dLQDTgzoelzmhyPFHfsHSag/exec?key=TT_PRIVATE_2026_01"
+  method="POST">
+
+  <input type="hidden" name="formType" value="PAYMENT" />
+
+  <!-- NORMALIZED FIELDS -->
+  <input type="hidden" name="OrderID" id="normOrderID">
+  <input type="hidden" name="ClientID" id="normClientID">
+  <input type="hidden" name="ClientEmail" id="normClientEmail">
+  <input type="hidden" name="Package" id="normPackage">
+  <input type="hidden" name="PaymentMethod" id="normPaymentMethod">
+  <input type="hidden" name="AmountPaidUSD" id="normAmountPaidUSD">
+  <input type="hidden" name="ReferenceCode" id="normReferenceCode">
+  <input type="hidden" name="ProofLink" id="normProofLink">
+
+  <div class="oidRow">
+    <input name="order_id" id="orderIdHidden" type="text" readonly required>
+  </div>
+
+  <div class="oidRow">
+    <input name="email" id="payerEmail" type="email" placeholder="Your Email (required)" required>
+  </div>
+
+  <div class="oidRow">
+    <input name="package" id="packageHidden" type="text" readonly>
+  </div>
+
+  <div class="oidRow">
+    <select name="payment_method" id="paymentMethodSel" required>
+      <option value="">Payment Method</option>
+      <option>PayPal</option>
+      <option>GCash</option>
+      <option>Maya</option>
+      <option>GoTyme</option>
+      <option>PNB</option>
+      <option>Bank Transfer</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="oidRow">
+    <input name="amount_paid" id="amountPaidInput" type="text" placeholder="Amount Paid (optional)">
+  </div>
+
+  <div class="oidRow">
+    <input name="reference_code" id="referenceCodeInput" type="text" placeholder="Reference Code (optional)">
+  </div>
+
+  <div class="oidRow">
+    <input name="proof_link" id="proofLinkInput" type="url" placeholder="Proof link (Google Drive)">
+  </div>
+
+  <button class="btn" type="submit">Submit Payment Proof</button>
+  <div class="status" id="proofStatus">Submitting proof…</div>
+</form>
+</div>
+
+</div>
+</div>
+</div>
 </main>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-
-    <div class="footer-brand">
-      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
-      <span class="footer-x">×</span>
-      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
-    </div>
-
-    <div class="footer-contacts">
-      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
-      <span class="dot">•</span>
-      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
-    </div>
-
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <span class="dot">•</span>
-      <a href="help/index.html">Help</a>
-      <span class="dot">•</span>
-      <a href="reseller/index.html">Reseller Program</a>
-    </div>
-
-    <div class="footer-links" style="margin-top:6px;">
-      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
-        TinyTeam Digital Library (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">
-        SVP Digital System (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">
-        Chin Veloso (Facebook)
-      </a>
-    </div>
-
-  </div>
-</footer>
 
 <script>
 (function(){
-  const params = new URLSearchParams(window.location.search);
-  let pkg = (params.get("package") || "").toUpperCase();
-  let oid = (params.get("order_id") || "").trim();
-
-  try{
-    if (!pkg) pkg = (localStorage.getItem("TT_LAST_PACKAGE") || "").toUpperCase();
-    if (!oid) oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim();
-  }catch(e){}
-
+  const oidInput = document.getElementById("orderIdInput");
+  const oidHidden = document.getElementById("orderIdHidden");
   const pkgSel = document.getElementById("pkgSel");
-  const orderIdInput = document.getElementById("orderIdInput");
 
-  if (pkgSel && (pkg === "FAM" || pkg === "COMM" || pkg === "ADDON")) pkgSel.value = pkg;
-  if (orderIdInput && oid) orderIdInput.value = oid;
+  function sync(){
+    const oid = oidInput.value.trim();
+    const pkg = pkgSel.value;
 
-  function refreshPaypal(){
-    const chosen = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
-    const cards = document.querySelectorAll("#paypalArea .qr-card[data-package]");
-    cards.forEach(c => c.style.display = (c.dataset.package === chosen ? "" : "none"));
+    oidHidden.value = oid;
+    document.getElementById("normOrderID").value = oid;
+    document.getElementById("normPackage").value = pkg;
+    document.getElementById("normClientEmail").value = document.getElementById("payerEmail").value.trim();
+    document.getElementById("normPaymentMethod").value = document.getElementById("paymentMethodSel").value;
+    document.getElementById("normAmountPaidUSD").value = document.getElementById("amountPaidInput").value.trim();
+    document.getElementById("normReferenceCode").value = document.getElementById("referenceCodeInput").value.trim();
+    document.getElementById("normProofLink").value = document.getElementById("proofLinkInput").value.trim();
+    document.getElementById("normClientID").value = ""; // derived later from ORDERS
   }
 
-  const packageHidden = document.getElementById("packageHidden");
-  const upsellPackage = document.getElementById("upsellPackage");
-  function syncPackage(){
-    const p = (pkgSel ? pkgSel.value : "FAM").toUpperCase();
-    if (packageHidden) packageHidden.value = p;
-    if (upsellPackage) upsellPackage.value = p;
+  document.querySelectorAll("input,select").forEach(el=>{
+    el.addEventListener("input",sync);
+    el.addEventListener("change",sync);
+  });
 
-    try { localStorage.setItem("TT_LAST_PACKAGE", p); } catch(e){}
-    refreshPaypal();
-    syncNormalized();
-    syncUpsellNormalized();
-  }
-
-  const orderIdHidden = document.getElementById("orderIdHidden");
-  const upsellOrderId = document.getElementById("upsellOrderId");
-  function syncOrderId(){
-    const v = (orderIdInput ? orderIdInput.value : "").trim();
-    if (orderIdHidden) orderIdHidden.value = v;
-    if (upsellOrderId) upsellOrderId.value = v;
-
-    try{ if (v) localStorage.setItem("TT_LAST_ORDER_ID", v); }catch(e){}
-    syncNormalized();
-    syncUpsellNormalized();
-  }
-
-  function syncNormalized(){
-    const oidVal = (document.getElementById("orderIdHidden") ? document.getElementById("orderIdHidden").value : "").trim();
-    const emailVal = (document.getElementById("payerEmail") ? document.getElementById("payerEmail").value : "").trim();
-    const pkgVal = (document.getElementById("packageHidden") ? document.getElementById("packageHidden").value : "").trim();
-    const methodVal = (document.getElementById("paymentMethodSel") ? document.getElementById("paymentMethodSel").value : "").trim();
-    const amtVal = (document.getElementById("amountPaidInput") ? document.getElementById("amountPaidInput").value : "").trim();
-    const proofVal = (document.getElementById("proofLinkInput") ? document.getElementById("proofLinkInput").value : "").trim();
-
-    const nOID = document.getElementById("normOrderID");
-    const nEmail = document.getElementById("normClientEmail");
-    const nPkg = document.getElementById("normPackage");
-    const nMethod = document.getElementById("normPaymentMethod");
-    const nAmt = document.getElementById("normAmountPaidUSD");
-    const nRef = document.getElementById("normReferenceCode");
-    const nProof = document.getElementById("normProofLink");
-
-    if (nOID) nOID.value = oidVal;
-    if (nEmail) nEmail.value = emailVal;
-    if (nPkg) nPkg.value = pkgVal;
-    if (nMethod) nMethod.value = methodVal;
-    if (nAmt) nAmt.value = amtVal;
-    if (nRef) nRef.value = "";
-    if (nProof) nProof.value = proofVal;
-  }
-
-  function syncUpsellNormalized(){
-    const oidVal = (document.getElementById("upsellOrderId") ? document.getElementById("upsellOrderId").value : "").trim();
-    const emailVal = (document.getElementById("upsellEmail") ? document.getElementById("upsellEmail").value : "").trim();
-    const pkgVal = (document.getElementById("upsellPackage") ? document.getElementById("upsellPackage").value : "").trim();
-    const srvVal = (document.getElementById("serviceReqSel") ? document.getElementById("serviceReqSel").value : "").trim();
-    const detVal = (document.getElementById("upsellDetails") ? document.getElementById("upsellDetails").value : "").trim();
-
-    const nOID = document.getElementById("upsellNormOrderID");
-    const nEmail = document.getElementById("upsellNormClientEmail");
-    const nPkg = document.getElementById("upsellNormPackage");
-    const nSrv = document.getElementById("upsellNormService");
-    const nDet = document.getElementById("upsellNormDetails");
-
-    if (nOID) nOID.value = oidVal;
-    if (nEmail) nEmail.value = emailVal;
-    if (nPkg) nPkg.value = pkgVal;
-    if (nSrv) nSrv.value = srvVal;
-    if (nDet) nDet.value = detVal;
-  }
-
-  if (pkgSel) pkgSel.addEventListener("change", syncPackage);
-  if (orderIdInput) orderIdInput.addEventListener("input", syncOrderId);
-
-  const payerEmail = document.getElementById("payerEmail");
-  const paymentMethodSel = document.getElementById("paymentMethodSel");
-  const amountPaidInput = document.getElementById("amountPaidInput");
-  const proofLinkInput = document.getElementById("proofLinkInput");
-  if (payerEmail) payerEmail.addEventListener("input", syncNormalized);
-  if (paymentMethodSel) paymentMethodSel.addEventListener("change", syncNormalized);
-  if (amountPaidInput) amountPaidInput.addEventListener("input", syncNormalized);
-  if (proofLinkInput) proofLinkInput.addEventListener("input", syncNormalized);
-
-  const upsellEmail = document.getElementById("upsellEmail");
-  const serviceReqSel = document.getElementById("serviceReqSel");
-  const upsellDetails = document.getElementById("upsellDetails");
-  const upsellOrderEl = document.getElementById("upsellOrderId");
-  if (upsellEmail) upsellEmail.addEventListener("input", syncUpsellNormalized);
-  if (serviceReqSel) serviceReqSel.addEventListener("change", syncUpsellNormalized);
-  if (upsellDetails) upsellDetails.addEventListener("input", syncUpsellNormalized);
-  if (upsellOrderEl) upsellOrderEl.addEventListener("input", syncUpsellNormalized);
-
-  syncPackage();
-  syncOrderId();
-  refreshPaypal();
-  syncNormalized();
-  syncUpsellNormalized();
-
-  const proofForm = document.getElementById("proofForm");
-  const proofStatus = document.getElementById("proofStatus");
-  const submitProofBtn = document.getElementById("submitProofBtn");
-  if (proofForm && proofStatus && submitProofBtn) {
-    proofForm.addEventListener("submit", () => {
-      syncNormalized();
-      submitProofBtn.disabled = true;
-      submitProofBtn.textContent = "Submitting...";
-      proofStatus.classList.add("show");
-    });
-  }
-
-  const upsellForm = document.getElementById("upsellForm");
-  const upsellSubmitBtn = document.getElementById("upsellSubmitBtn");
-  if (upsellForm && upsellSubmitBtn) {
-    upsellForm.addEventListener("submit", () => {
-      syncUpsellNormalized();
-      upsellSubmitBtn.disabled = true;
-      upsellSubmitBtn.textContent = "Submitting...";
-    });
-  }
+  sync();
 })();
 </script>
-
-<!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
-<style>
-  .tt-messenger-bubble {
-    position: fixed;
-    bottom: 22px;
-    right: 22px;
-    width: 68px;
-    height: 68px;
-    background: #1877f2;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    z-index: 99999;
-    box-shadow: 0 0 0 rgba(24,119,242, 0.6);
-    animation: ttPulse 2s infinite;
-  }
-
-  .tt-messenger-bubble:hover {
-    transform: scale(1.08);
-  }
-
-  .tt-messenger-bubble span {
-    font-size: 32px;
-    color: #fff;
-    line-height: 1;
-  }
-
-  @keyframes ttPulse {
-    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
-    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
-  }
-</style>
-
-<a
-  href="https://m.me/918023754727652"
-  class="tt-messenger-bubble"
-  target="_blank"
-  rel="noopener"
-  aria-label="Chat with TinyTeam on Messenger"
->
-  <span>💬</span>
-</a>
 
 </body>
 </html>
