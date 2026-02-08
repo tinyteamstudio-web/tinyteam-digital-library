@@ -1,317 +1,126 @@
-/************************************************************
- * TinyTeam BuildFrame — ONE WEBAPP (START + PAYMENT + UPSELL)
- * ✅ One WebApp URL
- * ✅ One Secret key: ?key=TT_PRIVATE_2026_01
- * ✅ Safe sheet + headers (won’t overwrite if exists)
- * ✅ Redirects to /thank-you.html (relative, GitHub Pages-safe)
- ************************************************************/
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-const TT = {
-  SECRET_KEY: "TT_PRIVATE_2026_01",
+  <title>Thank You — TinyTeam</title>
+  <meta name="description" content="Thank you for your submission. TinyTeam will review and follow up by email." />
+  <meta name="robots" content="noindex, nofollow" />
 
-  SHEET_START:   "INBOX_START",
-  SHEET_PAYMENT: "PAYMENT_PROOFS",
-  SHEET_UPSELL:  "UPSELL_REQUESTS",
+  <link rel="stylesheet" href="assets/styles/main.css" />
 
-  // ✅ RELATIVE URL (safer than hardcoding domain)
-  THANKYOU_PATH: "/thank-you.html"
-};
-
-/** Run anytime (safe): creates sheets + headers */
-function TT_INSTALL() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  // CONFIG (safe)
-  let cfg = ss.getSheetByName("CONFIG");
-  if (!cfg) cfg = ss.insertSheet("CONFIG");
-
-  // Ensure config headers once
-  const cfgHeaders = cfg.getRange(1, 1, 1, 2).getValues()[0];
-  if (String(cfgHeaders[0] || "").trim() !== "Key" || String(cfgHeaders[1] || "").trim() !== "Value") {
-    cfg.getRange(1, 1, 1, 2).setValues([["Key", "Value"]]);
-  }
-
-  // Upsert config keys (don’t wipe everything)
-  TT_upsertConfig_(cfg, [
-    ["WEBAPP_SECRET_KEY", TT.SECRET_KEY],
-    ["SHEET_START", TT.SHEET_START],
-    ["SHEET_PAYMENT", TT.SHEET_PAYMENT],
-    ["SHEET_UPSELL", TT.SHEET_UPSELL],
-    ["THANKYOU_PATH", TT.THANKYOU_PATH],
-  ]);
-
-  // START
-  TT_ensureSheet_(ss, TT.SHEET_START, [
-    "Timestamp",
-    "RequestID",
-    "Package",
-    "OwnerName",
-    "OwnerEmail",
-    "LibraryTitle",
-    "DesignResolved",
-    "ThemeResolved",
-    "ColorResolved",
-    "FamilyIntro",
-    "Notes",
-    "Status",
-    "OfficialOrderID",
-    "ReferralCode",
-    "LeadType",
-    "EmailConsent",
-    "LastEmailSent",
-  ]);
-
-  // PAYMENT
-  TT_ensureSheet_(ss, TT.SHEET_PAYMENT, [
-    "SubmittedAt",
-    "OrderID",
-    "ClientEmail",
-    "Package",
-    "PaymentMethod",
-    "AmountPaidUSD",
-    "ReferenceCode",
-    "ProofLink",
-    "Channel",
-    "Status",
-  ]);
-
-  // UPSELL
-  TT_ensureSheet_(ss, TT.SHEET_UPSELL, [
-    "SubmittedAt",
-    "OrderID",
-    "ClientEmail",
-    "Package",
-    "ServiceRequest",
-    "Details",
-    "Status",
-  ]);
-
-  SpreadsheetApp.flush();
-}
-
-/** WebApp GET (simple ping) */
-function doGet(e) {
-  return ContentService.createTextOutput("TinyTeam WebApp OK");
-}
-
-/** WebApp POST (HTML form submit) */
-function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.tryLock(10000);
-
-  try {
-    const p = (e && e.parameter) ? e.parameter : {};
-
-    // ✅ AUTH: one secret = ?key=
-    const key = String(p.key || "").trim();
-    if (!key || key !== TT.SECRET_KEY) {
-      return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
+  <style>
+    .thankyou-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      text-align: center;
     }
-
-    // ✅ ROUTE
-    const formType = String(p.formType || p.formtype || "").trim().toUpperCase();
-
-    if (formType === "START")   return TT_handleStart_(p);
-    if (formType === "PAYMENT") return TT_handlePayment_(p);
-    if (formType === "UPSELL")  return TT_handleUpsell_(p);
-
-    // fallback inference
-    if (p.RequestID && p.OwnerEmail) return TT_handleStart_(p);
-    if (p.OrderID || p.order_id)     return TT_handlePayment_(p);
-
-    return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
-
-  } catch (err) {
-    return TT_redirect_(TT_THANKYOU_URL_() + "?from=unknown");
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/* -----------------------------
-   START: writes to INBOX_START
---------------------------------*/
-function TT_handleStart_(p) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(TT.SHEET_START);
-  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=start");
-
-  const requestId = TT_or_(p.RequestID, TT_makeId_("TT-REQ"));
-  const pkg = TT_or_(p.Package, "");
-
-  const rowObj = {
-    Timestamp: new Date(),
-    RequestID: requestId,
-    Package: pkg,
-    OwnerName: TT_or_(p.OwnerName, ""),
-    OwnerEmail: TT_or_(p.OwnerEmail, ""),
-    LibraryTitle: TT_or_(p.LibraryTitle, ""),
-    DesignResolved: TT_or_(p.DesignResolved, ""),
-    ThemeResolved:  TT_or_(p.ThemeResolved, ""),
-    ColorResolved:  TT_or_(p.ColorResolved, ""),
-    FamilyIntro: TT_or_(p.FamilyIntro, ""),
-    Notes: TT_or_(p.Notes, ""),
-    Status: TT_or_(p.Status, "RECEIVED"),
-    OfficialOrderID: TT_or_(p.OfficialOrderID, ""),
-    ReferralCode: TT_or_(p.ReferralCode, ""),
-    LeadType: TT_or_(p.LeadType, "START"),
-    EmailConsent: TT_or_(p.EmailConsent, "YES"),
-    LastEmailSent: TT_or_(p.LastEmailSent, "")
-  };
-
-  TT_appendByHeaders_(sh, rowObj);
-
-  const url = TT_THANKYOU_URL_()
-    + "?from=start"
-    + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
-    + "&order_id=" + encodeURIComponent(requestId);
-
-  return TT_redirect_(url);
-}
-
-/* -----------------------------
-   PAYMENT: writes to PAYMENT_PROOFS
---------------------------------*/
-function TT_handlePayment_(p) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(TT.SHEET_PAYMENT);
-  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=payment");
-
-  const orderId = TT_or_(p.OrderID, TT_or_(p.order_id, ""));
-  const email   = TT_or_(p.ClientEmail, TT_or_(p.email, ""));
-  const pkg     = TT_or_(p.Package, TT_or_(p.package, ""));
-  const method  = TT_or_(p.PaymentMethod, TT_or_(p.payment_method, ""));
-  const amount  = TT_or_(p.AmountPaidUSD, TT_or_(p.amount_paid, ""));
-  const proof   = TT_or_(p.ProofLink, TT_or_(p.proof_link, ""));
-  const ref     = TT_or_(p.ReferenceCode, "");
-
-  const rowObj = {
-    SubmittedAt: new Date(),
-    OrderID: orderId,
-    ClientEmail: email,
-    Package: pkg,
-    PaymentMethod: method,
-    AmountPaidUSD: amount,
-    ReferenceCode: ref,
-    ProofLink: proof,
-    Channel: "tinyteam-site",
-    Status: "SUBMITTED"
-  };
-
-  TT_appendByHeaders_(sh, rowObj);
-
-  const url = TT_THANKYOU_URL_()
-    + "?from=payment"
-    + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
-    + (orderId ? "&order_id=" + encodeURIComponent(orderId) : "");
-
-  return TT_redirect_(url);
-}
-
-/* -----------------------------
-   UPSELL: writes to UPSELL_REQUESTS
---------------------------------*/
-function TT_handleUpsell_(p) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(TT.SHEET_UPSELL);
-  if (!sh) return TT_redirect_(TT_THANKYOU_URL_() + "?from=upsell");
-
-  const orderId = TT_or_(p.OrderID, TT_or_(p.order_id, ""));
-  const email   = TT_or_(p.ClientEmail, TT_or_(p.email, ""));
-  const pkg     = TT_or_(p.Package, TT_or_(p.package, ""));
-  const srv     = TT_or_(p.ServiceRequest, TT_or_(p.service_request, ""));
-  const det     = TT_or_(p.Details, TT_or_(p.details, ""));
-
-  const rowObj = {
-    SubmittedAt: new Date(),
-    OrderID: orderId,
-    ClientEmail: email,
-    Package: pkg,
-    ServiceRequest: srv,
-    Details: det,
-    Status: "REQUESTED"
-  };
-
-  TT_appendByHeaders_(sh, rowObj);
-
-  const url = TT_THANKYOU_URL_()
-    + "?from=upsell"
-    + (pkg ? "&package=" + encodeURIComponent(pkg) : "")
-    + (orderId ? "&order_id=" + encodeURIComponent(orderId) : "");
-
-  return TT_redirect_(url);
-}
-
-/* -----------------------------
-   Helpers
---------------------------------*/
-
-function TT_THANKYOU_URL_() {
-  // Build absolute URL based on incoming host (fallback to site domain)
-  // If no event host is available, use your production domain:
-  const base = "https://tinyteamstudio.online";
-  return base + TT.THANKYOU_PATH;
-}
-
-function TT_redirect_(url) {
-  const safeUrl = String(url || "").replace(/"/g, "&quot;");
-  const html =
-`<!doctype html><html><head>
-<meta http-equiv="refresh" content="0;url=${safeUrl}">
-<meta name="robots" content="noindex">
-<title>Redirecting…</title>
-</head><body>Redirecting…</body></html>`;
-  return HtmlService.createHtmlOutput(html);
-}
-
-function TT_ensureSheet_(ss, name, headers) {
-  let sh = ss.getSheetByName(name);
-  if (!sh) sh = ss.insertSheet(name);
-
-  // ✅ Only write headers if missing/blank
-  const existing = sh.getRange(1, 1, 1, headers.length).getValues()[0];
-  const hasAny = existing.some(v => String(v || "").trim() !== "");
-  if (!hasAny) {
-    sh.getRange(1, 1, 1, headers.length).setValues([headers]);
-  }
-
-  return sh;
-}
-
-function TT_upsertConfig_(cfgSheet, pairs) {
-  const data = cfgSheet.getDataRange().getValues();
-  const map = {};
-
-  for (var i = 1; i < data.length; i++) {
-    const k = String(data[i][0] || "").trim();
-    if (k) map[k] = i + 1; // row index in sheet
-  }
-
-  pairs.forEach(pair => {
-    const key = pair[0], val = pair[1];
-    if (map[key]) {
-      cfgSheet.getRange(map[key], 2).setValue(val);
-    } else {
-      cfgSheet.appendRow([key, val]);
+    .thankyou-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 42px 28px;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.08);
     }
-  });
-}
+    .thankyou-card h1 {
+      margin: 0 0 14px;
+    }
+    .thankyou-card p {
+      line-height: 1.7;
+    }
+    .thankyou-meta {
+      margin-top: 18px;
+      font-size: 13px;
+      color: rgba(0,0,0,0.55);
+    }
+    .thankyou-actions {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
 
-function TT_appendByHeaders_(sh, rowObj) {
-  const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
-  if (!headers || headers.length < 2) throw new Error("Headers missing in " + sh.getName());
-  const values = headers.map(h => (h in rowObj ? rowObj[h] : ""));
-  sh.appendRow(values);
-}
+<body>
 
-function TT_or_(v, fallback) {
-  v = (v === null || v === undefined) ? "" : String(v);
-  return v.trim() ? v : fallback;
-}
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="start.html">Start</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
 
-function TT_makeId_(prefix) {
-  const stamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd-HHmmss");
-  const rand = Math.random().toString(16).slice(2, 10).toUpperCase();
-  return `${prefix}-${stamp}-${rand}`;
-}
+<main>
+  <div class="thankyou-wrap">
+    <div class="thankyou-card">
 
+      <h1>Thank you — we’ve received your submission</h1>
+
+      <p>
+        Your request has been received successfully.<br>
+        TinyTeam is <strong>human-handled</strong> and <strong>privacy-first</strong>.
+        Every submission is reviewed manually.
+      </p>
+
+      <p>
+        If payment proof was submitted, verification will be confirmed by email.
+        If this was a start request, we’ll guide you through the next steps shortly.
+      </p>
+
+      <div class="thankyou-meta" id="metaLine"></div>
+
+      <div class="thankyou-actions">
+        <a class="btn" href="index.html">Back to Home</a>
+        <a class="btn secondary" href="start.html">Start Another Request</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
+    </div>
+
+    <div class="footer-contacts">
+      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+    </div>
+
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <span class="dot">•</span>
+      <a href="help/index.html">Help</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const from = p.get("from");
+  const oid  = p.get("order_id");
+
+  const meta = document.getElementById("metaLine");
+  if (!meta) return;
+
+  let msg = "";
+  if (from === "payment") msg = "Payment proof received.";
+  else if (from === "upsell") msg = "Customization request received.";
+  else if (from === "start") msg = "Library request received.";
+
+  if (oid) msg += " Order ID: " + oid;
+
+  meta.textContent = msg;
+})();
+</script>
+
+</body>
+</html>
