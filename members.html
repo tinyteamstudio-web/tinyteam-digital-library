@@ -43,7 +43,8 @@
     <form id="membersForm" method="POST"
       action="https://script.google.com/macros/s/AKfycbzX7SG63XhVSPERvMDyZWT2AH9J7FGYleaTVUzXP2axrPVWcYpC-CGXBXGWa8QUoo7m_w/exec?key=TT_PRIVATE_2026_01">
 
-      <input type="hidden" name="formType" value="MEMBER" />
+      <!-- ✅ FIXED: must match doPost router -->
+      <input type="hidden" name="formType" value="MEMBERS" />
 
       <!-- Core IDs -->
       <div class="grid2">
@@ -136,22 +137,18 @@
 
 <footer class="site-footer">
   <div class="footer-inner">
-
-    <!-- Logos -->
     <div class="footer-brand">
       <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
       <span class="footer-x">×</span>
       <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
     </div>
 
-    <!-- Emails -->
     <div class="footer-contacts">
       <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
 
-    <!-- Core pages -->
     <div class="footer-links">
       <a href="index.html">Home</a>
       <span class="dot">•</span>
@@ -160,7 +157,6 @@
       <a href="reseller/index.html">Reseller Program</a>
     </div>
 
-    <!-- Social -->
     <div class="footer-links" style="margin-top:6px;">
       <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
         TinyTeam Digital Library (Facebook)
@@ -174,15 +170,11 @@
         Chin Veloso (Facebook)
       </a>
     </div>
-
   </div>
 </footer>
 
 <script>
 (function(){
-  // Auto-fill Order ID from:
-  // 1) URL param ?order_id=...
-  // 2) localStorage TT_LAST_ORDER_ID (set by start.html)
   const params = new URLSearchParams(window.location.search);
   const oidFromUrl = (params.get("order_id") || "").trim();
 
@@ -197,11 +189,9 @@
 
   if (orderIdEl && oid) orderIdEl.value = oid;
 
-  // Optional: allow ?library_id=
   const lidFromUrl = (params.get("library_id") || "").trim();
   if (libIdEl && lidFromUrl) libIdEl.value = lidFromUrl;
 
-  // Submit UI state
   const form = document.getElementById("membersForm");
   const btn  = document.getElementById("submitBtn");
   const box  = document.getElementById("statusBox");
@@ -214,6 +204,7 @@
   }
 })();
 </script>
+
 <!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
 <style>
   .tt-messenger-bubble {
@@ -232,27 +223,12 @@
     box-shadow: 0 0 0 rgba(24,119,242, 0.6);
     animation: ttPulse 2s infinite;
   }
-
-  .tt-messenger-bubble:hover {
-    transform: scale(1.08);
-  }
-
-  .tt-messenger-bubble span {
-    font-size: 32px;
-    color: #fff;
-    line-height: 1;
-  }
-
+  .tt-messenger-bubble:hover { transform: scale(1.08); }
+  .tt-messenger-bubble span { font-size: 32px; color: #fff; line-height: 1; }
   @keyframes ttPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0.6);
-    }
-    70% {
-      box-shadow: 0 0 0 18px rgba(24,119,242, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(24,119,242, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
+    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
   }
 </style>
 
