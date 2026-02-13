@@ -1,192 +1,245 @@
-/************************************************************
- * TinyTeam BuildFrame — ONE WEBAPP (START + PAYMENT + UPSELL + MEMBERS)
- * SINGLE SOURCE OF TRUTH
- * ✅ Writes by HEADER NAME (stable)
- * ✅ Uses openById via TT_ss_()
- ************************************************************/
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Members — TinyTeam</title>
+  <meta name="description" content="Add members to your TinyTeam library. Manual-first, privacy-first." />
+  <link rel="stylesheet" href="assets/styles/main.css" />
 
-const TT_SECRET_KEY = "TT_PRIVATE_2026_01";
-const TT_THANKYOU_URL = "https://tinyteamstudio.online/thankyou.html";
+  <style>
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
+    .status{margin-top:10px;font-size:13px;color: rgba(0,0,0,0.65);display:none;line-height:1.5;}
+    .status.show{display:block}
+    .note{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.6;margin-top:10px;}
+    .miniHelp{font-size:12px;color:rgba(0,0,0,0.60);margin-top:6px;line-height:1.5;}
+  </style>
+</head>
 
-/* =========================
-   REQUIRED WEB APP HOOKS
-   ========================= */
+<body>
 
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({
-      ok: true,
-      message: "TinyTeam WebApp is LIVE",
-      time: new Date().toISOString()
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+<header>
+  <div>
+    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="start.html">Start</a>
+      <a href="members.html">Members</a>
+      <a href="help/index.html">Help</a>
+    </nav>
+  </div>
+</header>
 
-function doPost(e) {
-  const p = (e && e.parameter) ? e.parameter : {};
+<main>
 
-  if (String(p.key || "") !== TT_SECRET_KEY) {
-    TT_log_("WEBAPP_UNAUTHORIZED", "Bad key");
-    return redirect_(TT_THANKYOU_URL + "?from=unauthorized");
+  <section class="panel">
+    <h1>Add Members</h1>
+    <p class="muted">
+      Add one member per submission. This is manual-first and privacy-first.
+      If you’re unsure, leave fields blank and add notes — TinyTeam will clarify by email.
+    </p>
+
+    <form id="membersForm" method="POST"
+      action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec?key=TT_PRIVATE_2026_01">
+
+      <!-- ✅ MUST match doPost routing -->
+      <input type="hidden" name="formType" value="MEMBERS" />
+
+      <!-- Core IDs -->
+      <div class="grid2">
+        <div>
+          <label>Order ID</label>
+          <input id="orderId" name="order_id" class="mono" type="text" placeholder="TT-ORD-YYYY-XXXXXX-XXX" required />
+          <p class="miniHelp">Use the Order ID generated from Start. (Auto-filled if available)</p>
+        </div>
+        <div>
+          <label>Library ID (optional)</label>
+          <input id="libraryId" name="library_id" class="mono" type="text" placeholder="TT-LIB-..." />
+          <p class="miniHelp">Leave blank if not assigned yet.</p>
+        </div>
+      </div>
+
+      <!-- Member identity -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Full Name</label>
+          <input name="fullName" type="text" placeholder="Member full name (required)" required />
+        </div>
+        <div>
+          <label>Gender (optional)</label>
+          <select name="gender">
+            <option value="">—</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Birth Date (optional)</label>
+          <input name="birthDate" type="date" />
+        </div>
+        <div>
+          <label>Death Date (optional)</label>
+          <input name="deathDate" type="date" />
+        </div>
+      </div>
+
+      <!-- Relationships -->
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Relationship to Root (optional)</label>
+          <input name="relationshipToRoot" type="text" placeholder="e.g., Root, Father, Mother, Child, Spouse, Grandparent" />
+          <p class="miniHelp">“Root” means the main person the tree starts from.</p>
+        </div>
+        <div>
+          <label>Spouse Name (optional)</label>
+          <input name="spouseName" type="text" placeholder="Spouse full name" />
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:12px;">
+        <div>
+          <label>Father Name (optional)</label>
+          <input name="fatherName" type="text" placeholder="Father full name" />
+        </div>
+        <div>
+          <label>Mother Name (optional)</label>
+          <input name="motherName" type="text" placeholder="Mother full name" />
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div style="margin-top:12px;">
+        <label>Notes (optional)</label>
+        <textarea name="notes" rows="4" placeholder="Any clarifications, nicknames, place of birth, maiden name, uncertainties, etc."></textarea>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn" id="submitBtn" type="submit">Submit Member</button>
+        <a class="btn secondary" href="start.html">Back to Start</a>
+      </div>
+
+      <p class="note">
+        Tip: Add members one-by-one. After you submit, you can add another member using the same Order ID.
+      </p>
+
+      <div class="status" id="statusBox">Submitting member…</div>
+    </form>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
+      <span class="footer-x">×</span>
+      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
+    </div>
+
+    <div class="footer-contacts">
+      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
+      <span class="dot">•</span>
+      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
+    </div>
+
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <span class="dot">•</span>
+      <a href="help/index.html">Help</a>
+      <span class="dot">•</span>
+      <a href="reseller/index.html">Reseller Program</a>
+    </div>
+
+    <div class="footer-links" style="margin-top:6px;">
+      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
+        TinyTeam Digital Library (Facebook)
+      </a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">
+        SVP Digital System (Facebook)
+      </a>
+      <span class="dot">•</span>
+      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">
+        Chin Veloso (Facebook)
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const oidFromUrl = (params.get("order_id") || "").trim();
+
+  const orderIdEl = document.getElementById("orderId");
+  const libIdEl   = document.getElementById("libraryId");
+
+  let oid = oidFromUrl;
+
+  if (!oid) {
+    try { oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim(); } catch(e){}
   }
 
-  const type = String(p.formType || "").toUpperCase();
+  if (orderIdEl && oid) orderIdEl.value = oid;
 
-  if (type === "START")   return handleStart_(p);
-  if (type === "PAYMENT") return handlePayment_(p);
-  if (type === "UPSELL")  return handleUpsell_(p);
-  if (type === "MEMBERS") return handleMembers_(p);
+  const lidFromUrl = (params.get("library_id") || "").trim();
+  if (libIdEl && lidFromUrl) libIdEl.value = lidFromUrl;
 
-  TT_log_("WEBAPP_UNKNOWN", "Unknown formType=" + type);
-  return redirect_(TT_THANKYOU_URL + "?from=unknown");
-}
-
-/* =========================
-   START → INBOX_START
-   ========================= */
-function handleStart_(p) {
-  try {
-    const requestId  = (p.RequestID || "").trim() || id_("TT-REQ");
-    const pkg        = (p.Package || "").trim();
-    const ownerName  = (p.OwnerName || "").trim();
-    const ownerEmail = (p.OwnerEmail || "").trim();
-    const consent    = String(p.EmailConsent || "").trim().toUpperCase();
-
-    const missing = [];
-    if (!pkg) missing.push("Package");
-    if (!ownerName) missing.push("OwnerName");
-    if (!ownerEmail) missing.push("OwnerEmail");
-    if (consent !== "YES") missing.push("EmailConsent");
-
-    const status = missing.length ? "INCOMPLETE" : "NEW";
-
-    const rowIndex = TT_appendByHeader_(
-      TT_SCHEMA.INBOX_START.sheetName,
-      TT_SCHEMA.INBOX_START.headers,
-      {
-        Timestamp: new Date(),
-        RequestID: requestId,
-        Package: pkg,
-        OwnerName: ownerName,
-        OwnerEmail: ownerEmail,
-        LibraryTitle: p.LibraryTitle || "",
-        DesignResolved: p.DesignResolved || "",
-        ThemeResolved: p.ThemeResolved || "",
-        ColorResolved: p.ColorResolved || "",
-        FamilyIntro: p.FamilyIntro || "",
-        Notes: p.Notes || "",
-        Status: status,
-        OfficialOrderID: p.OfficialOrderID || "",
-        ReferralCode: p.ReferralCode || "",
-        LeadType: "DIRECT",
-        EmailConsent: (consent === "YES" ? "YES" : (p.EmailConsent || "")),
-        LastEmailSent: "",
-        "EmailStep (1–60)": "",
-        "NextEmailDueAt (datetime)": ""
-      }
-    );
-
-    if (missing.length) {
-      TT_log_("START_INCOMPLETE", `row=${rowIndex} | RequestID=${requestId} | missing=${missing.join(",")}`);
-      return redirect_(TT_THANKYOU_URL + "?from=start_incomplete&request_id=" + encodeURIComponent(requestId));
-    }
-
-    TT_log_("START_OK", `row=${rowIndex} | RequestID=${requestId} | email=${ownerEmail} | pkg=${pkg}`);
-    return redirect_(TT_THANKYOU_URL + "?from=start&request_id=" + encodeURIComponent(requestId));
-
-  } catch (err) {
-    TT_log_("START_FAIL", "error=" + err);
-    return redirect_(TT_THANKYOU_URL + "?from=start_error");
+  const form = document.getElementById("membersForm");
+  const btn  = document.getElementById("submitBtn");
+  const box  = document.getElementById("statusBox");
+  if (form && btn && box) {
+    form.addEventListener("submit", () => {
+      btn.disabled = true;
+      btn.textContent = "Submitting...";
+      box.classList.add("show");
+    });
   }
-}
+})();
+</script>
 
-/* =========================
-   PAYMENT → PAYMENT_PROOFS
-   ========================= */
-function handlePayment_(p) {
-  try {
-    const rowIndex = TT_appendByHeader_(
-      TT_SCHEMA.PAYMENT_PROOFS.sheetName,
-      TT_SCHEMA.PAYMENT_PROOFS.headers,
-      {
-        SubmittedAt: new Date(),
-        OrderID: p.OrderID || p.order_id || "",
-        ClientID: p.ClientID || "",
-        ClientEmail: p.ClientEmail || p.client_email || "",
-        PaymentMethod: p.PaymentMethod || "",
-        AmountPaidUSD: p.AmountPaidUSD || "",
-        ReferenceCode: p.ReferenceCode || "",
-        ProofLink: p.ProofLink || "",
-        Channel: "tinyteam-site",
-        Status: "SUBMITTED",
-        HandledAt: ""
-      }
-    );
-
-    TT_log_("PAYMENT_OK", `row=${rowIndex} | OrderID=${p.OrderID || p.order_id || ""} | email=${p.ClientEmail || p.client_email || ""}`);
-    return redirect_(TT_THANKYOU_URL + "?from=payment" + ((p.OrderID || p.order_id) ? "&order_id=" + encodeURIComponent(p.OrderID || p.order_id) : ""));
-
-  } catch (err) {
-    TT_log_("PAYMENT_FAIL", "error=" + err);
-    return redirect_(TT_THANKYOU_URL + "?from=payment_error");
+<!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
+<style>
+  .tt-messenger-bubble {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 68px;
+    height: 68px;
+    background: #1877f2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 99999;
+    box-shadow: 0 0 0 rgba(24,119,242, 0.6);
+    animation: ttPulse 2s infinite;
   }
-}
-
-/* =========================
-   UPSELL → UPSELL_REQUESTS
-   ========================= */
-function handleUpsell_(p) {
-  try {
-    const rowIndex = TT_appendByHeader_(
-      TT_SCHEMA.UPSELL_REQUEST.sheetName,
-      TT_SCHEMA.UPSELL_REQUEST.headers,
-      {
-        SubmittedAt: new Date(),
-        OrderID: p.OrderID || p.order_id || "",
-        ClientEmail: p.ClientEmail || p.client_email || "",
-        Package: p.Package || "",
-        ServiceRequest: p.ServiceRequest || "",
-        Details: p.Details || "",
-        Status: "REQUESTED"
-      }
-    );
-
-    TT_log_("UPSELL_OK", `row=${rowIndex} | OrderID=${p.OrderID || p.order_id || ""} | email=${p.ClientEmail || p.client_email || ""}`);
-    return redirect_(TT_THANKYOU_URL + "?from=upsell" + ((p.OrderID || p.order_id) ? "&order_id=" + encodeURIComponent(p.OrderID || p.order_id) : ""));
-
-  } catch (err) {
-    TT_log_("UPSELL_FAIL", "error=" + err);
-    return redirect_(TT_THANKYOU_URL + "?from=upsell_error");
+  .tt-messenger-bubble:hover { transform: scale(1.08); }
+  .tt-messenger-bubble span { font-size: 32px; color: #fff; line-height: 1; }
+  @keyframes ttPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
+    70%  { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
   }
-}
+</style>
 
-/* =========================
-   MEMBERS → MEMBERS (delegated)
-   ========================= */
-function handleMembers_(p) {
-  try {
-    const res = TT_handleMemberSubmit_(p);
-    return redirect_(TT_THANKYOU_URL + "?from=members" + (res && res.orderId ? "&order_id=" + encodeURIComponent(res.orderId) : ""));
-  } catch (err) {
-    TT_log_("MEMBERS_FAIL", "error=" + err);
-    return redirect_(TT_THANKYOU_URL + "?from=members_error");
-  }
-}
+<a
+  href="https://m.me/918023754727652"
+  class="tt-messenger-bubble"
+  target="_blank"
+  rel="noopener"
+  aria-label="Chat with TinyTeam on Messenger"
+>
+  <span>💬</span>
+</a>
 
-/* =========================
-   HELPERS
-   ========================= */
-function redirect_(url) {
-  const safeUrl = String(url || "").replace(/"/g, "&quot;");
-  const html =
-    '<!doctype html><html><head>' +
-    '<meta http-equiv="refresh" content="0;url=' + safeUrl + '">' +
-    '<meta name="robots" content="noindex">' +
-    '<title>Redirecting…</title>' +
-    '</head><body>Redirecting…</body></html>';
-  return HtmlService.createHtmlOutput(html);
-}
-
-function id_(p) {
-  return p + "-" + Utilities.getUuid();
-}
+</body>
+</html>
