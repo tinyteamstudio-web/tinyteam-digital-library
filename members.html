@@ -1,248 +1,406 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Members — TinyTeam</title>
-  <meta name="description" content="Add members to your TinyTeam library. Manual-first, privacy-first." />
-  <link rel="stylesheet" href="assets/styles/main.css" />
+/*******************************
+ * BuildFrame — TinyTeam
+ * EMAIL WORKFLOWS (Confirm + Nurture Loop)
+ * File: BF_EmailWorkflows.gs.gs  (LAUNCH PATCH)
+ * ✅ Logs via TT_log_() to ACTIVITY_LOG
+ * ✅ No silent crashes: header issues log + exit
+ *******************************/
 
-  <!-- Small safety styles only (won’t change your layout) -->
-  <style>
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
-    .status{margin-top:10px;font-size:13px;color: rgba(0,0,0,0.65);display:none;line-height:1.5;}
-    .status.show{display:block}
-    .note{font-size:13px;color:rgba(0,0,0,0.65);line-height:1.6;margin-top:10px;}
-    .miniHelp{font-size:12px;color:rgba(0,0,0,0.60);margin-top:6px;line-height:1.5;}
-  </style>
-</head>
+const BF_EMAIL_CFG = {
+  SHEET_INBOX_START: (BF_CFG && BF_CFG.SHEET_INBOX_START) ? BF_CFG.SHEET_INBOX_START : "INBOX_START",
+  FROM_NAME: (BF_CFG && BF_CFG.FROM_NAME) ? BF_CFG.FROM_NAME : "TinyTeam Digital Library",
+  REPLY_TO:  (BF_CFG && BF_CFG.REPLY_TO)  ? BF_CFG.REPLY_TO  : "smallsteps@tinyteamstudio.online",
 
-<body>
+  INBOX_CONFIRM_STATUS_ALLOW: ["NEW", "RECEIVED", ""],
 
-<header>
-  <div>
-    <a href="index.html"><strong>TinyTeam Digital Library</strong></a>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="start.html">Start</a>
-      <a href="members.html">Members</a>
-      <a href="help/index.html">Help</a>
-    </nav>
-  </div>
-</header>
+  TAG_CONFIRM_RECEIVED: "CONFIRM_RECEIVED",
+  TAG_NURTURE_STEP: "NURTURE_STEP",
+  TAG_NURTURE_NEXT_DUE: "NURTURE_NEXT_DUE",
 
-<main>
+  NURTURE_TOTAL_STEPS: (BF_CFG && BF_CFG.NURTURE_TOTAL_STEPS) ? BF_CFG.NURTURE_TOTAL_STEPS : 60,
+  NURTURE_LOOP_TO_STEP: (BF_CFG && BF_CFG.NURTURE_LOOP_TO_STEP) ? BF_CFG.NURTURE_LOOP_TO_STEP : 2,
+  NURTURE_CADENCE_DAYS: (BF_CFG && BF_CFG.NURTURE_CADENCE_DAYS) ? BF_CFG.NURTURE_CADENCE_DAYS : 1,
+};
 
-  <section class="panel">
-    <h1>Add Members</h1>
-    <p class="muted">
-      Add one member per submission. This is manual-first and privacy-first.
-      If you’re unsure, leave fields blank and add notes — TinyTeam will clarify by email.
+// Must match your INBOX_START headers
+const BF_INBOX_HEADERS = {
+  Timestamp: "Timestamp",
+  RequestID: "RequestID",
+  Package: "Package",
+  OwnerName: "OwnerName",
+  OwnerEmail: "OwnerEmail",
+  LibraryTitle: "LibraryTitle",
+  DesignResolved: "DesignResolved",
+  ThemeResolved: "ThemeResolved",
+  ColorResolved: "ColorResolved",
+  FamilyIntro: "FamilyIntro",
+  Notes: "Notes",
+  Status: "Status",
+  OfficialOrderID: "OfficialOrderID",
+  ReferralCode: "ReferralCode",
+  LeadType: "LeadType",
+  EmailConsent: "EmailConsent",
+  LastEmailSent: "LastEmailSent",
+
+  // ✅ NEW: if present, we will write them
+  EmailStep: "EmailStep (1–60)",
+  NextEmailDueAt: "NextEmailDueAt (datetime)",
+};
+
+function BF_scanInboxStartAndSend() {
+  if (BF_CFG && BF_CFG.EMAILS_ENABLED === false) return;
+  if (BF_isNurturePaused_()) return;
+
+  try {
+    if (typeof BF_ensureEmailTemplatesSheet_ === "function") BF_ensureEmailTemplatesSheet_();
+  } catch (e) {
+    TT_log_("EMAIL_TEMPLATES_CHECK_FAIL", String(e));
+  }
+
+  const ss = TT_ss_();
+  const sh = ss.getSheetByName(BF_EMAIL_CFG.SHEET_INBOX_START);
+  if (!sh) {
+    TT_log_("INBOX_SHEET_MISSING", "Missing sheet: " + BF_EMAIL_CFG.SHEET_INBOX_START);
+    return;
+  }
+
+  const data = sh.getDataRange().getValues();
+  if (data.length < 2) return;
+
+  const header = data[0].map(h => String(h || "").trim());
+
+  let col;
+  try {
+    col = BF_mapCols_(header);
+  } catch (err) {
+    TT_log_("INBOX_HEADERS_MISSING", String(err));
+    return;
+  }
+
+  for (let r = 1; r < data.length; r++) {
+    const row = data[r];
+
+    const ownerEmail = String(BF_v_(row, col, BF_INBOX_HEADERS.OwnerEmail) || "").trim();
+    const ownerName  = String(BF_v_(row, col, BF_INBOX_HEADERS.OwnerName) || "").trim();
+    const pkg        = String(BF_v_(row, col, BF_INBOX_HEADERS.Package) || "").trim();
+    const consent    = String(BF_v_(row, col, BF_INBOX_HEADERS.EmailConsent) || "").trim().toUpperCase();
+    const statusRaw  = String(BF_v_(row, col, BF_INBOX_HEADERS.Status) || "").trim();
+    const status     = statusRaw.toUpperCase();
+
+    const requestId  = String(BF_v_(row, col, BF_INBOX_HEADERS.RequestID) || "").trim();
+    const title      = String(BF_v_(row, col, BF_INBOX_HEADERS.LibraryTitle) || "").trim();
+
+    const lastSent   = String(BF_v_(row, col, BF_INBOX_HEADERS.LastEmailSent) || "").trim();
+    let updatedLast  = lastSent;
+
+    // ✅ SOFT MODE: only require email + consent to send
+    const missing = [];
+    if (!ownerEmail) missing.push("OwnerEmail");
+    if (consent !== "YES") missing.push("EmailConsent");
+
+    if (missing.length) {
+      if (String(status || "").toUpperCase() !== "INCOMPLETE") {
+        sh.getRange(r + 1, col[BF_INBOX_HEADERS.Status] + 1).setValue("INCOMPLETE");
+      }
+      BF_logActivity_("INBOX_SKIP_NO_EMAIL", `row=${r+1} | requestId=${requestId} | missing=${missing.join(", ")}`);
+      continue;
+    }
+
+    if (String(status || "").toUpperCase() === "INCOMPLETE") {
+      sh.getRange(r + 1, col[BF_INBOX_HEADERS.Status] + 1).setValue("NEW");
+    }
+
+    if (consent !== "YES") continue;
+
+    // =========================
+    // A) CONFIRMATION (once)
+    // =========================
+    const hasConfirm = BF_hasTag_(updatedLast, BF_EMAIL_CFG.TAG_CONFIRM_RECEIVED);
+
+    if (!hasConfirm && BF_EMAIL_CFG.INBOX_CONFIRM_STATUS_ALLOW.includes(status)) {
+      const subject = "We received your TinyTeam request ✅";
+      const htmlBody = BF_tplConfirmReceived_({ ownerName, requestId, pkg, title });
+
+      const okConfirm = BF_sendEmail_(ownerEmail, subject, htmlBody, {
+        step: "CONFIRM",
+        ctx: `requestId=${requestId}`
+      });
+
+      if (okConfirm) {
+        updatedLast = BF_appendTag_(updatedLast, `${BF_EMAIL_CFG.TAG_CONFIRM_RECEIVED}|${BF_nowStamp_()}`);
+      }
+    }
+
+    // =========================
+    // B) START / CONTINUE NURTURE
+    // =========================
+    updatedLast = BF_maybeSendDueNurture_(ownerEmail, updatedLast, {
+      ownerName,
+      orderId: requestId,
+      pkg,
+      title
+    });
+
+    // ✅ Write back LastEmailSent if changed
+    if (updatedLast !== lastSent) {
+      sh.getRange(r + 1, col[BF_INBOX_HEADERS.LastEmailSent] + 1).setValue(updatedLast);
+    }
+
+    // ✅ ALSO sync visible columns if they exist
+    BF_syncVisibleNurtureColumns_(sh, r + 1, col, updatedLast);
+  }
+}
+
+function BF_runNurtureCron() { BF_scanInboxStartAndSend(); }
+function BF_onInboxStartFormSubmit(e) { BF_scanInboxStartAndSend(); }
+
+function BF_syncVisibleNurtureColumns_(sh, rowNum1, colMap, lastSent) {
+  try {
+    // If columns do not exist, do nothing (fail-soft)
+    const stepColIdx = colMap[BF_INBOX_HEADERS.EmailStep];
+    const dueColIdx  = colMap[BF_INBOX_HEADERS.NextEmailDueAt];
+
+    const stepInfo = BF_getTagValue3_(lastSent, BF_EMAIL_CFG.TAG_NURTURE_STEP);
+    const dueInfo  = BF_getTagValue3_(lastSent, BF_EMAIL_CFG.TAG_NURTURE_NEXT_DUE);
+
+    if (stepColIdx !== undefined && stepInfo && stepInfo.v1) {
+      sh.getRange(rowNum1, stepColIdx + 1).setValue(stepInfo.v1);
+    }
+
+    if (dueColIdx !== undefined && dueInfo && dueInfo.v1) {
+      sh.getRange(rowNum1, dueColIdx + 1).setValue(dueInfo.v1); // ISO string
+    }
+  } catch (e) {
+    TT_log_("NU_RT_SYNC_WARN", String(e));
+  }
+}
+
+function BF_maybeSendDueNurture_(toEmail, lastSent, ctx) {
+  if (typeof BF_sendNurtureEmailStep_ !== "function") {
+    TT_log_("EMAIL_FAIL", `to=${toEmail} | step=? | error=Missing function BF_sendNurtureEmailStep_`);
+    return lastSent;
+  }
+
+  const hasConfirm = BF_hasTag_(lastSent, BF_EMAIL_CFG.TAG_CONFIRM_RECEIVED);
+  if (!hasConfirm) return lastSent;
+
+  const stepInfo = BF_getTagValue3_(lastSent, BF_EMAIL_CFG.TAG_NURTURE_STEP);
+  const dueInfo  = BF_getTagValue3_(lastSent, BF_EMAIL_CFG.TAG_NURTURE_NEXT_DUE);
+
+  const now = new Date();
+
+  // If never started, send step 1
+  if (!stepInfo) {
+    const ok1 = BF_sendNurtureEmailStep_(toEmail, 1, {
+      OwnerName: ctx.ownerName,
+      OrderID: ctx.orderId,
+      Package: ctx.pkg,
+      LibraryTitle: ctx.title
+    });
+    if (!ok1) return lastSent;
+
+    let updated = lastSent;
+    updated = BF_setTagValue3_(updated, BF_EMAIL_CFG.TAG_NURTURE_STEP, "1");
+    const nextDue = BF_addDays_(now, BF_EMAIL_CFG.NURTURE_CADENCE_DAYS);
+    updated = BF_setTagValue3_(updated, BF_EMAIL_CFG.TAG_NURTURE_NEXT_DUE, BF_toISO_(nextDue));
+    return updated;
+  }
+
+  let dueDate = (dueInfo && dueInfo.v1) ? BF_fromISO_(dueInfo.v1) : null;
+  if (!dueDate) {
+    const nd = BF_addDays_(now, BF_EMAIL_CFG.NURTURE_CADENCE_DAYS);
+    return BF_setTagValue3_(lastSent, BF_EMAIL_CFG.TAG_NURTURE_NEXT_DUE, BF_toISO_(nd));
+  }
+
+  if (now < dueDate) return lastSent;
+
+  const lastStep = Number(stepInfo.v1 || 0) || 0;
+  const total  = Number(BF_EMAIL_CFG.NURTURE_TOTAL_STEPS || 60);
+  const loopTo = Number(BF_EMAIL_CFG.NURTURE_LOOP_TO_STEP || 2);
+
+  let nextStep = lastStep + 1;
+  if (nextStep > total) nextStep = loopTo;
+
+  const ok = BF_sendNurtureEmailStep_(toEmail, nextStep, {
+    OwnerName: ctx.ownerName,
+    OrderID: ctx.orderId,
+    Package: ctx.pkg,
+    LibraryTitle: ctx.title
+  });
+
+  if (!ok) return lastSent;
+
+  let updated = lastSent;
+  updated = BF_setTagValue3_(updated, BF_EMAIL_CFG.TAG_NURTURE_STEP, String(nextStep));
+  const nextDue = BF_addDays_(now, BF_EMAIL_CFG.NURTURE_CADENCE_DAYS);
+  updated = BF_setTagValue3_(updated, BF_EMAIL_CFG.TAG_NURTURE_NEXT_DUE, BF_toISO_(nextDue));
+  return updated;
+}
+
+function BF_sendEmail_(to, subject, htmlBody, meta) {
+  const step = meta && meta.step ? String(meta.step) : "";
+  const ctx  = meta && meta.ctx ? String(meta.ctx) : "";
+
+  if (BF_CFG && BF_CFG.DRY_RUN === true) {
+    TT_log_("EMAIL_SENT", `to=${to} | step=${step} | subject=${subject} | (DRY_RUN) ${ctx}`);
+    return true;
+  }
+
+  try {
+    GmailApp.sendEmail(to, subject, "Your email client does not support HTML.", {
+      name: BF_EMAIL_CFG.FROM_NAME,
+      htmlBody: htmlBody,
+      replyTo: BF_EMAIL_CFG.REPLY_TO,
+    });
+
+    TT_log_("EMAIL_SENT", `to=${to} | step=${step} | subject=${subject} ${ctx}`);
+    return true;
+
+  } catch (err) {
+    TT_log_("EMAIL_FAIL", `to=${to} | step=${step} | subject=${subject} | error=${err} ${ctx}`);
+    return false;
+  }
+}
+
+// ===== TEMPLATE =====
+function BF_tplConfirmReceived_(p) {
+  const safe = (s) =>
+    String(s || "").replace(/[<>&"]/g, (c) => ({
+      "<": "&lt;",
+      ">": "&gt;",
+      "&": "&amp;",
+      '"': "&quot;",
+    }[c]));
+
+  return `
+  <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111;">
+    <h2 style="margin:0 0 10px;">Hi ${safe(p.ownerName)} 👋</h2>
+    <p style="margin:0 0 12px;">We received your TinyTeam Digital Library request. ✅</p>
+
+    <div style="padding:12px;border:1px solid #eee;border-radius:10px;background:#fafafa;margin:12px 0;">
+      <div><strong>Request ID:</strong> ${safe(p.requestId)}</div>
+      <div><strong>Package:</strong> ${safe(p.pkg)}</div>
+      <div><strong>Library Title:</strong> ${safe(p.title)}</div>
+    </div>
+
+    <p style="margin:0 0 12px;">
+      Next step:
+      <br>• If you haven’t paid yet, you can proceed to the Payment page and submit your proof.
+      <br>• If you already paid, just wait for verification — we’ll email you the next link.
     </p>
 
-   <form id="membersForm" method="POST"
-action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec?key=TT_PRIVATE_2026_01"
+    <p style="margin:14px 0 0;">
+      — TinyTeam<br>
+      <a href="mailto:${safe(BF_EMAIL_CFG.REPLY_TO)}">${safe(BF_EMAIL_CFG.REPLY_TO)}</a>
+    </p>
+  </div>`;
+}
 
-  <input type="hidden" name="formType" value="MEMBERS" />
+// ===== HELPERS =====
+function BF_mapCols_(headerRow) {
+  const map = {};
+  headerRow.forEach((h, i) => {
+    const key = String(h || "").trim();
+    if (key) map[key] = i;
+  });
 
-      <!-- ✅ FIXED: must match doPost router -->
-      <input type="hidden" name="formType" value="MEMBERS" />
+  const required = [
+    BF_INBOX_HEADERS.OwnerEmail,
+    BF_INBOX_HEADERS.OwnerName,
+    BF_INBOX_HEADERS.EmailConsent,
+    BF_INBOX_HEADERS.LastEmailSent,
+    BF_INBOX_HEADERS.Status,
+    BF_INBOX_HEADERS.Package,
+  ];
 
-      <!-- Core IDs -->
-      <div class="grid2">
-        <div>
-          <label>Order ID</label>
-          <input id="orderId" name="order_id" class="mono" type="text" placeholder="TT-ORD-YYYY-XXXXXX-XXX" required />
-          <p class="miniHelp">Use the Order ID generated from Start. (Auto-filled if available)</p>
-        </div>
-        <div>
-          <label>Library ID (optional)</label>
-          <input id="libraryId" name="library_id" class="mono" type="text" placeholder="TT-LIB-..." />
-          <p class="miniHelp">Leave blank if not assigned yet.</p>
-        </div>
-      </div>
+  const missing = required.filter((k) => map[k] === undefined);
+  if (missing.length) throw new Error("INBOX_START missing columns: " + missing.join(", "));
+  return map;
+}
 
-      <!-- Member identity -->
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label>Full Name</label>
-          <input name="fullName" type="text" placeholder="Member full name (required)" required />
-        </div>
-        <div>
-          <label>Gender (optional)</label>
-          <select name="gender">
-            <option value="">—</option>
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-            <option value="Non-binary">Non-binary</option>
-            <option value="Prefer not to say">Prefer not to say</option>
-          </select>
-        </div>
-      </div>
+function BF_v_(row, colMap, headerName) {
+  const idx = colMap[headerName];
+  if (idx === undefined) return "";
+  return row[idx];
+}
 
-      <!-- Dates -->
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label>Birth Date (optional)</label>
-          <input name="birthDate" type="date" />
-        </div>
-        <div>
-          <label>Death Date (optional)</label>
-          <input name="deathDate" type="date" />
-        </div>
-      </div>
+function BF_nowStamp_() {
+  const tz = Session.getScriptTimeZone() || "Asia/Manila";
+  return Utilities.formatDate(new Date(), tz, "yyyy-MM-dd HH:mm:ss");
+}
 
-      <!-- Relationships -->
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label>Relationship to Root (optional)</label>
-          <input name="relationshipToRoot" type="text" placeholder="e.g., Root, Father, Mother, Child, Spouse, Grandparent" />
-          <p class="miniHelp">“Root” means the main person the tree starts from.</p>
-        </div>
-        <div>
-          <label>Spouse Name (optional)</label>
-          <input name="spouseName" type="text" placeholder="Spouse full name" />
-        </div>
-      </div>
+function BF_isNurturePaused_() {
+  try {
+    const ss = TT_ss_();
+    const sh = ss.getSheetByName("SETTINGS");
+    if (!sh) return false;
 
-      <div class="grid2" style="margin-top:12px;">
-        <div>
-          <label>Father Name (optional)</label>
-          <input name="fatherName" type="text" placeholder="Father full name" />
-        </div>
-        <div>
-          <label>Mother Name (optional)</label>
-          <input name="motherName" type="text" placeholder="Mother full name" />
-        </div>
-      </div>
-
-      <!-- Notes -->
-      <div style="margin-top:12px;">
-        <label>Notes (optional)</label>
-        <textarea name="notes" rows="4" placeholder="Any clarifications, nicknames, place of birth, maiden name, uncertainties, etc."></textarea>
-      </div>
-
-      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="btn" id="submitBtn" type="submit">Submit Member</button>
-        <a class="btn secondary" href="start.html">Back to Start</a>
-      </div>
-
-      <p class="note">
-        Tip: Add members one-by-one. After you submit, you can add another member using the same Order ID.
-      </p>
-
-      <div class="status" id="statusBox">Submitting member…</div>
-    </form>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
-      <span class="footer-x">×</span>
-      <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
-    </div>
-
-    <div class="footer-contacts">
-      <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
-      <span class="dot">•</span>
-      <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
-    </div>
-
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <span class="dot">•</span>
-      <a href="help/index.html">Help</a>
-      <span class="dot">•</span>
-      <a href="reseller/index.html">Reseller Program</a>
-    </div>
-
-    <div class="footer-links" style="margin-top:6px;">
-      <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
-        TinyTeam Digital Library (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/profile.php?id=61571330212081" target="_blank" rel="noopener">
-        SVP Digital System (Facebook)
-      </a>
-      <span class="dot">•</span>
-      <a href="https://www.facebook.com/svpfunnels" target="_blank" rel="noopener">
-        Chin Veloso (Facebook)
-      </a>
-    </div>
-  </div>
-</footer>
-
-<script>
-(function(){
-  const params = new URLSearchParams(window.location.search);
-  const oidFromUrl = (params.get("order_id") || "").trim();
-
-  const orderIdEl = document.getElementById("orderId");
-  const libIdEl   = document.getElementById("libraryId");
-
-  let oid = oidFromUrl;
-
-  if (!oid) {
-    try { oid = (localStorage.getItem("TT_LAST_ORDER_ID") || "").trim(); } catch(e){}
+    const values = sh.getDataRange().getValues();
+    for (let i = 1; i < values.length; i++) {
+      const key = String(values[i][0] || "").trim();
+      const val = String(values[i][1] || "").trim().toUpperCase();
+      if (key === "NU_RT_PAUSED") return (val === "YES" || val === "TRUE" || val === "1");
+    }
+    return false;
+  } catch (err) {
+    return false;
   }
+}
 
-  if (orderIdEl && oid) orderIdEl.value = oid;
+function BF_hasTag_(lastEmailSent, tag) {
+  const s = String(lastEmailSent || "").trim();
+  if (!s) return false;
+  return s.split(/\s*;\s*/).some((part) => part.startsWith(tag + "|") || part === tag);
+}
 
-  const lidFromUrl = (params.get("library_id") || "").trim();
-  if (libIdEl && lidFromUrl) libIdEl.value = lidFromUrl;
+function BF_appendTag_(existing, entry) {
+  const s = String(existing || "").trim();
+  if (!s) return entry;
+  return `${s}; ${entry}`;
+}
 
-  const form = document.getElementById("membersForm");
-  const btn  = document.getElementById("submitBtn");
-  const box  = document.getElementById("statusBox");
-  if (form && btn && box) {
-    form.addEventListener("submit", () => {
-      btn.disabled = true;
-      btn.textContent = "Submitting...";
-      box.classList.add("show");
-    });
+function BF_getTagValue3_(lastEmailSent, tag) {
+  const s = String(lastEmailSent || "").trim();
+  if (!s) return null;
+
+  const parts = s.split(/\s*;\s*/);
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = String(parts[i] || "").trim();
+    if (!p) continue;
+
+    const seg = p.split("|");
+    if (seg[0] === tag) {
+      return { v1: seg[1] || "", v2: seg[2] || "" };
+    }
   }
-})();
-</script>
+  return null;
+}
 
-<!-- 🔵 TinyTeam Messenger Floating Bubble (HIGH VISIBILITY) -->
-<style>
-  .tt-messenger-bubble {
-    position: fixed;
-    bottom: 22px;
-    right: 22px;
-    width: 68px;
-    height: 68px;
-    background: #1877f2;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    z-index: 99999;
-    box-shadow: 0 0 0 rgba(24,119,242, 0.6);
-    animation: ttPulse 2s infinite;
+function BF_setTagValue3_(lastEmailSent, tag, value) {
+  const stamp = BF_nowStamp_();
+  const entry = `${tag}|${String(value || "")}|${stamp}`;
+
+  const s = String(lastEmailSent || "").trim();
+  if (!s) return entry;
+
+  const parts = s.split(/\s*;\s*/).filter(p => String(p || "").split("|")[0] !== tag);
+  parts.push(entry);
+  return parts.join("; ");
+}
+
+function BF_addDays_(d, days) {
+  const x = new Date(d.getTime());
+  x.setDate(x.getDate() + Number(days || 0));
+  return x;
+}
+
+function BF_toISO_(d) { return new Date(d).toISOString(); }
+
+function BF_fromISO_(s) {
+  try {
+    const d = new Date(String(s || "").trim());
+    return isNaN(d.getTime()) ? null : d;
+  } catch (e) {
+    return null;
   }
-  .tt-messenger-bubble:hover { transform: scale(1.08); }
-  .tt-messenger-bubble span { font-size: 32px; color: #fff; line-height: 1; }
-  @keyframes ttPulse {
-    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
-    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
-  }
-</style>
-
-<a
-  href="https://m.me/918023754727652"
-  class="tt-messenger-bubble"
-  target="_blank"
-  rel="noopener"
-  aria-label="Chat with TinyTeam on Messenger"
->
-  <span>💬</span>
-</a>
-
-</body>
-</html>
+}
