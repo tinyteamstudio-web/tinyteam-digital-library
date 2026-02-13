@@ -7,6 +7,7 @@
   <meta name="description" content="Add members to your TinyTeam library. Manual-first, privacy-first." />
   <link rel="stylesheet" href="assets/styles/main.css" />
 
+  <!-- Small safety styles only (won’t change your layout) -->
   <style>
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,"Liberation Mono","Courier New", monospace;}
     .status{margin-top:10px;font-size:13px;color: rgba(0,0,0,0.65);display:none;line-height:1.5;}
@@ -42,19 +43,19 @@
     <form id="membersForm" method="POST"
       action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec?key=TT_PRIVATE_2026_01">
 
-      <!-- ✅ MUST match doPost routing -->
+      <!-- ✅ MUST match doPost handler -->
       <input type="hidden" name="formType" value="MEMBERS" />
 
       <!-- Core IDs -->
       <div class="grid2">
         <div>
           <label>Order ID</label>
-          <input id="orderId" name="order_id" class="mono" type="text" placeholder="TT-ORD-YYYY-XXXXXX-XXX" required />
+          <input id="orderId" name="OrderID" class="mono" type="text" placeholder="TT-ORD-YYYY-XXXXXX-XXX" required />
           <p class="miniHelp">Use the Order ID generated from Start. (Auto-filled if available)</p>
         </div>
         <div>
           <label>Library ID (optional)</label>
-          <input id="libraryId" name="library_id" class="mono" type="text" placeholder="TT-LIB-..." />
+          <input id="libraryId" name="LibraryID" class="mono" type="text" placeholder="TT-LIB-..." />
           <p class="miniHelp">Leave blank if not assigned yet.</p>
         </div>
       </div>
@@ -63,11 +64,11 @@
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Full Name</label>
-          <input name="fullName" type="text" placeholder="Member full name (required)" required />
+          <input name="FullName" type="text" placeholder="Member full name (required)" required />
         </div>
         <div>
           <label>Gender (optional)</label>
-          <select name="gender">
+          <select name="Gender">
             <option value="">—</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
@@ -81,11 +82,11 @@
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Birth Date (optional)</label>
-          <input name="birthDate" type="date" />
+          <input name="BirthDate" type="date" />
         </div>
         <div>
           <label>Death Date (optional)</label>
-          <input name="deathDate" type="date" />
+          <input name="DeathDate" type="date" />
         </div>
       </div>
 
@@ -93,30 +94,30 @@
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Relationship to Root (optional)</label>
-          <input name="relationshipToRoot" type="text" placeholder="e.g., Root, Father, Mother, Child, Spouse, Grandparent" />
+          <input name="RelationshipToRoot" type="text" placeholder="e.g., Root, Father, Mother, Child, Spouse, Grandparent" />
           <p class="miniHelp">“Root” means the main person the tree starts from.</p>
         </div>
         <div>
           <label>Spouse Name (optional)</label>
-          <input name="spouseName" type="text" placeholder="Spouse full name" />
+          <input name="SpouseName" type="text" placeholder="Spouse full name" />
         </div>
       </div>
 
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Father Name (optional)</label>
-          <input name="fatherName" type="text" placeholder="Father full name" />
+          <input name="FatherName" type="text" placeholder="Father full name" />
         </div>
         <div>
           <label>Mother Name (optional)</label>
-          <input name="motherName" type="text" placeholder="Mother full name" />
+          <input name="MotherName" type="text" placeholder="Mother full name" />
         </div>
       </div>
 
       <!-- Notes -->
       <div style="margin-top:12px;">
         <label>Notes (optional)</label>
-        <textarea name="notes" rows="4" placeholder="Any clarifications, nicknames, place of birth, maiden name, uncertainties, etc."></textarea>
+        <textarea name="Notes" rows="4" placeholder="Any clarifications, nicknames, place of birth, maiden name, uncertainties, etc."></textarea>
       </div>
 
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
@@ -136,18 +137,22 @@
 
 <footer class="site-footer">
   <div class="footer-inner">
+
+    <!-- Logos -->
     <div class="footer-brand">
       <img class="footer-logo" src="assets/logo/tinyteam-logo.jpeg" alt="TinyTeam Digital Library" />
       <span class="footer-x">×</span>
       <img class="footer-logo" src="assets/logo/svp-funnels-logo.png" alt="SVP Funnels" />
     </div>
 
+    <!-- Emails -->
     <div class="footer-contacts">
       <a href="mailto:chinveloso.consmaterials@gmail.com">chinveloso.consmaterials@gmail.com</a>
       <span class="dot">•</span>
       <a href="mailto:smallsteps@tinyteamstudio.online">smallsteps@tinyteamstudio.online</a>
     </div>
 
+    <!-- Core pages -->
     <div class="footer-links">
       <a href="index.html">Home</a>
       <span class="dot">•</span>
@@ -156,6 +161,7 @@
       <a href="reseller/index.html">Reseller Program</a>
     </div>
 
+    <!-- Social -->
     <div class="footer-links" style="margin-top:6px;">
       <a href="https://www.facebook.com/profile.php?id=61585335397502" target="_blank" rel="noopener">
         TinyTeam Digital Library (Facebook)
@@ -169,11 +175,15 @@
         Chin Veloso (Facebook)
       </a>
     </div>
+
   </div>
 </footer>
 
 <script>
 (function(){
+  // Auto-fill Order ID from:
+  // 1) URL param ?order_id=...
+  // 2) localStorage TT_LAST_ORDER_ID (set by start.html)
   const params = new URLSearchParams(window.location.search);
   const oidFromUrl = (params.get("order_id") || "").trim();
 
@@ -188,9 +198,11 @@
 
   if (orderIdEl && oid) orderIdEl.value = oid;
 
+  // Optional: allow ?library_id=
   const lidFromUrl = (params.get("library_id") || "").trim();
   if (libIdEl && lidFromUrl) libIdEl.value = lidFromUrl;
 
+  // Submit UI state
   const form = document.getElementById("membersForm");
   const btn  = document.getElementById("submitBtn");
   const box  = document.getElementById("statusBox");
@@ -222,11 +234,20 @@
     box-shadow: 0 0 0 rgba(24,119,242, 0.6);
     animation: ttPulse 2s infinite;
   }
-  .tt-messenger-bubble:hover { transform: scale(1.08); }
-  .tt-messenger-bubble span { font-size: 32px; color: #fff; line-height: 1; }
+
+  .tt-messenger-bubble:hover {
+    transform: scale(1.08);
+  }
+
+  .tt-messenger-bubble span {
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+  }
+
   @keyframes ttPulse {
-    0%   { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
-    70%  { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(24,119,242, 0.6); }
+    70% { box-shadow: 0 0 0 18px rgba(24,119,242, 0); }
     100% { box-shadow: 0 0 0 0 rgba(24,119,242, 0); }
   }
 </style>
