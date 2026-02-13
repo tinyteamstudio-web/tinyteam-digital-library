@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -38,32 +38,27 @@
       We will email you next steps after review.
     </p>
 
-    <!-- ✅ IMPORTANT: keep key + formType exactly like this -->
+    <!-- ✅ OFFICIAL WEBAPP DOOR (NEW URL) -->
     <form id="startForm" method="POST"
-      action="https://script.google.com/macros/s/AKfycbz7zW4jMNjAM8f7RQQ1gvqmZQiOlKrwWoMaHyMabVqamb0dLQDTgzoelzmhyPFHfsHSag/exec?key=TT_PRIVATE_2026_01">
+      action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec?key=TT_PRIVATE_2026_01">
 
       <input type="hidden" name="formType" value="START">
 
-      <!-- ✅ These can exist, but WebApp will also enforce its own Status/LeadType -->
-     <input type="hidden" name="LeadType" value="DIRECT" />
-
+      <input type="hidden" name="LeadType" value="DIRECT" />
       <input type="hidden" name="Status" value="RECEIVED" />
 
-      <!-- ✅ RequestID (what your sheet uses as LeadID) -->
-      <input type="hidden" name="RequestID" id="orderIdHidden" value="" />
+      <!-- ✅ RequestID: we let the server generate TT-REQ (do NOT fake TT-ORD here) -->
+      <input type="hidden" name="RequestID" id="requestIdHidden" value="" />
 
-      <!-- ✅ ReferralCode (canonical, matches your sheet header) -->
       <input type="hidden" name="ReferralCode" id="referralHidden" value="" />
 
       <div class="grid2">
         <div>
           <label>Full Name</label>
-          <!-- ✅ MUST be OwnerName -->
           <input name="OwnerName" type="text" placeholder="Full name (required)" required />
         </div>
         <div>
           <label>Email</label>
-          <!-- ✅ MUST be OwnerEmail -->
           <input name="OwnerEmail" type="email" placeholder="Email (required)" required />
         </div>
       </div>
@@ -71,7 +66,6 @@
       <div class="grid2" style="margin-top:12px;">
         <div>
           <label>Package</label>
-          <!-- ✅ MUST be Package -->
           <select name="Package" id="packageSel" required>
             <option value="FAM">Family Library (FAM) — $48</option>
             <option value="COMM">Community Library (COMM) — $89</option>
@@ -79,15 +73,16 @@
           </select>
         </div>
         <div>
-          <label>Order ID (auto-generated)</label>
-          <input id="orderIdView" class="mono" type="text" readonly />
-          <p class="muted small" style="margin:6px 0 0;">Keep this Order ID for payment proof + follow-ups.</p>
+          <label>Request ID (auto-generated)</label>
+          <input id="requestIdView" class="mono" type="text" readonly />
+          <p class="muted small" style="margin:6px 0 0;">
+            You will receive your <strong>Official Order ID</strong> by email after review.
+          </p>
         </div>
       </div>
 
       <div style="margin-top:12px;">
         <label>Library Title (optional)</label>
-        <!-- ✅ MUST be LibraryTitle -->
         <input name="LibraryTitle" type="text" placeholder="e.g., The Veloso Family Archive" />
         <p class="muted small" style="margin:6px 0 0;">
           This helps us label your library properly.
@@ -96,13 +91,11 @@
 
       <div style="margin-top:12px;">
         <label>Family Intro (optional)</label>
-        <!-- ✅ MUST be FamilyIntro -->
         <textarea name="FamilyIntro" rows="3" placeholder="Short background (optional) — e.g., roots, branches, main surnames, generations covered"></textarea>
       </div>
 
       <div style="margin-top:12px;">
         <label>Notes (optional)</label>
-        <!-- ✅ MUST be Notes -->
         <textarea name="Notes" rows="2" placeholder="Any special notes (optional) — e.g., preferred spelling, privacy requests, urgent deadlines"></textarea>
       </div>
 
@@ -152,7 +145,6 @@
         </div>
       </div>
 
-      <!-- ✅ These are the only values your START handler actually writes -->
       <input type="hidden" name="DesignResolved" id="designResolved" value="" />
       <input type="hidden" name="ThemeResolved"  id="themeResolved"  value="" />
       <input type="hidden" name="ColorResolved"  id="colorResolved"  value="" />
@@ -172,11 +164,12 @@
 
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn" id="submitBtn" type="submit">Submit Request</button>
+        <!-- ✅ Payment page is just a page. Official Order ID comes via email after review -->
         <a class="btn secondary" id="payBtn" href="payment.html">View Payment Options</a>
       </div>
 
       <p class="note">
-        Please wait for approval email before paying. This button only shows payment methods.
+        Please wait for the approval email before paying. This button only shows payment methods.
       </p>
 
       <div class="status" id="statusBox">Submitting your request…</div>
@@ -228,8 +221,8 @@
   const params = new URLSearchParams(window.location.search);
 
   const pkgSel = document.getElementById("packageSel");
-  const orderIdView = document.getElementById("orderIdView");
-  const orderIdHidden = document.getElementById("orderIdHidden");
+  const requestIdView = document.getElementById("requestIdView");
+  const requestIdHidden = document.getElementById("requestIdHidden");
   const payBtn = document.getElementById("payBtn");
 
   const referralInput = document.getElementById("referralInput");
@@ -248,30 +241,28 @@
     pkgSel.value = pkgFromUrl;
   }
 
-  let rid = (params.get("order_id") || "").trim();
-
+  // ✅ Generate a REQUEST ID preview (TT-REQ) — official order id comes via email
   function pad6(n){
     const s = String(n);
     return s.length >= 6 ? s.slice(-6) : ("000000" + s).slice(-6);
   }
 
-  function makeOrderId(){
+  function makeRequestId(){
     const now = new Date();
-    const year = now.getFullYear();
+    const y = now.getFullYear();
     const seconds = Math.floor(now.getTime() / 1000);
     const six = seconds % 1000000;
-
     const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let suffix = "";
     for (let i = 0; i < 3; i++) suffix += alphabet[Math.floor(Math.random() * alphabet.length)];
-
-    return `TT-ORD-${year}-${pad6(six)}-${suffix}`;
+    return `TT-REQ-${y}-${pad6(six)}-${suffix}`;
   }
 
-  if (!rid) rid = makeOrderId();
+  let rid = (params.get("request_id") || "").trim();
+  if (!rid) rid = makeRequestId();
 
-  if (orderIdView) orderIdView.value = rid;
-  if (orderIdHidden) orderIdHidden.value = rid;
+  if (requestIdView) requestIdView.value = rid;
+  if (requestIdHidden) requestIdHidden.value = ""; // ✅ let server generate the official RequestID
 
   const refFromUrl = (params.get("ref") || params.get("referral") || params.get("ReferralCode") || "").trim();
   if (refFromUrl && referralInput) referralInput.value = refFromUrl;
@@ -283,7 +274,7 @@
   }
 
   try{
-    localStorage.setItem("TT_LAST_ORDER_ID", rid);
+    localStorage.setItem("TT_LAST_REQUEST_ID", rid);
     localStorage.setItem("TT_LAST_PACKAGE", (pkgSel ? (pkgSel.value||"FAM") : "FAM").toUpperCase());
   }catch(e){}
 
@@ -333,14 +324,9 @@
   }
 
   function syncLinks(){
-    const pkg = (pkgSel ? (pkgSel.value || "FAM") : "FAM").toUpperCase();
-    const encodedPkg = encodeURIComponent(pkg);
-    const encodedId  = encodeURIComponent(rid);
-
-    if (payBtn) payBtn.href = `payment.html?package=${encodedPkg}&order_id=${encodedId}`;
-
     resolveAutoDesign();
     syncReferral();
+    if (payBtn) payBtn.href = `payment.html`; // ✅ no fake order_id
   }
 
   if (pkgSel)   pkgSel.addEventListener("change", syncLinks);
