@@ -38,9 +38,12 @@
       We will email you next steps after review.
     </p>
 
-    <!-- ✅ OFFICIAL WEBAPP DOOR (NEW URL) -->
+    <!-- ✅ OFFICIAL WEBAPP DOOR (FIXED) -->
     <form id="startForm" method="POST"
-     action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec?key=TT_PRIVATE_2026_01"
+      action="https://script.google.com/macros/s/AKfycbxmzUt9Zb-oQHQQrccqit1SIkM6EfsNHaHKyS2N3V4vKasD3lIOt7xREn99XqxGlZ4S/exec">
+
+      <!-- ✅ REQUIRED KEY (FIXED) -->
+      <input type="hidden" name="key" value="TT_PRIVATE_2026_01">
 
       <input type="hidden" name="formType" value="START">
 
@@ -164,7 +167,6 @@
 
       <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
         <button class="btn" id="submitBtn" type="submit">Submit Request</button>
-        <!-- ✅ Payment page is just a page. Official Order ID comes via email after review -->
         <a class="btn secondary" id="payBtn" href="payment.html">View Payment Options</a>
       </div>
 
@@ -241,7 +243,6 @@
     pkgSel.value = pkgFromUrl;
   }
 
-  // ✅ Generate a REQUEST ID preview (TT-REQ) — official order id comes via email
   function pad6(n){
     const s = String(n);
     return s.length >= 6 ? s.slice(-6) : ("000000" + s).slice(-6);
@@ -326,7 +327,7 @@
   function syncLinks(){
     resolveAutoDesign();
     syncReferral();
-    if (payBtn) payBtn.href = `payment.html`; // ✅ no fake order_id
+    if (payBtn) payBtn.href = `payment.html`;
   }
 
   if (pkgSel)   pkgSel.addEventListener("change", syncLinks);
